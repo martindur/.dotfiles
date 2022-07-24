@@ -268,3 +268,63 @@ passwd bob
 ```
 # %wheel ALL=(ALL) ALL
 ```
+
+
+## Minimal GUI
+
+To run any grahical user interface, we need an X Window System implementation (X11), where the common one being Xorg.
+
+
+### Xorg
+
+1. Install minimal Xorg
+```
+pacman -S xorg-server xorg-xinit
+```
+
+xinit is useful for specifying what should run when the x server starts
+
+2. Configure keyboard layout by creating/editing `~/.xinitrc`
+```
+setxkbmap -layout dk
+```
+
+Different from the virtual console language, this sets the language for X, which will be used by the terminal you choose to use
+
+
+### Window Manager
+
+At this point, we're already getting well into the "opinionated" space, where you could choose to install a Desktop environment, or (as I will show in this guide) settle with a simple Window manager.
+
+We will install qtile, and do the minimal configuration in our `.xinitrc` to make it run. (You might be missing fonts, if you see a lot of squares in qtile. Download a font and update it in the qtile config)
+
+1. Install qtile
+```
+pacman -S qtile
+```
+
+2. Add this to the end of the `~/.xinitrc` file
+```
+qtile start
+```
+
+3. From the Arch TTY, run `startx`, and qtile should start (You might need to reboot)
+
+And that's all you need! .... at least from this guide.
+
+
+### Graphics drivers (Optional)
+
+1. Some functionality will of course require graphics drivers, run the appripriate one:
+```
+# for nvidia GPU
+pacman -S nvidia nvidia-utils
+
+# for amd discreet and integrated GPU
+pacman -S xf86-video-amdgpu
+
+# for intel integrated GPU
+pacman -S xf86-video-intel
+```
+
+
