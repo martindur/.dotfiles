@@ -22,13 +22,17 @@ If you don't have a an install medium.... always have an install medium with Arc
 
 
 1. download Arch
-`curl http://mirrors.dotsrc.org/archlinux/iso/latest/archlinux-x86_64.iso -o ~/Downloads/archlinux-x86_64.iso`
+```
+curl http://mirrors.dotsrc.org/archlinux/iso/latest/archlinux-x86_64.iso -o ~/Downloads/archlinux-x86_64.iso
+```
 
 2. Insert your install medium and find it
 `lsblk` - identify it as `/dev/sdx` where `x` is probably another letter in your case. Make sure it is not mounted.
 
 3. Arch2USB
-`dd bs=4M if=~/Downloads/archlinux-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress`
+```
+dd bs=4M if=~/Downloads/archlinux-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
+```
 
 
 ### Installation
