@@ -12,7 +12,7 @@ Well, Linux is different, or rather Arch Linux is different. Linux is really jus
 Another popular one, is Arch. It is quite the opposite of Ubuntu, instead of giving you the Linux kernel and a lot of extra software to give you that "normal" desktop. It'll give you the kernel, a package manager (Pacman), and a few necessary tools, but other than that, you're left alone to customize your own OS. Good luck with that!
 
 
-## Install the base
+## Install a bootable base
 
 For a more in depth article, this source is great: https://freecodecamp.org/news/how-to-install-arch-linux
 
@@ -136,10 +136,135 @@ pacman -Sy
 
 2. Use `pacstrap` to install packages to a specified new root directory.
 ```
-pacstrap /mnt base base-devel linux linux-firmware sudo nvim ntfs-3g networkmanager
+pacstrap /mnt base base-devel linux linux-firmware intel-ucode sudo nvim ntfs-3g networkmanager
 ``` 
+
+(If you're on AMD, replace `intel-ucode` with `amd-ucode`)
 
 These are not all "essential", but `nvim` is useful as a text editor for further configuration (You can also replace it with `nano`), and networkmanager makes it easier to configure networks.
 
 Congratulations! Arch linux is now installed! It's not bootable, but installed!
 
+
+### Configure-for-Boot!
+
+Before we can calmy boot into our new Arch install, we need some configs like 
+* `fstab` file which specifies how disk partitions should be mounted into the file system
+* `GRUB` bootloader, which gives us a neat boot menu, which can also list other installed OSes. How convenient!
+
+
+Before we move on, to make the configuration easier, we'll use `chroot` to "jump" from the USB root, to the newly installed root, with this command:
+```
+arch-chroot /mnt
+```
+
+
+1. Generate fstab file
+```
+genfstab -U /mnt >>/mnt/etc/fstab
+```
+
+2. Mounting EFI
+```
+mkdir /boot/efi
+mount /dev/sda1 /boot/efi
+```
+
+3. Install packages & GRUB in the mounted EFI system partition
+```
+pacman -S grub efibootmgr os-prober
+grub-install --target=x86_64-efi --bootloader-id=grub
+```
+
+4. Enable OS prober (Really only needed if you have another OS installed as well)
+
+Open `/etc/default/grub` and uncomment:
+```
+#GRUB_DISABLE_OS_PROBER=false
+```
+
+5. Generate the GRUB config file
+```
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+
+There we go! Installed, and bootable.
+
+
+## Post-configuration (Users, locale and time)
+
+There's now a working and bootable Arch install, but there's still some housekeeping to be done!
+
+You can either continue in `chroot` from the previous section, or run `umount /mnt` and reboot into the install
+
+
+### Network, locale and time
+
+1. Set timezone
+```
+ln -sf /usr/share/zoneinfo/Europe/Copenhagen /etc/localtime
+```
+
+2. Set localization/language by editing the `/etc/locale.gen`
+Uncomment the appropriate languages, e.g. `en_US.UTF-8 UTF-8` and `da_DK.UTF-8 UTF-8`
+
+3. Generate the locale
+```
+locale-gen
+```
+
+4. If you enabled multiple languages, tell Arch which is default by editing `/etc/locale.conf`
+```
+LANG=da_DK.UTF-8
+```
+
+5. Persist keymapping for virtual console, edit `vconsole.conf` (Important to note this does NOT set the language for X11)
+```
+KEYMAP=dk
+```
+
+6. Update `/etc/hostname` (The hostname of your computer)
+```
+bestnameever
+```
+
+7. Update `/etc/hosts`
+```
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	bestnameever
+```
+
+8. Enable network manager
+```
+systemctl enable NetworkManager
+```
+
+That's it! Nice housekeeping!
+
+
+### Root, Users and Sudo
+
+1. Set root password
+```
+passwd
+```
+Type password twice
+
+2. Create non-root user
+```
+useradd -m -G wheel bob
+```
+
+(wheel is a common admin group in Arch)
+
+3. Update password for bob
+```
+passwd bob
+```
+
+4. Enable sudo privileges for bob by editing `/etc/sudoers` and uncomment
+```
+# %wheel ALL=(ALL) ALL
+```
