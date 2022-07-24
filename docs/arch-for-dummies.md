@@ -28,7 +28,7 @@ If you don't have a an install medium.... always have an install medium with Arc
 `lsblk` - identify it as `/dev/sdx` where `x` is probably another letter in your case. Make sure it is not mounted.
 
 3. Arch2USB
-`dd bs=4M if=~/Downloads/archlinux-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress
+`dd bs=4M if=~/Downloads/archlinux-x86_64.iso of=/dev/sdx conv=fsync oflag=direct status=progress`
 
 
 ### Installation
