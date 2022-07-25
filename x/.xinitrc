@@ -5,7 +5,7 @@
 setxkbmap -layout dk
 
 # Start compositor for fancy visuals
-# picom &
+picom --experimental-backends &
 
 # Unclutter - hide the mouse cursor
 unclutter --jitter 10 --ignore-scrolling --start-hidden --fork
