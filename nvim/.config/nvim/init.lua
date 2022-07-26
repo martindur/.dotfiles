@@ -1,4 +1,2 @@
-
-require 'user.options'
-require 'user.keymaps'
-require 'user.plugins'
+require("dur.set")
+require("dur.remap")
