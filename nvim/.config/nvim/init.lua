@@ -1,2 +1,1 @@
-require("dur.set")
-require("dur.remap")
+require("martindur")

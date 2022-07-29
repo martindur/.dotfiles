@@ -1,0 +1,6 @@
+1. easy to use "replace all"
+2. font ligatuuuures! 
+3. Good key binding for brackets?
+4. Multi-line indent (There might be a plugin that handles this)
+5. Run tests in current file (Maybe even current test case (class/function)?)
+6. Get Oh-My-Fish! for fish shell
