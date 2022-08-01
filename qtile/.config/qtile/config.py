@@ -118,8 +118,8 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="mononoki",
-    fontsize=18,
+    font="FiraCode Nerd Font Mono",
+    fontsize=20,
     padding=3,
 )
 extension_defaults = widget_defaults.copy()

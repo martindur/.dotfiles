@@ -8,6 +8,8 @@ return require('packer').startup(function(use)
   use('wbthomason/packer.nvim')
   use ('tpope/vim-commentary')
 
+  use('neovim/nvim-lspconfig')
+
   use('nvim-lua/plenary.nvim')
 
   use('TimUntersberger/neogit')
@@ -16,5 +18,7 @@ return require('packer').startup(function(use)
   use('nvim-telescope/telescope.nvim')
 
   use('theprimeagen/harpoon')
+
+  use('vimwiki/vimwiki')
 
   end)
