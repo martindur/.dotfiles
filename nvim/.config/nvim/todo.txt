@@ -3,7 +3,6 @@
 3. Good key binding for brackets? This key: ½ (next to 1), and maybe <leader>½ for closing, or other brackets?
 4. Multi-line indent (There might be a plugin that handles this)
 5. Run tests in current file (Maybe even current test case (class/function)?)
-7. Install FiraCode Nerd Font
 8. Try out VimWiki, for personal notes, and todo lists! Maybe better than "this"?
 9. When using LSP (go-to-definition), create a mapping to jump between current and next buffer.
 10. When using LSP (go-to-definition), create a mapping that traverses multiple jumps, backwards.
@@ -11,3 +10,4 @@
 
 DONE:
 6. Get Oh-My-Fish! for fish shell - DONE!
+7. Install FiraCode Nerd Font - DONE!
