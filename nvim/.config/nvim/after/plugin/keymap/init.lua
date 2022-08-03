@@ -1,1 +1,3 @@
-local Remap = require("martindur.keymap")
+local nnoremap = require("martindur.keymap").nnoremap
+
+nnoremap(",", "<C-^>")
