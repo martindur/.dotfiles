@@ -40,6 +40,22 @@ WIFI:
 6. Input password, profit!
 
 
+iwctl might have network configuration disabled. In that case, create a `etc/iwd/main.conf` file with content:
+
+```
+[General]
+EnableNetworkConfiguration=true
+
+[Network]
+NameResolvingService=systemd
+```
+
+And run
+```
+systemctl restart iwd.service
+```
+
+
 System clock:
 ```
 timedatectl set-ntp true
