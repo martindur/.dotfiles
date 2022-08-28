@@ -3,6 +3,8 @@ local nnoremap = require('martindur.keymap').nnoremap
 
 local telescope = require('telescope.builtin')
 
+--telescope.load_extension('fzf')
+
 nnoremap("<leader>f", function()
     telescope.find_files()
 end)

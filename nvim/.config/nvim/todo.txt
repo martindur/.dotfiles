@@ -6,8 +6,11 @@
 8. Try out VimWiki, for personal notes, and todo lists! Maybe better than "this"?
 9. When using LSP (go-to-definition), create a mapping to jump between current and next buffer.
 10. When using LSP (go-to-definition), create a mapping that traverses multiple jumps, backwards.
+11. Keep cursor around middle when scrolling
+12. Completion!
+13. Fuzzy find ALL THE THINGS!
 
 
 DONE:
-6. Get Oh-My-Fish! for fish shell - DONE!
-7. Install FiraCode Nerd Font - DONE!
+6. Get Oh-My-Fish! for fish shell
+7. Install FiraCode Nerd Font
