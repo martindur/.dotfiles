@@ -1,4 +1,8 @@
+-- Package for utility functions of various kinds. Generally useful for other setup scripts.
+local lsp_util = require('lspconfig/util')
+
 local M = {}
+
 
 local function bind(op, outer_opts)
     outer_opts = outer_opts or {noremap = true}
@@ -16,6 +20,13 @@ M.nnoremap = bind("n")
 M.vnoremap = bind("v")
 M.xnoremap = bind("x")
 M.inoremap = bind("i")
+
+
+M.has_words_before = function()
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match '%s' == nil
+end
+
 
 M.find_cmd = function(cmd, prefixes, start_from, stop_at)
   local path = require("lspconfig/util").path
@@ -57,6 +68,32 @@ M.find_cmd = function(cmd, prefixes, start_from, stop_at)
 
   return found or cmd
 end
+
+
+M.get_python_path = function(workspace)
+    path = lsp_util.path
+    -- Use activated venv
+    if vim.env.VIRTUAL_ENV then
+        return path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
+    end
+
+    -- Find virtualenv in workspace
+    return M.find_cmd("python", ".venv/bin", workspace)
+
+    -- Find and use virtualenv in workspace directory
+    -- for _, pattern in ipairs({'*', '.*'}) do
+    --     local match = vim.fn.glob(path.join(workspace, pattern, 'venv'))
+    --     if match ~= '' then
+    --         vim.inspect(p)
+    --         p = path.join(path.dirname(match), 'bin', 'python')
+    --         return p
+    --     end
+    -- end
+
+    -- Fallback to system Python (For now prioritize Python 2, due to work)
+    -- return exepath('python') or exepath('python3') or 'python'
+end
+
 
 
 return M

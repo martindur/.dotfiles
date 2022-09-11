@@ -10,11 +10,14 @@ vim.opt.expandtab = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
-vim.opt.smartindent = true
+--vim.opt.smartindent = true
+vim.opt.autoindent = true
 
 vim.opt.wrap = false
 
-vim.opt.colorcolumn='80'
+--vim.opt.colorcolumn='80'
 
 
 vim.g.mapleader = " "
+
+vim.opt.clipboard = "unnamed"

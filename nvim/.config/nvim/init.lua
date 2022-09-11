@@ -1,1 +1,5 @@
-require("martindur")
+require('dur.packer')
+require('dur.options')
+require('dur.lsp')
+require('dur.telescope')
+require('dur.treesitter')

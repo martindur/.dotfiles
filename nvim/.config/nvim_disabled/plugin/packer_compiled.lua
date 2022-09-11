@@ -99,6 +99,21 @@ _G.packer_plugins = {
     path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
     url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
+  ["glow.nvim"] = {
+    loaded = true,
+    path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/glow.nvim",
+    url = "https://github.com/ellisonleao/glow.nvim"
+  },
+  gruvbox = {
+    loaded = true,
+    path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/gruvbox",
+    url = "https://github.com/gruvbox-community/gruvbox"
+  },
+  harpoon = {
+    loaded = true,
+    path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/harpoon",
+    url = "https://github.com/theprimeagen/harpoon"
+  },
   ["lspkind-nvim"] = {
     loaded = true,
     path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/lspkind-nvim",
@@ -113,6 +128,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
+  },
+  neogit = {
+    loaded = true,
+    path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/neogit",
+    url = "https://github.com/TimUntersberger/neogit"
   },
   ["nvim-cmp"] = {
     loaded = true,
@@ -149,10 +169,20 @@ _G.packer_plugins = {
     path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["tokyonight.nvim"] = {
+    loaded = true,
+    path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
+    url = "https://github.com/folke/tokyonight.nvim"
+  },
   ["vim-commentary"] = {
     loaded = true,
     path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/vim-commentary",
     url = "https://github.com/tpope/vim-commentary"
+  },
+  vimwiki = {
+    loaded = true,
+    path = "/Users/martindur/.local/share/nvim/site/pack/packer/start/vimwiki",
+    url = "https://github.com/vimwiki/vimwiki"
   }
 }
 
