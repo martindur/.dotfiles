@@ -126,6 +126,10 @@ To enable OS prober (for dual-booting), open `/etc/default/grub` and uncomment:
 ```
 #GRUB_DISABLE_OS_PROBER=false
 ```
+In the same file, to keep the terminal less verbose set:
+```
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet ibt=off"
+```
 
 ```
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -253,6 +257,27 @@ yay -S \
 
 
 ## GUI, WM etc. (Dotfiles)
+
+### X11
+
+To make Nvidia drivers work with X11, add a file `/etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf`:
+```
+Section "OutputClass"
+    Identifier "intel"
+    MatchDriver "i915"
+    Driver "modesetting"
+EndSection
+
+Section "OutputClass"
+    Identifier "nvidia"
+    MatchDriver "nvidia-drm"
+    Driver "nvidia"
+    Option "AllowEmptyInitialConfiguration"
+    Option "PrimaryGPU" "yes"
+    ModulePath "/usr/lib/nvidia/xorg"
+    ModulePath "/usr/lib/xorg/modules"
+EndSection
+```
 
 ```
 cd ~ && \
