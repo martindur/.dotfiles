@@ -183,6 +183,12 @@ Update `/etc/hosts`
 127.0.1.1   bestgenericname
 ```
 
+Update `/etc/resolv.conf`
+```
+nameserver 1.1.1.1
+options use-vc
+```
+
 ```
 systemctl enable NetworkManager
 ```
