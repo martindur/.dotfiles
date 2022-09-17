@@ -101,7 +101,7 @@ pacman -Sy
 These are base packages (and some opinionated ones) we install *before* booting into the system, as we still have more configuration needed
 
 ```
-pacstrap /mnt base base-devel linux linux-firmware intel-ucode sudo nvim ntfs-3g networkmanager
+pacstrap /mnt base base-devel linux linux-firmware intel-ucode sudo nvim ntfs-3g networkmanager iwd
 ```
 
 ### Boot loader
