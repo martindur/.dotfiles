@@ -107,11 +107,11 @@ pacstrap /mnt base base-devel linux linux-firmware intel-ucode sudo nvim ntfs-3g
 ### Boot loader
 
 ```
-arch-chroot /mnt
+genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
 ```
-genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
 ```
 
 ```
@@ -133,6 +133,12 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 ```
 umount /mnt
+```
+
+### Root login
+
+```
+passwd
 ```
 
 Reboot!
@@ -181,11 +187,8 @@ Update `/etc/hosts`
 systemctl enable NetworkManager
 ```
 
-### Root, users and sudo
+### Users and sudo
 
-```
-passwd
-```
 
 ```
 useradd -m -G wheel bob
