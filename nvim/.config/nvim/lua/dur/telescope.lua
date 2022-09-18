@@ -12,6 +12,18 @@ require("telescope").setup({
 
 require('telescope').load_extension('fzy_native')
 
+
+local search_dotfiles = function()
+    require("telescope/builtin").find_files({
+        prompt_title = "< VimRC >",
+        cwd = vim.env.DOTFILES,
+        hidden = true,
+    })
+end
+
+
+
+
 -- KEYMAP
 
 local nnoremap = require('dur.utils').nnoremap
@@ -31,4 +43,8 @@ end)
 
 nnoremap("<leader>F", function()
     telescope.find_files({hidden=true})
+end)
+
+nnoremap("<leader>vrc", function()
+    search_dotfiles()
 end)
