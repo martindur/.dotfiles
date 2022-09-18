@@ -101,17 +101,17 @@ pacman -Sy
 These are base packages (and some opinionated ones) we install *before* booting into the system, as we still have more configuration needed
 
 ```
-pacstrap /mnt base base-devel linux linux-firmware intel-ucode sudo nvim ntfs-3g networkmanager
+pacstrap /mnt base base-devel linux linux-firmware intel-ucode sudo nvim ntfs-3g networkmanager iwd
 ```
 
 ### Boot loader
 
 ```
-arch-chroot /mnt
+genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
 ```
-genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
 ```
 
 ```
@@ -126,6 +126,10 @@ To enable OS prober (for dual-booting), open `/etc/default/grub` and uncomment:
 ```
 #GRUB_DISABLE_OS_PROBER=false
 ```
+In the same file, to keep the terminal less verbose set:
+```
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet ibt=off"
+```
 
 ```
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -133,6 +137,12 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 ```
 umount /mnt
+```
+
+### Root login
+
+```
+passwd
 ```
 
 Reboot!
@@ -177,15 +187,18 @@ Update `/etc/hosts`
 127.0.1.1   bestgenericname
 ```
 
+Update `/etc/resolv.conf`
+```
+nameserver 1.1.1.1
+options use-vc
+```
+
 ```
 systemctl enable NetworkManager
 ```
 
-### Root, users and sudo
+### Users and sudo
 
-```
-passwd
-```
 
 ```
 useradd -m -G wheel bob
@@ -244,6 +257,27 @@ yay -S \
 
 
 ## GUI, WM etc. (Dotfiles)
+
+### X11
+
+To make Nvidia drivers work with X11, add a file `/etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf`:
+```
+Section "OutputClass"
+    Identifier "intel"
+    MatchDriver "i915"
+    Driver "modesetting"
+EndSection
+
+Section "OutputClass"
+    Identifier "nvidia"
+    MatchDriver "nvidia-drm"
+    Driver "nvidia"
+    Option "AllowEmptyInitialConfiguration"
+    Option "PrimaryGPU" "yes"
+    ModulePath "/usr/lib/nvidia/xorg"
+    ModulePath "/usr/lib/xorg/modules"
+EndSection
+```
 
 ```
 cd ~ && \
