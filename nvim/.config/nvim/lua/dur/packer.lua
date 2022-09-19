@@ -31,4 +31,13 @@ packer.startup(function(use)
 
     -- TREESITTER
     use('nvim-treesitter/nvim-treesitter')
-end)
+
+    -- COLORTHEME
+    use('navarasu/onedark.nvim')
+
+    -- LUALINE
+    use {
+      'nvim-lualine/lualine.nvim',
+      requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    }
+    end)

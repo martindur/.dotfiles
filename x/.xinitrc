@@ -5,13 +5,14 @@
 setxkbmap -layout dk
 
 # Start compositor for fancy visuals
-picom --experimental-backends &
+#picom --experimental-backends &
+picom &
 
 # Unclutter - hide the mouse cursor
 unclutter --jitter 10 --ignore-scrolling --start-hidden --fork
 
 # Nitrogen for wallpaper
-nitrogen --set-zoom-fill ~/Pictures/carina-nebula.png &
+#nitrogen --set-zoom-fill ~/Pictures/carina-nebula.png &
 
 # Start qtile window manager
 qtile start

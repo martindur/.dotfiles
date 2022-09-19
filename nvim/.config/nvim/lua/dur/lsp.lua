@@ -72,6 +72,11 @@ lspconfig.sumneko_lua.setup(config({
 	},
 }))
 
+-- OTHER LSP CONFIGs
+
+lspconfig.svelte.setup{}
+lspconfig.html.setup{}
+lspconfig.gopls.setup{}
 
 
 -- COMPLETION
