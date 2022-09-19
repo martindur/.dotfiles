@@ -31,6 +31,7 @@ packer.startup(function(use)
 
     -- TREESITTER
     use('nvim-treesitter/nvim-treesitter')
+    use('nvim-treesitter/nvim-treesitter-context')
 
     -- COLORTHEME
     use('navarasu/onedark.nvim')
