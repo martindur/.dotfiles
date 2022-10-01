@@ -39,10 +39,10 @@ require("mason-lspconfig").setup({
 -- PYTHON LSP CONFIG
 lspconfig.pyright.setup(config{
     before_init = function(_, _config)
-        _config.settings.python.pythonPath = lsputils.path.join(_config.root_dir, '.venv/bin/python')
+        --_config.settings.python.pythonPath = lsputils.path.join(_config.root_dir, '.venv/bin/python')
         -- Utility function not working properly. Might want to fix it, so we are not always reliant
         -- on a venv
-        --config.settings.python.pythonPath = utils.get_python_path(config.root_dir)
+        _config.settings.python.pythonPath = utils.get_python_path(_config.root_dir)
     end
 })
 

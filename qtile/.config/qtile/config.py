@@ -24,8 +24,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from dataclasses import dataclass
+
 from libqtile import bar, layout, widget
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
@@ -73,9 +75,27 @@ keys = [
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 ]
 
-groups = [Group(name=i, label=j) for i, j in zip("12345", ["", "", "", "", ""])]
+@dataclass
+class OneDark:
+    """Color theme"""
 
+    foreground: str = 'abb2bf'
+    background: str = '1e2127'
+
+    black: str = '1e2127'
+    red: str = 'e06c75'
+    green: str = '98c379'
+    yellow: str = 'd19a66'
+    blue: str = '61afef'
+    magenta: str = 'c678dd'
+    cyan: str = '56b6c2'
+    white: str = 'abb2bf'
+
+
+#NOTE: Ignoring labels for now
 group_labels = ["", "", "", "", ""]
+groups = [Group(name=i, label=i) for i, j in zip("12345", ["", "", "", "", ""])]
+
 
 for i in groups:
     keys.extend(
@@ -101,8 +121,31 @@ for i in groups:
         ]
     )
 
+# Scratchpads
+
+scratchpad = ScratchPad('scratchpad', [
+    DropDown(
+        'vimwiki',
+        [terminal, '-e', 'vim', '~/vimwiki/index.wiki'],
+        height=0.35,
+        width=0.8,
+        x=0.1,
+        y=0.0,
+        on_focus_lost_hide=False,
+        opacity=0.85,
+        warp_pointer=False,
+    ),
+])
+
+scratchpad_keys = [
+    Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('vimwiki')),
+]
+
+groups.append(scratchpad)
+keys.extend(scratchpad_keys)
+
 layouts = [
-    layout.MonadTall(ratio=0.65, align=layout.MonadTall._left),
+    layout.MonadTall(ratio=0.65, align=layout.MonadTall._left, border_focus=OneDark.magenta, margin=8),
     layout.Max(),
     #layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
     # Try more layouts by unleashing below layouts.
@@ -119,8 +162,8 @@ layouts = [
 
 widget_defaults = dict(
     font="FiraCode Nerd Font Mono",
-    fontsize=20,
-    padding=3,
+    fontsize=18,
+    padding=6,
 )
 extension_defaults = widget_defaults.copy()
 
@@ -128,25 +171,32 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
+                widget.GroupBox(highlight_method='block', active=OneDark.blue),
+                widget.Sep(),
                 widget.Prompt(),
-                widget.WindowName(),
+                widget.Spacer(length=bar.STRETCH),
                 widget.Chord(
                     chords_colors={
                         "launch": ("#ff0000", "#ffffff"),
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                widget.Bluetooth(),
+                widget.Sep(),
+                widget.Net(foreground=OneDark.green, prefix='M'),
+                widget.Sep(),
+                widget.TextBox("RAM", foreground=OneDark.yellow),
+                widget.MemoryGraph(graph_color=OneDark.yellow, border_color=OneDark.yellow, type='box'),
+                widget.Sep(),
+                widget.TextBox("CPU", foreground=OneDark.red),
+                widget.CPUGraph(graph_color=OneDark.red, border_color=OneDark.red, type='box'),
+                widget.Sep(),
+                widget.Clock(format="%Y-%m-%d %a %H:%M", foreground=OneDark.white),
             ],
-            24,
+            36,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            background=OneDark.background,
         ),
     ),
 ]

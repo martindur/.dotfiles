@@ -71,27 +71,20 @@ end
 
 
 M.get_python_path = function(workspace)
-    path = lsp_util.path
+    local path = lsp_util.path
     -- Use activated venv
     if vim.env.VIRTUAL_ENV then
         return path.join(vim.env.VIRTUAL_ENV, 'bin', 'python')
     end
 
-    -- Find virtualenv in workspace
-    return M.find_cmd("python", ".venv/bin", workspace)
-
     -- Find and use virtualenv in workspace directory
-    -- for _, pattern in ipairs({'*', '.*'}) do
-    --     local match = vim.fn.glob(path.join(workspace, pattern, 'venv'))
-    --     if match ~= '' then
-    --         vim.inspect(p)
-    --         p = path.join(path.dirname(match), 'bin', 'python')
-    --         return p
-    --     end
-    -- end
+    local match = vim.fn.glob(path.join(workspace, '.venv'))
+    if match ~= '' then
+        return path.join(path.dirname(match), 'bin', 'python')
+    end
 
     -- Fallback to system Python (For now prioritize Python 2, due to work)
-    -- return exepath('python') or exepath('python3') or 'python'
+    return exepath('python') or exepath('python3') or 'python'
 end
 
 

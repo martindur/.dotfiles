@@ -44,4 +44,9 @@ packer.startup(function(use)
 
     -- WIKI
     use('vimwiki/vimwiki')
+
+    -- DATABASES
+    use('tpope/vim-dadbod')
+    use('kristijanhusak/vim-dadbod-ui')
+
     end)

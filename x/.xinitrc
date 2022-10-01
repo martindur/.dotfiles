@@ -12,7 +12,7 @@ picom &
 unclutter --jitter 10 --ignore-scrolling --start-hidden --fork
 
 # Nitrogen for wallpaper
-#nitrogen --set-zoom-fill ~/Pictures/carina-nebula.png &
+nitrogen --set-zoom-fill ~/Pictures/wallpaper.png &
 
 # Start qtile window manager
 qtile start
