@@ -77,6 +77,7 @@ lspconfig.sumneko_lua.setup(config({
 lspconfig.svelte.setup{}
 lspconfig.html.setup{}
 lspconfig.gopls.setup{}
+lspconfig.jsonls.setup{}
 
 
 -- COMPLETION

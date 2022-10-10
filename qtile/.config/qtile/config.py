@@ -67,12 +67,17 @@ keys = [
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "x", lazy.spawn('flameshot gui'), desc="Launch flameshot"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+
+    # Connect bluetooth
+    Key([mod], "b", lazy.spawn('bluetoothctl connect 2C:32:6A:C5:6F:9F'), desc="Connect bluetooth in-ears"),
+    Key([mod, "shift"], "b", lazy.spawn('bluetoothctl disconnect 2C:32:6A:C5:6F:9F'), desc="Disconnect bluetooth in-ears"),
 ]
 
 @dataclass
@@ -126,19 +131,33 @@ for i in groups:
 scratchpad = ScratchPad('scratchpad', [
     DropDown(
         'vimwiki',
-        [terminal, '-e', 'vim', '~/vimwiki/index.wiki'],
-        height=0.35,
-        width=0.8,
-        x=0.1,
+        # [terminal, '-e', 'vim', '~/vimwiki/index.wiki'],
+        terminal + " -e nvim /home/dur/vimwiki/index.wiki",
+        #terminal + " -e helix /home/dur/durwiki",
+        height=0.45,
+        width=0.25,
+        x=0.75,
         y=0.0,
         on_focus_lost_hide=False,
-        opacity=0.85,
+        opacity=0.95,
+        warp_pointer=False,
+    ),
+    DropDown(
+        'newiki',
+        terminal + " -e durwiki",
+        height=0.45,
+        width=0.25,
+        x=0.75,
+        y=0.0,
+        on_focus_lost_hide=False,
+        opacity=0.95,
         warp_pointer=False,
     ),
 ])
 
 scratchpad_keys = [
     Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('vimwiki')),
+    #Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('newiki'),
 ]
 
 groups.append(scratchpad)

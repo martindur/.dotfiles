@@ -58,6 +58,12 @@ window:
 
 #  dynamic_padding: true
 
+
+# KEY BINDINGS #
+key_bindings:
+  - { key: C, mods: Super, action: Copy }
+  - { key: V, mods: Super, action: Paste }
+
 alt_send_esc: false # This is a very important config! Otherwise, braces don't work! - {} []
 
 cursor:

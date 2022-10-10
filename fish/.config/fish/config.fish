@@ -20,5 +20,15 @@ alias nf="cd ~/code/projects/iconfinder/nextfinder && nvim"
 alias d="docker"
 alias dc="docker-compose"
 
+# Kubernetes
+set USE_GKE_GCLOUD_AUTH_PLUGIN "True"
+
 # p
 alias p="~/code/projects/p/p"
+
+
+# New durwiki file
+function durwiki
+    read wikifile
+    touch "$HOME/durwiki/$wikifile.md"
+end
