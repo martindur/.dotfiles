@@ -143,6 +143,17 @@ scratchpad = ScratchPad('scratchpad', [
         warp_pointer=False,
     ),
     DropDown(
+        'notion',
+        'notion-app',
+        height=0.45,
+        width=0.25,
+        x=0.75,
+        y=0.0,
+        on_focus_lost_hide=False,
+        opacity=0.95,
+        warp_pointer=False,
+    ),
+    DropDown(
         'newiki',
         terminal + " -e durwiki",
         height=0.45,
@@ -157,7 +168,7 @@ scratchpad = ScratchPad('scratchpad', [
 
 scratchpad_keys = [
     Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('vimwiki')),
-    #Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('newiki'),
+    Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('notion')),
 ]
 
 groups.append(scratchpad)
