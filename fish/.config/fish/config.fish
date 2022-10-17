@@ -10,7 +10,10 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
+# PATHs #
+
 fish_add_path ~/go/bin
+fish_add_path ~/.config/bin
 
 set DOTFILES ~/.dotfiles
 
@@ -36,3 +39,4 @@ end
 
 # Dotfile management
 alias dot="cd ~/.dotfiles && helix"
+
