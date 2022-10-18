@@ -63,6 +63,8 @@ window:
 key_bindings:
   - { key: C, mods: Super, action: Copy }
   - { key: V, mods: Super, action: Paste }
+  
+  - { key: F, mods: Control, chars: "tmux-sessionizer \x0D"} # Symbols needed to execute command
 
 alt_send_esc: false # This is a very important config! Otherwise, braces don't work! - {} []
 
