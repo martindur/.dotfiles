@@ -3,6 +3,7 @@
 #     git-tip | ponysay
 # end
 
+set fish_greeting         # Remove default greeting
 #set TERM "alacritty"		# Sets the terminal type
 set EDITOR "helix"		# $EDITOR use neovim in terminal
 alias vim="nvim"
@@ -19,6 +20,7 @@ end
 
 fish_add_path ~/go/bin
 fish_add_path ~/.config/bin
+fish_add_path ~/.local/bin
 
 set DOTFILES ~/.dotfiles
 
