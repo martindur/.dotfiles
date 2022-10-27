@@ -203,6 +203,7 @@ screens = [
             [
                 widget.GroupBox(highlight_method='block', active=OneDark.blue),
                 widget.Sep(),
+                widget.Image(filename='~/Pictures/archlinux-logo.png', margin_x=5, margin_y=5),
                 widget.Prompt(),
                 widget.Spacer(length=bar.STRETCH),
                 widget.Chord(
@@ -213,7 +214,8 @@ screens = [
                 ),
                 widget.Bluetooth(),
                 widget.Sep(),
-                widget.Net(foreground=OneDark.green, prefix='M'),
+                # widget.Net(foreground=OneDark.green, prefix='M'),
+                widget.DF(warn_space=600, visible_on_warn=False),
                 widget.Sep(),
                 widget.TextBox("RAM", foreground=OneDark.yellow),
                 widget.MemoryGraph(graph_color=OneDark.yellow, border_color=OneDark.yellow, type='box'),
