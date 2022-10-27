@@ -5,8 +5,8 @@
 
 set fish_greeting         # Remove default greeting
 #set TERM "alacritty"		# Sets the terminal type
-set EDITOR "helix"		# $EDITOR use neovim in terminal
-alias vim="nvim"
+set EDITOR "lvim"		# $EDITOR use neovim in terminal
+alias vim="lvim"
 alias hx="helix"
 
 # VIMmy terminal
@@ -25,7 +25,7 @@ fish_add_path ~/.local/bin
 set DOTFILES ~/.dotfiles
 
 # Iconfinder
-alias nf="cd ~/code/projects/iconfinder/nextfinder && helix"
+alias nf="cd ~/code/projects/iconfinder/nextfinder && lvim"
 
 # Docker
 alias d="docker"
@@ -51,5 +51,6 @@ alias dot="cd ~/.dotfiles && helix"
 # Key bindings (Duplicates might appear to have bindings in both insert/normal mode)
 
 # This is equivalent to Right Alt+f (Fish is pretty much ignoring my Left Alt)
-bind \u0111 'tmux-sessionizer'
-bind -M insert \u0111 'tmux-sessionizer'
+# bind \u0111 'tmux-sessionizer'
+# bind -M insert \u0111 'tmux-sessionizer'
+
