@@ -7,7 +7,18 @@ packer.startup(function(use)
     use('wbthomason/packer.nvim')
 
     -- COMMENTS
-    use('tpope/vim-commentary')
+    use{
+        'numToStr/Comment.nvim',
+        config = function()
+            require('Comment').setup()
+        end
+    }
+
+    use('tpope/vim-sleuth') -- Detect tabstop and shiftwidth automatically
+    use {
+        "windwp/nvim-autopairs",
+        config = function() require("nvim-autopairs").setup {} end
+    }
 
     -- LSP
     use('williamboman/mason.nvim')
@@ -32,6 +43,7 @@ packer.startup(function(use)
     -- TREESITTER
     use('nvim-treesitter/nvim-treesitter')
     use('nvim-treesitter/nvim-treesitter-context')
+    use('nvim-treesitter/nvim-treesitter-textobjects')
 
     -- COLORTHEME
     use('navarasu/onedark.nvim')
@@ -41,6 +53,9 @@ packer.startup(function(use)
       'nvim-lualine/lualine.nvim',
       requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
+
+    -- INDENT GUIDE
+    use('lukas-reineke/indent-blankline.nvim')
 
     -- WIKI
     use('vimwiki/vimwiki')
