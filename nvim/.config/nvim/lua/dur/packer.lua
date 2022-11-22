@@ -25,6 +25,9 @@ packer.startup(function(use)
     use('williamboman/mason-lspconfig.nvim')
     use('neovim/nvim-lspconfig')
 
+    -- FORMATTING & LINTING
+    use('jose-elias-alvarez/null-ls.nvim')
+
     -- CMP
     use("hrsh7th/cmp-nvim-lsp")
     use("hrsh7th/cmp-buffer")

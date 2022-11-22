@@ -37,15 +37,11 @@ nnoremap("<leader>f", function()
     telescope.find_files()
 end)
 
--- nnoremap("<leader>b", function()
---     telescope.buffers()
--- end)
+vim.keymap.set('n', '<leader>b', telescope.buffers, { desc = '[ ] Find existing buffers' })
 
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-
-vim.keymap.set('n', '<leader>h', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', 'ff', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>s', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>h', telescope.help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', 'ff', telescope.grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>s', telescope.live_grep, { desc = '[S]earch by [G]rep' })
 -- vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 nnoremap("<leader>F", function()
