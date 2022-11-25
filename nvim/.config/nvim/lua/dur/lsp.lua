@@ -180,5 +180,7 @@ null_ls.setup({
 		-- formatting.prettier.with({ extra_args = { "--single-quote" } }), -- EXAMPLE
 		-- formatting.black.with({ extra_args = { "--fast" } }), -- EXAMPLE
 		formatting.stylua,
+		formatting.phpcsfixer,
+		diagnostics.phpcs,
 	},
 })
