@@ -154,8 +154,8 @@ scratchpad = ScratchPad('scratchpad', [
         warp_pointer=False,
     ),
     DropDown(
-        'newiki',
-        terminal + " -e durwiki",
+        'cider',
+        "cider",
         height=0.45,
         width=0.25,
         x=0.75,
@@ -169,6 +169,7 @@ scratchpad = ScratchPad('scratchpad', [
 scratchpad_keys = [
     Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('vimwiki')),
     Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('notion')),
+    Key(["control"], "3", lazy.group['scratchpad'].dropdown_toggle('cider')),
 ]
 
 groups.append(scratchpad)
@@ -255,6 +256,7 @@ floating_layout = layout.Floating(
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
+        Match(title="unity"),
     ]
 )
 auto_fullscreen = True

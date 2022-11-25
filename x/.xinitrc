@@ -1,6 +1,10 @@
 # Disable beep
 # xset -b
 
+# xrandr
+# xrandr --output DP-0 --primary --right-of HDMI-1 --rate 144
+# xrandr --output HDMI-1 --rotate right --left-of DP-0
+
 # Set keyboard (in x) to dk
 setxkbmap -layout dk
 
@@ -10,6 +14,9 @@ picom &
 
 # Unclutter - hide the mouse cursor
 unclutter --jitter 10 --ignore-scrolling --start-hidden --fork
+
+# Flameshot process (Screenshots)
+flameshot &
 
 # Nitrogen for wallpaper
 nitrogen --set-zoom-fill ~/Pictures/wallpaper.png &
