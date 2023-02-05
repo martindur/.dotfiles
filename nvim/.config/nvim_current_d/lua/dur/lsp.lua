@@ -45,7 +45,7 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protoc
 
 require("mason").setup()
 
-local servers = { "pyright", "html", "tsserver", "svelte", "tailwindcss", "intelephense" }
+local servers = { "pyright", "html", "tsserver", "svelte", "tailwindcss", "intelephense", "rust_analyzer"}
 
 require("mason-lspconfig").setup({
 	ensure_installed = servers,

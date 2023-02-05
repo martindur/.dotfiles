@@ -24,6 +24,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ' '
 
 --vim.opt.clipboard = "unnamedplus,unnamed"
+vim.opt.clipboard = "unnamedplus"
 
 
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })

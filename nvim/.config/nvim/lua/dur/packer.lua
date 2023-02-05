@@ -1,70 +1,77 @@
--- Packer
+vim.cmd [[packadd packer.nvim]]
 
-local packer = require('packer')
+return require('packer').startup(function(use)
+    use 'wbthomason/packer.nvim'
 
-packer.startup(function(use)
-    -- PACKER
-    use('wbthomason/packer.nvim')
+    use {
+        'nvim-telescope/telescope.nvim', tag = '0.1.0',
+        requires = { { 'nvim-lua/plenary.nvim' } }
+    }
+    use('nvim-telescope/telescope-fzy-native.nvim')
 
-    -- COMMENTS
-    use{
-        'numToStr/Comment.nvim',
+    use({
+        'rose-pine/neovim',
+        as = 'rose-pine',
         config = function()
-            require('Comment').setup()
+            require("rose-pine").setup()
+            vim.cmd('colorscheme rose-pine')
+        end
+    })
+
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use('nvim-treesitter/playground')
+
+    use('mbbill/undotree')
+    use('theprimeagen/harpoon')
+
+    -- LSP
+    use {
+        'VonHeikemen/lsp-zero.nvim',
+        branch = 'v1.x',
+        requires = {
+            -- LSP Support
+            { 'neovim/nvim-lspconfig' }, -- Required
+            { 'williamboman/mason.nvim' }, -- Optional
+            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+
+            -- Autocompletion
+            { 'hrsh7th/nvim-cmp' }, -- Required
+            { 'hrsh7th/cmp-nvim-lsp' }, -- Required
+            { 'hrsh7th/cmp-buffer' }, -- Optional
+            { 'hrsh7th/cmp-path' }, -- Optional
+            { 'saadparwaiz1/cmp_luasnip' }, -- Optional
+            { 'hrsh7th/cmp-nvim-lua' }, -- Optional
+
+            -- Snippets
+            { 'L3MON4D3/LuaSnip' }, -- Required
+            { 'rafamadriz/friendly-snippets' }, -- Optional
+        }
+    }
+
+    use {
+        "folke/zen-mode.nvim",
+        config = function()
+            require("zen-mode").setup {
+                -- your configuration comes here
+                -- or leave it empty to use the default settings
+                -- refer to the configuration section below
+            }
         end
     }
 
-    use('tpope/vim-sleuth') -- Detect tabstop and shiftwidth automatically
+    use('github/copilot.vim')
+
+    -- Lua
     use {
-        "windwp/nvim-autopairs",
-        config = function() require("nvim-autopairs").setup {} end
+        "folke/which-key.nvim",
+        config = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+            require("which-key").setup {
+                -- your configuration comes here
+                -- or leave it empty to use the default settings
+                -- refer to the configuration section below
+            }
+        end
     }
-
-    -- LSP
-    use('williamboman/mason.nvim')
-    use('williamboman/mason-lspconfig.nvim')
-    use('neovim/nvim-lspconfig')
-
-    -- FORMATTING & LINTING
-    use('jose-elias-alvarez/null-ls.nvim')
-
-    -- CMP
-    use("hrsh7th/cmp-nvim-lsp")
-    use("hrsh7th/cmp-buffer")
-    use("hrsh7th/nvim-cmp")
-    use("tzachar/cmp-tabnine", { run = "./install.sh", requires = 'hrsh7th/nvim-cmp' })
-    use("onsails/lspkind-nvim")
-    use("L3MON4D3/LuaSnip")
-    use("saadparwaiz1/cmp_luasnip")
-
-    -- TELESCOPE (FUZZY FINDER)
-    use('nvim-lua/plenary.nvim')
-    use('nvim-telescope/telescope.nvim')
-    use('nvim-telescope/telescope-fzy-native.nvim')
-
-
-    -- TREESITTER
-    use('nvim-treesitter/nvim-treesitter')
-    use('nvim-treesitter/nvim-treesitter-context')
-    use('nvim-treesitter/nvim-treesitter-textobjects')
-
-    -- COLORTHEME
-    use('navarasu/onedark.nvim')
-
-    -- LUALINE
-    use {
-      'nvim-lualine/lualine.nvim',
-      requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-    }
-
-    -- INDENT GUIDE
-    use('lukas-reineke/indent-blankline.nvim')
-
-    -- WIKI
-    use('vimwiki/vimwiki')
-
-    -- DATABASES
-    use('tpope/vim-dadbod')
-    use('kristijanhusak/vim-dadbod-ui')
-
-    end)
+end)
