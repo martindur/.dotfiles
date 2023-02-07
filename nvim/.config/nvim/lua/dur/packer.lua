@@ -9,6 +9,13 @@ return require('packer').startup(function(use)
     }
     use('nvim-telescope/telescope-fzy-native.nvim')
 
+    use{
+        'numToStr/Comment.nvim',
+        config = function()
+            require('Comment').setup()
+        end
+    }
+
     use({
         'rose-pine/neovim',
         as = 'rose-pine',
