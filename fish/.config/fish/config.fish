@@ -7,6 +7,7 @@ set fish_greeting         # Remove default greeting
 #set TERM "alacritty"		# Sets the terminal type
 set EDITOR "lvim"		# $EDITOR use neovim in terminal
 alias vim="lvim"
+alias vi="nvim"
 alias hx="helix"
 
 # VIMmy terminal
@@ -47,6 +48,9 @@ end
 # Dotfile management
 alias dot="cd ~/.dotfiles && helix"
 
+
+# Poetry keyring issue?
+set PYTHON_KEYRING_BACKEND "keyring.backends.null.Keyring"
 
 # Key bindings (Duplicates might appear to have bindings in both insert/normal mode)
 
