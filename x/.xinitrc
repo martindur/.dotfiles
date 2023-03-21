@@ -2,8 +2,8 @@
 # xset -b
 
 # xrandr
-# xrandr --output DP-0 --primary --right-of HDMI-1 --rate 144
-# xrandr --output HDMI-1 --rotate right --left-of DP-0
+xrandr --output DP-4 --right-of HDMI-1 --rate 144
+# xrandr --output HDMI-1 --primary --left-of DP-0
 
 # Set keyboard (in x) to dk
 setxkbmap -layout dk
@@ -19,7 +19,8 @@ unclutter --jitter 10 --ignore-scrolling --start-hidden --fork
 flameshot &
 
 # Nitrogen for wallpaper
-nitrogen --set-zoom-fill ~/Pictures/wallpaper.png &
+# nitrogen --set-zoom-fill ~/Pictures/wallpaper.png &
+nitrogen --restore
 
 # Start qtile window manager
 qtile start

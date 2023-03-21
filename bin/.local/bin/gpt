@@ -1,0 +1,8 @@
+#!/bin/bash
+# Description: GPT-3 prompt generator
+
+# Get the prompt file from: https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/raw/main/prompts.csv
+
+cut -d "," -f 1 ~/.config/stuff/prompts.csv | fzf | xargs -I {} grep -w \"{}\" ~/.config/stuff/prompts.csv | awk -F '","' '{gsub(/^"|"$/,"",$2);print $2}' | xclip -selection clipboard
+
+echo "Copied prompt to clipboard"

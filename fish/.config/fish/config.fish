@@ -7,6 +7,7 @@ set fish_greeting         # Remove default greeting
 #set TERM "alacritty"		# Sets the terminal type
 set EDITOR "nvim"		# $EDITOR use neovim in terminal
 alias vim="nvim"
+alias vi="nvim"
 
 # VIMmy terminal
 fish_vi_key_bindings
@@ -24,7 +25,7 @@ fish_add_path ~/.local/bin
 set DOTFILES ~/.dotfiles
 
 # Iconfinder
-alias nf="cd ~/code/projects/iconfinder/nextfinder && lvim"
+alias nf="cd ~/code/projects/iconfinder/nextfinder && nvim"
 
 # Docker
 alias d="docker"
@@ -44,8 +45,11 @@ function durwiki
 end
 
 # Dotfile management
-alias dot="cd ~/.dotfiles && helix"
+alias dot="cd ~/.dotfiles && nvim"
 
+
+# Poetry keyring issue?
+set PYTHON_KEYRING_BACKEND "keyring.backends.null.Keyring"
 
 # Key bindings (Duplicates might appear to have bindings in both insert/normal mode)
 

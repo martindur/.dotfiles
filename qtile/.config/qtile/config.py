@@ -128,27 +128,30 @@ for i in groups:
 
 # Scratchpads
 
+default_height = 0.7
+default_width = 0.4
+default_x = 0.3
+default_y = 0.1
+
 scratchpad = ScratchPad('scratchpad', [
     DropDown(
-        'vimwiki',
-        # [terminal, '-e', 'vim', '~/vimwiki/index.wiki'],
-        terminal + " -e nvim /home/dur/vimwiki/index.wiki",
-        #terminal + " -e helix /home/dur/durwiki",
-        height=0.45,
-        width=0.25,
-        x=0.75,
-        y=0.0,
+        'cheatsheets',
+        terminal + " -e glow /home/dur/.dotfiles/docs/chtsh",
+        height=default_height,
+        width=default_width,
+        x=default_x,
+        y=default_y,
         on_focus_lost_hide=False,
         opacity=0.95,
         warp_pointer=False,
     ),
     DropDown(
-        'notion',
-        'notion-app',
-        height=0.45,
-        width=0.25,
-        x=0.75,
-        y=0.0,
+        'taskwarrior',
+        terminal + " -e taskwarrior-tui",
+        height=default_height,
+        width=default_width,
+        x=default_x,
+        y=default_y,
         on_focus_lost_hide=False,
         opacity=0.95,
         warp_pointer=False,
@@ -156,10 +159,10 @@ scratchpad = ScratchPad('scratchpad', [
     DropDown(
         'cider',
         "cider",
-        height=0.45,
-        width=0.25,
-        x=0.75,
-        y=0.0,
+        height=0.75,
+        width=0.8,
+        x=0.1,
+        y=0.1,
         on_focus_lost_hide=False,
         opacity=0.95,
         warp_pointer=False,
@@ -167,8 +170,8 @@ scratchpad = ScratchPad('scratchpad', [
 ])
 
 scratchpad_keys = [
-    Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('vimwiki')),
-    Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('notion')),
+    Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('cheatsheets')),
+    Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('taskwarrior')),
     Key(["control"], "3", lazy.group['scratchpad'].dropdown_toggle('cider')),
 ]
 
