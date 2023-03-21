@@ -5,10 +5,9 @@
 
 set fish_greeting         # Remove default greeting
 #set TERM "alacritty"		# Sets the terminal type
-set EDITOR "lvim"		# $EDITOR use neovim in terminal
-alias vim="lvim"
+set EDITOR "nvim"		# $EDITOR use neovim in terminal
+alias vim="nvim"
 alias vi="nvim"
-alias hx="helix"
 
 # VIMmy terminal
 fish_vi_key_bindings
@@ -26,7 +25,7 @@ fish_add_path ~/.local/bin
 set DOTFILES ~/.dotfiles
 
 # Iconfinder
-alias nf="cd ~/code/projects/iconfinder/nextfinder && lvim"
+alias nf="cd ~/code/projects/iconfinder/nextfinder && nvim"
 
 # Docker
 alias d="docker"
@@ -46,7 +45,7 @@ function durwiki
 end
 
 # Dotfile management
-alias dot="cd ~/.dotfiles && helix"
+alias dot="cd ~/.dotfiles && nvim"
 
 
 # Poetry keyring issue?
@@ -57,4 +56,3 @@ set PYTHON_KEYRING_BACKEND "keyring.backends.null.Keyring"
 # This is equivalent to Right Alt+f (Fish is pretty much ignoring my Left Alt)
 # bind \u0111 'tmux-sessionizer'
 # bind -M insert \u0111 'tmux-sessionizer'
-
