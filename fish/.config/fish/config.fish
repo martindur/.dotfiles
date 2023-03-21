@@ -5,9 +5,8 @@
 
 set fish_greeting         # Remove default greeting
 #set TERM "alacritty"		# Sets the terminal type
-set EDITOR "lvim"		# $EDITOR use neovim in terminal
-alias vim="lvim"
-alias hx="helix"
+set EDITOR "nvim"		# $EDITOR use neovim in terminal
+alias vim="nvim"
 
 # VIMmy terminal
 fish_vi_key_bindings
@@ -53,4 +52,3 @@ alias dot="cd ~/.dotfiles && helix"
 # This is equivalent to Right Alt+f (Fish is pretty much ignoring my Left Alt)
 # bind \u0111 'tmux-sessionizer'
 # bind -M insert \u0111 'tmux-sessionizer'
-
