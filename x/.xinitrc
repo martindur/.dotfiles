@@ -1,12 +1,14 @@
 # Disable beep
 # xset -b
 
+xrdb ~/.Xresources
+
 # xrandr
 xrandr --output DP-4 --right-of HDMI-1 --rate 144
 # xrandr --output HDMI-1 --primary --left-of DP-0
 
-# Set keyboard (in x) to dk
-setxkbmap -layout dk
+# Set keyboard (in x)
+setxkbmap -layout us 
 
 # Start compositor for fancy visuals
 #picom --experimental-backends &

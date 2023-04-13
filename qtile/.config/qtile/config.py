@@ -24,25 +24,43 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
 from dataclasses import dataclass
 
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile.log_utils import logger
 
 mod = "mod4"
-terminal = guess_terminal()
+alt = "mod1"
+#terminal = guess_terminal()
+terminal = "kitty"
+
+@lazy.function
+def launch_browser(qtile):
+    context = os.getenv('PROJECT_CONTEXT') or 'work'
+    logger.warning(context)
+    logger.warning(os.environ)
+
+    if 'work' in context:
+        qtile.cmd_spawn(['firefox', '-P', 'work'])
+    elif 'personal' in context:
+        qtile.cmd_spawn(['firefox', '-P', 'dur'])
+    else:
+        qtile.cmd_spawn('firefox')
 
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Switch between windows
-    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
-    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
-    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    Key([alt], "h", lazy.layout.left(), desc="Move focus to left"),
+    Key([alt], "l", lazy.layout.right(), desc="Move focus to right"),
+    Key([alt], "j", lazy.layout.down(), desc="Move focus down"),
+    Key([alt], "k", lazy.layout.up(), desc="Move focus up"),
+    # Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    Key([mod], "space", lazy.next_screen(), desc="Move window focus to next screen"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
@@ -67,6 +85,7 @@ keys = [
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "t", launch_browser, desc="Launch browser"),
     Key([mod], "x", lazy.spawn('flameshot gui'), desc="Launch flameshot"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
@@ -157,8 +176,8 @@ scratchpad = ScratchPad('scratchpad', [
         warp_pointer=False,
     ),
     DropDown(
-        'cider',
-        "cider",
+        'spotify',
+        terminal + " -e spt",
         height=0.75,
         width=0.8,
         x=0.1,
@@ -172,7 +191,7 @@ scratchpad = ScratchPad('scratchpad', [
 scratchpad_keys = [
     Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('cheatsheets')),
     Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('taskwarrior')),
-    Key(["control"], "3", lazy.group['scratchpad'].dropdown_toggle('cider')),
+    Key(["control"], "3", lazy.group['scratchpad'].dropdown_toggle('spotify')),
 ]
 
 groups.append(scratchpad)

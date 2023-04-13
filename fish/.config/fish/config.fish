@@ -9,6 +9,7 @@ set EDITOR "lvim"		# $EDITOR use neovim in terminal
 alias vim="lvim"
 alias vi="nvim"
 alias hx="helix"
+alias n="nvim"
 
 # VIMmy terminal
 fish_vi_key_bindings
@@ -18,15 +19,14 @@ if status is-interactive
 end
 
 # PATHs #
-
 fish_add_path ~/go/bin
 fish_add_path ~/.config/bin
 fish_add_path ~/.local/bin
 
 set DOTFILES ~/.dotfiles
-
-# Iconfinder
-alias nf="cd ~/code/projects/iconfinder/nextfinder && lvim"
+if test -z $PROJECT_CONTEXT
+    set PROJECT_CONTEXT "$HOME/work"
+end
 
 # Docker
 alias d="docker"
@@ -45,16 +45,16 @@ function durwiki
     touch "$HOME/durwiki/$wikifile.md"
 end
 
-# Dotfile management
-alias dot="cd ~/.dotfiles && helix"
-
-
-# Poetry keyring issue?
-set PYTHON_KEYRING_BACKEND "keyring.backends.null.Keyring"
-
-# Key bindings (Duplicates might appear to have bindings in both insert/normal mode)
-
-# This is equivalent to Right Alt+f (Fish is pretty much ignoring my Left Alt)
-# bind \u0111 'tmux-sessionizer'
-# bind -M insert \u0111 'tmux-sessionizer'
+function context
+    if test $argv[1] = "p"
+        set PROJECT_CONTEXT "$HOME/personal"
+        echo "Context set to personal" | cowsay
+    else if test $argv[1] = "w"
+        set PROJECT_CONTEXT "$HOME/work"
+        echo "Context set to work" | cowsay
+    else
+        echo "Invalid context"
+    end
+    echo "Location: $PROJECT_CONTEXT"
+end
 

@@ -1,5 +1,6 @@
 
 default_shell "fish"
+mirror_session false
 
 theme "onedark"
 
