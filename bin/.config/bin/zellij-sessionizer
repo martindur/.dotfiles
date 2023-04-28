@@ -1,0 +1,32 @@
+#!/usr/bin/fish
+
+# Does not work while in zellij session yet
+
+if test (count $argv) -eq 1 
+    set selected $argv[1]
+# else if test (count $argv) -eq 2
+#     set selected $argv[1]
+#     set stop_recursion 1
+else
+    set selected (find ~/code/projects ~/code/rnd -maxdepth 3 -type d -name ".git" | sed 's/\/.git//g' | fzf)
+end
+
+if test -z "$selected"
+    exit 0
+end
+
+set selected_name (basename $selected)
+zellij attach -c $selected_name
+
+# if test $ZELLIJ
+#     echo $ZELLIJ
+#     if test $stop_recursion
+#         exit 666
+#     end
+#     xdotool key ctrl+o d
+#     sleep 0.1
+#     zellij-sessionizer $selected foo
+#     exit 0
+# else
+#     zellij attach -c $selected_name
+# end

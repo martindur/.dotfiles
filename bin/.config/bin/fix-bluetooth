@@ -1,0 +1,15 @@
+#!/usr/bin/fish
+
+# This may fix it by itself
+systemctl restart bluetooth.service
+
+
+# Alternative:
+# Put AirPods in pairing mode
+# Run:
+# bluetoothctl remove 2C:32:6A:C5:6F:9F
+# bluetoothctl power on
+# bluetoothctl scan on (separately)
+# bluetoothctl pair 2C:32:6A:C5:6F:9F
+# bluetoothctl connect 2C:32:6A:C5:6F:9F
+# bluetoothctl trust 2C:32:6A:C5:6F:9F (Optional. This will auto-connect, maybe not desired)
