@@ -1,6 +1,6 @@
 linux:
-	stow --verbose --restow x alacritty fish qtile picom nvim bin p tmux task kitty helix
+	stow --verbose --restow x fish qtile picom nvim bin p tmux kitty helix
 osx:
-	stow --verbose --restow nvim sketchybar fish bin p tmux kitty
+	stow --verbose --restow nvim sketchybar fish bin p tmux kitty helix
 delete:
 	stow --verbose --delete */
