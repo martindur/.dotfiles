@@ -86,6 +86,8 @@ keys = [
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "t", launch_browser, desc="Launch browser"),
+    Key([mod, "control"], "w", lazy.spawn('firefox -P work'), desc="Firefox for work"),
+    Key([mod, "control"], "p", lazy.spawn('firefox -P dur'), desc="Firefox for personal"),
     Key([mod], "x", lazy.spawn('flameshot gui'), desc="Launch flameshot"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),

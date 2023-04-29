@@ -37,6 +37,15 @@ set USE_GKE_GCLOUD_AUTH_PLUGIN "True"
 # p
 alias p="~/code/projects/p/p"
 
+# Firefox with personal context
+function fp
+    firefox -P dur
+end
+
+# Firefox with work context
+function fw
+    firefox -P work
+end
 
 # New durwiki file
 function durwiki
