@@ -37,22 +37,6 @@ set USE_GKE_GCLOUD_AUTH_PLUGIN "True"
 # p
 alias p="~/code/projects/p/p"
 
-# Firefox with personal context
-function fp
-    firefox -P dur
-end
-
-# Firefox with work context
-function fw
-    firefox -P work
-end
-
-# New durwiki file
-function durwiki
-    read wikifile
-    touch "$HOME/durwiki/$wikifile.md"
-end
-
 function context
     if test $argv[1] = "p"
         set PROJECT_CONTEXT "$HOME/personal"
@@ -65,10 +49,6 @@ function context
     end
     echo "Location: $PROJECT_CONTEXT"
 end
-
-# Dotfile management
-alias dot="cd ~/.dotfiles && nvim"
-
 
 # Poetry keyring issue?
 set PYTHON_KEYRING_BACKEND "keyring.backends.null.Keyring"

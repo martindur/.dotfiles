@@ -47,7 +47,7 @@ vim.keymap.set("n", "<leader>s", telescope.live_grep, { desc = "[S]earch by [G]r
 -- vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 vim.keymap.set("n", "<leader>F", function()
-	telescope.find_files({ hidden = true })
+	telescope.find_files({ find_command = { "rg", "--files", "--hidden", "-g", "!.git" } })
 end)
 
 vim.keymap.set("n", "<leader>vrc", function()

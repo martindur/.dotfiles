@@ -1,5 +1,6 @@
 local lsp = require("lsp-zero")
 local null_ls = require("null-ls")
+local helpers = require("null-ls.helpers")
 
 -- lsp.preset({ name = "recommended" })
 
@@ -47,6 +48,7 @@ null_ls.setup({
 		null_ls.builtins.formatting.gofumpt,
 		null_ls.builtins.formatting.gofmt,
 		null_ls.builtins.formatting.sqlformat,
+		null_ls.builtins.formatting.djhtml,
 	},
 	on_attach = function(client, bufnr)
 		if client.supports_method("textDocument/formatting") then
