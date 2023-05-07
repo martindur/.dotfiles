@@ -1,3 +1,0 @@
-#!/bin/sh
-
-stow x alacritty fish qtile picom nvim bin p tmux stuff
