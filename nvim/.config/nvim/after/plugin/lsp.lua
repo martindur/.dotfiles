@@ -33,7 +33,6 @@ null_ls.setup({
 				"css",
 				"scss",
 				"json",
-				"yaml",
 				"markdown",
 				"html",
 				"vue",
