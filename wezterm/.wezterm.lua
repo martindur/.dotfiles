@@ -10,6 +10,10 @@ if wezterm.config_builder then
     config = wezterm.config_builder()
 end
 
+wezterm.on('update-right-status', function(window, pane)
+    window:set_right_status(window:active_workspace())
+end)
+
 -- Config
 
 config.color_scheme = "Tokyo Night Moon"
@@ -86,6 +90,72 @@ config.keys = {
         key = 'k',
 	mods = "CMD",
 	action = act.ActivatePaneDirection 'Up',
+    },
+    -- copy/paste
+    {
+        key = 'c',
+	mods = "CMD",
+	action = act.CopyTo 'Clipboard'
+    },
+    {
+        key = 'v',
+	mods = "CMD",
+	action = act.PasteFrom 'Clipboard'
+    },
+    -- workspaces
+    {
+        key = 'd',
+	mods = "CMD",
+	action = act.SwitchToWorkspace { name = 'default' },
+    },
+    {
+        key = 'o',
+	mods = "CMD",
+	action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'top' },}, },
+    },
+    -- Prompt name for workspace
+    {
+        key = 'n',
+	mods = "CMD",
+	action = act.PromptInputLine {
+	    description = wezterm.format {
+	        { Attribute = { Intensity = 'Bold' } },
+		{ Foreground = { AnsiColor = 'Fuchsia' } },
+		{ Text = 'Enter name for workspace' },
+	    },
+	    action = wezterm.action_callback(function(window, pane, line)
+		if line then
+		    window:perform_action(act.SwitchToWorkspace { name = line, }, pane)
+		end
+	    end),
+	},
+    },
+    {
+        key = 'f',
+	mods = "CMD",
+	action = wezterm.action_callback(function(window, pane)
+	    local home = wezterm.home_dir
+	    local workspaces = {}
+
+	    for _, v in ipairs(wezterm.glob home .. '/personal/projects/*/') do
+		table.insert(workspaces, { label = v })
+	    end
+
+	    window:perform_action(
+		act.InputSelector {
+		    action = wezterm.action_callback(
+			function(inner_window, inner_pane, id, label)
+			    if not id and not label then
+				wezterm.log_info 'cancelled'
+			    else
+				wezterm.log_info('id = ' .. id)
+				wezterm.log_info('label = ' .. label)
+			    end
+			end
+		    )
+		}
+	    )
+	end)
     },
 }
 
