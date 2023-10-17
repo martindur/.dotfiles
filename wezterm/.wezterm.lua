@@ -18,6 +18,20 @@ end)
 
 config.color_scheme = "Tokyo Night Moon"
 
+-- helpers
+
+function split (inputstr, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+
+  local t={}
+  for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+    table.insert(t, str)
+  end
+  return t
+end
+
 -- Key mappings
 
 config.keys = {
@@ -137,8 +151,8 @@ config.keys = {
 	    local home = wezterm.home_dir
 	    local workspaces = {}
 
-	    for _, v in ipairs(wezterm.glob home .. '/personal/projects/*/') do
-		table.insert(workspaces, { label = v })
+	    for _, v in ipairs(wezterm.glob (home .. '/code/projects/*/')) do
+		table.insert(workspaces, { id = v, label = v })
 	    end
 
 	    window:perform_action(
@@ -148,12 +162,28 @@ config.keys = {
 			    if not id and not label then
 				wezterm.log_info 'cancelled'
 			    else
+				local directories = split(id, '/')
+				local workspace = table.concat(directories, '\n', #directories)
 				wezterm.log_info('id = ' .. id)
 				wezterm.log_info('label = ' .. label)
+				inner_window:perform_action(
+				  act.SwitchToWorkspace {
+				    name = workspace,
+				    spawn = {
+				      label = workspace,
+				      cwd = id,
+				    },
+				  },
+				  inner_pane
+				)
 			    end
 			end
-		    )
-		}
+		    ),
+		    title = 'Choose Workspace',
+		    choices = workspaces,
+		    fuzzy = true,
+		},
+		pane
 	    )
 	end)
     },
