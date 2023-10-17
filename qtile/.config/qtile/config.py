@@ -36,7 +36,7 @@ from libqtile.log_utils import logger
 mod = "mod4"
 alt = "mod1"
 #terminal = guess_terminal()
-terminal = "kitty"
+terminal = "wezterm"
 
 @lazy.function
 def launch_browser(qtile):
