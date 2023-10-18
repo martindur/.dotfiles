@@ -32,6 +32,37 @@ function split (inputstr, sep)
   return t
 end
 
+local dotfiles = {
+  {
+    label = 'dotfiles',
+    id = wezterm.home_dir..'/'..'.dotfiles',
+  },
+  {
+    label = 'nvim',
+    id = wezterm.home_dir..'/.dotfiles/nvim/.config/nvim',
+  },
+  {
+    label = 'wezterm',
+    id = wezterm.home_dir..'/.dotfiles/wezterm',
+  },
+  {
+    label = 'fish',
+    id = wezterm.home_dir..'/.dotfiles/fish/.config/fish',
+  },
+  {
+    label = 'bin (scripts)',
+    id = wezterm.home_dir..'/.dotfiles/bin/.config/bin',
+  },
+  {
+    label = 'qtile',
+    id = wezterm.home_dir..'/.dotfiles/qtile/.config/qtile',
+  },
+  {
+    label = 'docs',
+    id = wezterm.home_dir..'/.dotfiles/docs',
+  },
+}
+
 -- Key mappings
 
 config.keys = {
@@ -119,7 +150,7 @@ config.keys = {
     -- workspaces
     {
         key = 'd',
-	mods = "CMD",
+	mods = "CMD|CTRL",
 	action = act.SwitchToWorkspace { name = 'default' },
     },
     {
@@ -127,31 +158,41 @@ config.keys = {
 	mods = "CMD",
 	action = act.SwitchToWorkspace { name = 'monitoring', spawn = { args = { 'top' },}, },
     },
-    -- Prompt name for workspace
     {
-        key = 'n',
+	-- workspace from 'dotfiles'
+	key = 'd',
 	mods = "CMD",
-	action = act.PromptInputLine {
-	    description = wezterm.format {
-	        { Attribute = { Intensity = 'Bold' } },
-		{ Foreground = { AnsiColor = 'Fuchsia' } },
-		{ Text = 'Enter name for workspace' },
-	    },
-	    action = wezterm.action_callback(function(window, pane, line)
-		if line then
-		    window:perform_action(act.SwitchToWorkspace { name = line, }, pane)
-		end
-	    end),
-	},
+	action = wezterm.action_callback(function(window, pane)
+	    window:perform_action(
+		act.InputSelector {
+		    action = wezterm.action_callback(
+			function(inner_window, inner_pane, id, label)
+			    if not id and not label then
+				wezterm.log_info 'cancelled'
+			    else
+				wezterm.log_info('id = ' .. id)
+				wezterm.log_info('label = ' .. label)
+				inner_window:perform_action(act.SwitchToWorkspace { name = label, spawn = { label = label, cwd = id }, }, inner_pane)
+			    end
+			end
+		    ),
+		    title = 'Choose Workspace',
+		    choices = dotfiles,
+		    fuzzy = true,
+		},
+		pane
+	    )
+	end)
     },
     {
+	-- workspace from 'projects'
         key = 'f',
 	mods = "CMD",
 	action = wezterm.action_callback(function(window, pane)
 	    local home = wezterm.home_dir
 	    local workspaces = {}
 
-	    for _, v in ipairs(wezterm.glob (home .. '/code/projects/*/')) do
+	    for _, v in ipairs(wezterm.glob (home .. '/projects/*/')) do
 		table.insert(workspaces, { id = v, label = v })
 	    end
 
@@ -187,6 +228,62 @@ config.keys = {
 	    )
 	end)
     },
+    {
+	-- workspace from 'current workspaces'
+	key = 'p',
+	mods = "CMD",
+	action = wezterm.action_callback(function(window, pane)
+	    local home = wezterm.home_dir
+	    local workspaces = {}
+
+	    for _, v in ipairs(wezterm.mux.get_workspace_names()) do
+		table.insert(workspaces, { id = v, label = v })
+	    end
+
+	    window:perform_action(
+		act.InputSelector {
+		    action = wezterm.action_callback(
+			function(inner_window, inner_pane, id, label)
+			    if not id and not label then
+				wezterm.log_info 'cancelled'
+			    else
+				wezterm.log_info('id = ' .. id)
+				wezterm.log_info('label = ' .. label)
+				inner_window:perform_action(act.SwitchToWorkspace { name = label, }, inner_pane)
+			    end
+			end
+		    ),
+		    title = 'Choose Workspace',
+		    choices = workspaces,
+		    fuzzy = true,
+		},
+		pane
+	    )
+	end)
+    },
+    {
+	-- close workspace(all panes in all tabs) from 'current workspaces'
+	key = 'q',
+	mods = "CMD",
+	action = wezterm.action_callback(function(window, pane)
+	    local panes = {}
+	    mux_window = window:mux_window()
+	    wezterm.log_info(mux_window)
+
+	    for _, tab in ipairs(mux_window:tabs()) do
+	       for _, pane in ipairs(tab:panes()) do
+		  table.insert(panes, pane:pane_id())
+	       end
+	    end
+
+	    wezterm.log_info(panes)
+
+	    -- DISABLED. Seems to freeze the terminal
+	    --for _, pane_id in ipairs(panes) do
+		--os.execute("wezterm cli kill-pane --pane-id "..pane_id)
+	    --end
+	end)
+    }
 }
 
 -- Launch menu
