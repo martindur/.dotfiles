@@ -1,0 +1,46 @@
+# shell, terminal and editor related
+
+brew "zsh-syntax-highlighting"
+brew "helix"
+brew "stow"
+brew "ripgrep"
+brew "fzf"
+cask "wezterm"
+cask "fig" # IDE-like auto completion for the terminal, for a wide range of CLIs
+
+# Mounting network drives via SSH
+cask "macfuse"
+# brew "sshfs" # installed from GUI (had to)
+
+
+# development
+
+cask "docker"
+brew "elixir"
+brew "pyenv"
+brew "node@20"
+cask "livebook" # Jupyter-like notebooks for elixir
+
+## LSPs
+
+brew "elixir-ls"
+brew "tailwindcss-language-server"
+brew "typescript-language-server"
+brew "pyright"
+brew "black"
+
+
+# WM
+
+tap "koekeishiya/formulae"
+brew "koekeishiya/formulae/yabai"
+brew "koekeishiya/formulae/skhd"
+
+
+# user
+
+cask "discord"
+cask "google-chrome"
+cask "1password"
+cask "tailscale"
+cask "figma"

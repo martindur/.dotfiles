@@ -38,6 +38,14 @@ local dotfiles = {
     id = wezterm.home_dir..'/'..'.dotfiles',
   },
   {
+    label = 'helix',
+    id = wezterm.home_dir..'/.dotfiles/helix/.config/helix',
+  },
+  {
+    label = 'homebrew',
+    id = wezterm.home_dir..'/.dotfiles/homebrew/.config',
+  },
+  {
     label = 'nvim',
     id = wezterm.home_dir..'/.dotfiles/nvim/.config/nvim',
   },
