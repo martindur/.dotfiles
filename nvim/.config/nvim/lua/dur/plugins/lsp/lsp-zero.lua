@@ -33,7 +33,6 @@ return {
         'dockerls',
         'docker_compose_language_service',
         'elixirls',
-        'erlangls',
         'gopls', -- Golang
         'graphql',
         'html',

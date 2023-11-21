@@ -79,6 +79,16 @@ config.keys = {
         mods = "CMD",
         action = act.ShowLauncher,
     },
+    {
+    key = "i",
+    mods = "CMD",
+    action = act.SpawnCommandInNewTab {
+      label = 'quick access to second brain',
+      cwd = '/home/dur/2brain',
+      domain = 'CurrentPaneDomain',
+      args = { 'nvim', '2brain.md' }
+    }
+  },
     -- pane create/remove
     {
 	key = "m",
