@@ -1,7 +1,7 @@
 # shell, terminal and editor related
 
 brew "zsh-syntax-highlighting"
-brew "helix"
+brew "nvim"
 brew "stow"
 brew "ripgrep"
 brew "fzf"
@@ -17,6 +17,8 @@ cask "macfuse"
 
 cask "docker"
 brew "elixir"
+brew "go@1.20"
+brew "rust"
 brew "pyenv"
 brew "node@20"
 cask "livebook" # Jupyter-like notebooks for elixir
