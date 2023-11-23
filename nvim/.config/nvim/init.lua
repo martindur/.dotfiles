@@ -1,19 +1,13 @@
 --require("dur.core") -- configs
 --require("dur.lazy") -- plugins
 
---vim.cmd [[colorscheme tokyonight]]
-
-
 -- Testing out "raw" single file
 
-vim.cmd.colorscheme("habamax")
 vim.cmd('syntax enable')
-
 
 vim.g.mapleader = ' '
 vim.keymap.set({"n", "x", "v"}, "J", "10j", { silent = true })
 vim.keymap.set({"n", "x", "v"}, "K", "10k", { silent = true })
-
 
 vim.opt.relativenumber = true
 vim.opt.number = true
@@ -119,22 +113,10 @@ local treesitter = {
     local configs = require('nvim-treesitter.configs')
     configs.setup({
       ensure_installed = {
-        "c",
-        "lua",
-        "vim",
-        "vimdoc",
-        "query",
-        "python",
-        "html",
-        "css",
-        "elixir",
-        "eex",
-        "heex",
-        "javascript",
-        "typescript",
-        "go",
-        "rust",
-        "svelte"
+        "c", "lua", "vim", "vimdoc", "query", "python", "html", "css", "scss",
+        "elixir", "eex", "heex", "javascript", "typescript", "go", "rust", "svelte",
+        "json", "yaml", "bash", "dockerfile", "erlang", "fish", "graphql", "make",
+        "markdown", "sql","toml",
       },
       sync_install = false,
       highlight = { enable = true },
@@ -143,12 +125,29 @@ local treesitter = {
   end
 }
 
+local colorscheme = {
+  "folke/tokyonight.nvim",
+  lazy = false,
+  priority = 1000,
+  opts = {},
+  config = function()
+    require("tokyonight").setup({ style = "moon" })
+  end
+}
+
 -- convenient way to disable/enable specific plugins
 local plugins = { 
   telescope,
-  treesitter
+  treesitter,
+  colorscheme
 }
 
-local config = {} -- just to be verbose
+local config = {
+  install = {
+    colorscheme = { "tokyonight" },
+  },
+}
 
 require('lazy').setup(plugins, config)
+
+vim.cmd.colorscheme("tokyonight")
