@@ -30,6 +30,7 @@ brew "tailwindcss-language-server"
 brew "typescript-language-server"
 brew "pyright"
 brew "black"
+brew "lua-language-server"
 
 
 # WM
