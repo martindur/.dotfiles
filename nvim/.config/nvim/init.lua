@@ -26,10 +26,38 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = "Briefly highlight yanked text"
 })
 
+--
+--------- GENERAL ---------
+--
+
+-- Detect filetypes for new files (even before saved)
+vim.api.nvim_create_autocmd('BufNewFile', {
+  pattern = '*',
+  callback = function(args)
+    vim.cmd("filetype detect")
+  end
+})
 
 --
 --------- LSP ---------
 --
+
+-- Lua LSP
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = "lua", -- nvim has filetype detection, and understands .ex files are "elixir" filetypes
+  callback = function(args)
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    vim.lsp.start({
+      name = 'lua-ls',
+      cmd = { 'lua-language-server' },
+      capabilities = capabilities
+    })
+
+    --vim.opt.statusline:append("lua-ls")
+  end
+})
+
 
 -- Elixir LSP
 vim.api.nvim_create_autocmd('FileType', {
@@ -43,22 +71,56 @@ vim.api.nvim_create_autocmd('FileType', {
       root_dir = vim.fs.dirname(vim.fs.find({ 'mix.exs' }, { upward = true })[1]),
       capabilities = capabilities
     })
+    --vim.opt.statusline:append("elixir-ls")
   end
 })
 
--- Lua LSP
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = "lua", -- nvim has filetype detection, and understands .ex files are "elixir" filetypes
+-- Html LSP
+vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
+  pattern = {"*.html", "*.heex"},
   callback = function(args)
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
     vim.lsp.start({
-      name = 'lua-ls',
-      cmd = { 'lua-language-server' },
+      name = 'vscode-html-languageserver',
+      cmd = { 'vscode-html-languageserver', '--stdio' },
+      capabilities = capabilities
+    })
+
+    --vim.opt.statusline:append("html-ls")
+  end
+})
+
+-- Emmet LSP (A faster way to do web dev)
+vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
+  pattern = {"*.css", "*.html", "*.heex", "*.jsx", "*.scss", "*.tsx"},
+  callback = function(args)
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    vim.lsp.start({
+      name = 'emmet-ls',
+      cmd = { 'emmet-language-server', '--stdio' },
+      root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
       capabilities = capabilities
     })
   end
 })
+
+-- Python LSP
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = "python",
+  callback = function(args)
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    vim.lsp.start({
+      name = 'pyright-ls',
+      cmd = { 'pyright-langserver', '--stdio' },
+      root_dir = vim.fs.dirname(vim.fs.find({ 'requirements.txt', 'pyproject.toml', '.venv' }, { upward = true })[1]),
+      capabilities = capabilities
+    })
+  end
+})
+
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
@@ -131,7 +193,13 @@ local telescope = {
 -- Treesitter (syntax highlighting and "understanding" of file structure)
 local treesitter = {
   'nvim-treesitter/nvim-treesitter',
+  lazy = false,
+  priority = 999,
   build = ':TSUpdate',
+  cmd = { "TSUpdateSync" },
+  dependencies = {
+    'windwp/nvim-ts-autotag'
+  },
   config = function()
     local configs = require('nvim-treesitter.configs')
     configs.setup({
@@ -143,7 +211,11 @@ local treesitter = {
       },
       sync_install = false,
       highlight = { enable = true },
-      indent = { enable = true }
+      indent = { enable = true },
+      autotag = {
+        enable = true,
+        filetypes = { "html", "elixir", "heex", "javascript", "typescript", "svelte", "markdown", "xml" }
+      }
     })
   end
 }
@@ -161,12 +233,15 @@ local completion = {
     'hrsh7th/vim-vsnip'
   },
   config = function()
+    local cmp_autopairs = require('nvim-autopairs.completion.cmp')
     local cmp = require('cmp')
+
+    cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done()) -- make sure autopairs works when doing auto-completions
 
     local has_words_before = function()
       unpack = unpack or table.unpack
       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, true)[1]:sub(col, col):match("%s") == nil
+      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
 
     local feedkey = function(key, mode)
@@ -238,10 +313,23 @@ local neotree = {
   end
 }
 
+local ts_autotag = { -- this is not in "plugins", but instead a dependency on both autopairs, and treesitter
+  "windwp/nvim-ts-autotag",
+  config = function()
+    require('nvim-ts-autotag').setup({})
+  end,
+  lazy = true
+}
+
 local autopairs = {
   "windwp/nvim-autopairs",
   event = "InsertEnter",
-  opts = {} -- this is equivalent to setup({}) function
+  dependencies = {
+    'windwp/nvim-ts-autotag'
+  },
+  config = function()
+    require('nvim-autopairs').setup()
+  end
 }
 
 local colorscheme = {
