@@ -24,6 +24,8 @@ fish_add_path ~/go/bin
 fish_add_path ~/.config/bin
 fish_add_path ~/.local/bin
 
+fish_add_path ~/.ebcli-virtual-env/executables
+
 set DOTFILES ~/.dotfiles
 if test -z $PROJECT_CONTEXT
     set PROJECT_CONTEXT "$HOME/work"
@@ -31,10 +33,10 @@ end
 
 # Docker
 alias d="docker"
-alias dc="docker-compose"
+alias dc="docker compose"
 
-# Kubernetes
-set USE_GKE_GCLOUD_AUTH_PLUGIN "True"
+# ASDF completions
+# source /opt/asdf-vm/asdf.fish
 
 # p
 alias p="~/code/projects/p/p"
@@ -52,11 +54,9 @@ function context
     echo "Location: $PROJECT_CONTEXT"
 end
 
-# Poetry keyring issue?
-set PYTHON_KEYRING_BACKEND "keyring.backends.null.Keyring"
+function lazy-postgres
+  docker stop lazy-postgres &> /dev/null
+  docker run --name lazy-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -v $PWD/postgres:/var/lib/postgresql/data -d --rm postgres:16
+end
 
-# Key bindings (Duplicates might appear to have bindings in both insert/normal mode)
-
-# This is equivalent to Right Alt+f (Fish is pretty much ignoring my Left Alt)
-# bind \u0111 'tmux-sessionizer'
-# bind -M insert \u0111 'tmux-sessionizer'
+alias gp="find $HOME -type f -not -name '.*' | fzf | sed 's/^..//' | tr -d '\n' | xclip -selection clipboard"

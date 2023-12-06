@@ -129,6 +129,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { buffer = args.buf })
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = args.buf })
+    vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, { buffer = args.buf })
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = args.buf })
     vim.keymap.set('n', 'gr', vim.lsp.buf.rename, { buffer = args.buf })
   end,
 })
@@ -248,6 +250,30 @@ local completion = {
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
     end
 
+    local next_suggestion = function()
+      return cmp.mapping(function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif vim.fn["vsnip#available"](1) == 1 then
+          feedkey("<Plug>(vsnip-expand-or-jump)", "")
+        --elseif has_words_before() then -- I prefer explicit selection for completion, but keeping this for reference
+          --cmp.complete()
+        else
+          fallback()
+        end
+      end, { "i", "s" })
+    end
+
+    local prev_suggestion = function()
+      return cmp.mapping(function()
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+          feedkey("<Plug>(vsnip-jump-prev)", "")
+        end
+      end, { "i", "s" })
+    end
+
     cmp.setup({
       -- small config to enable snippet engage
       snippet = {
@@ -266,25 +292,14 @@ local completion = {
       ),
       -- key mappings
       mapping = {
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif vim.fn["vsnip#available"](1) == 1 then
-            feedkey("<Plug>(vsnip-expand-or-jump)", "")
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-
-        ["<S-Tab>"] = cmp.mapping(function()
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-            feedkey("<Plug>(vsnip-jump-prev)", "")
-          end
-        end, { "i", "s" }),
+        ["<Tab>"] = next_suggestion(),
+        ["<Down>"] = next_suggestion(),
+        ["<S-Tab>"] = prev_suggestion(),
+        ["<Up>"] = prev_suggestion(),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
+        --["<Esc>"] = cmp.mapping.close(),
+        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4)
       }
     })
   end
