@@ -74,21 +74,40 @@ local dotfiles = {
 -- Key mappings
 
 config.keys = {
+--    {
+--       key = "g",
+--      mods = "CMD",
+--       action = act.ShowLauncher,
+--    },
     {
-        key = "g",
-        mods = "CMD",
-        action = act.ShowLauncher,
+      key = "i",
+      mods = "CMD",
+      action = act.SpawnCommandInNewTab {
+        label = 'quick access to second brain',
+        cwd = '/home/dur/2brain',
+        domain = 'CurrentPaneDomain',
+        args = { 'nvim', '2brain.md' }
+      },
     },
     {
-    key = "i",
-    mods = "CMD",
-    action = act.SpawnCommandInNewTab {
-      label = 'quick access to second brain',
-      cwd = '/home/dur/2brain',
-      domain = 'CurrentPaneDomain',
-      args = { 'nvim', '2brain.md' }
-    }
-  },
+      key = "g",
+      mods = "CMD",
+      action = act.SpawnCommandInNewTab {
+        label = 'open lazygit in a new tab',
+        domain = 'CurrentPaneDomain',
+        args = { 'lazygit' }
+      }
+    },
+    {
+      key = "f",
+      mods = "CTRL",
+      action = act.SpawnCommandInNewTab {
+        label = 'open file from fzf',
+        domain = 'CurrentPaneDomain',
+      --args = { 'git', 'ls-files', '-cmo', '--exclude-standard', '|', 'fzf' }
+      args = { 'fzf' }
+      }
+    },
     -- pane create/remove
     {
 	key = "m",
