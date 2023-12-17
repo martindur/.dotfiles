@@ -50,22 +50,30 @@ set cursorline
 set timeoutlen=1000 " the timeout length between key combinations
 set ttimeoutlen=0 " the timeout for key code delays. IMPORTANT: This may be a culprit for mappings that include keys like Esc
 
+" should just be for mac
+set rtp+=/usr/local/opt/fzf
+
 " MAPPINGS
 
-nmap J 10j
-nmap K 10k
+nnoremap J 10j
+nnoremap K 10k
 
-vmap J 10j
-vmap K 10k
+vnoremap J 10j
+vnoremap K 10k
 
 " move selection down by 1
-vmap <PageDown> :m '>+1<CR>gv=gv
+vnoremap <PageDown> :m '>+1<CR>gv=gv
 " move selection up by 1
-vmap <PageUp> :m '<-2<CR>gv=gv
+vnoremap <PageUp> :m '<-2<CR>gv=gv
 
 " quick save
-nmap <Leader>w :w<CR>
+nnoremap <Leader>w :w<CR>
 
+
+" COMMENTING:
+
+autocmd FileType python,elixir nnoremap <buffer> gc I#<esc>
+autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
 
 " FUZZY FINDING:
 
@@ -73,7 +81,8 @@ nmap <Leader>w :w<CR>
 " source: the input source for fzf, e.g. like git ls-files | fzf
 " sink: the action to take on the returned input, e.g. :e (edit)
 nnoremap <leader>f :call fzf#run({
-\    'source': 'git ls-files -cmo --exclude-standard',
+"\    'source': 'git ls-files -cmo --exclude-standard',
+\    'source': 'rg --files --type elixir',
 \    'sink': 'e',
 \    'window': {'width': 0.9, 'height': 0.7},
 \    'options': '--preview "bat --color=always --style=numbers --line-range=:500 {}"'
@@ -82,24 +91,15 @@ nnoremap <leader>f :call fzf#run({
 command! -nargs=* Rg call s:rg_fzf(<q-args>)
 
 function! s:rg_fzf(query)
-    let cmd = 'rg --column --line-number --no-heading --color=always --smart-case --'.shellescape(a:query)
-    let result = systemlist(cmd)
-    if empty(result)
-        echo "No matches found."
-        return
-    endif
+    let qry = empty(a:query) ? '' : a:query
 
-    let choice = fzf#run(result)
-    if empty(choice)
-        echo "Search canceled."
-        return
-    endif
+    let rg = 'rg --column --line-number --no-heading --color=always --smart-case'
+    let preview = '--delimiter : --preview "bat --color=always {1} --highlight-line {2}"'
 
-    let parts = split(choice, ":")
-    let filename = parts[0]
-    let line_number = parts[1]
-    execute 'edit ' . filename
-    execute line_number
+    let options = '--ansi --disabled --query "'.qry.'" --bind "start:reload:'.rg.' {q}" --bind "change:reload:sleep 0.01; '.rg.' {q} || true" '.preview
+    let fzf_cmd = {'source': ':', 'sink': 'echo', 'window': {'width': 0.9, 'height': 0.7}, 'options': simple_options}
+    
+    call fzf#run(fzf_cmd)
 endfunction
 
 " TO DO:
