@@ -1,12 +1,15 @@
 # shell, terminal and editor related
 
 brew "zsh-syntax-highlighting"
+brew "zsh-autosuggestions"
+brew "bat"
 brew "nvim"
 brew "stow"
 brew "ripgrep"
 brew "fzf"
 cask "wezterm"
 cask "fig" # IDE-like auto completion for the terminal, for a wide range of CLIs
+cask "chromedriver"
 
 # Mounting network drives via SSH
 cask "macfuse"

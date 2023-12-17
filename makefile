@@ -8,7 +8,7 @@ nix:
 	stow --verbose --restow nvim wezterm
 
 osx:
-	stow --verbose --restow helix wezterm yabai zsh skhd homebrew nvim
+	stow --verbose --restow helix wezterm yabai zsh skhd homebrew nvim vim bin
 
 delete:
 	stow --verbose --delete */

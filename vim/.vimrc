@@ -51,7 +51,9 @@ set timeoutlen=1000 " the timeout length between key combinations
 set ttimeoutlen=0 " the timeout for key code delays. IMPORTANT: This may be a culprit for mappings that include keys like Esc
 
 " should just be for mac
-set rtp+=/usr/local/opt/fzf
+if system('uname') =~ "Darwin"
+    set rtp+=/usr/local/opt/fzf
+endif
 
 " MAPPINGS
 
@@ -75,6 +77,10 @@ nnoremap <Leader>w :w<CR>
 autocmd FileType python,elixir nnoremap <buffer> gc I#<esc>
 autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
 
+   
+autocmd FileType python     :iabbrev <buffer> iff if:<left>
+autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+
 " FUZZY FINDING:
 
 " fzf comes with some native git integration functions - no need for plugin
@@ -82,13 +88,21 @@ autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
 " sink: the action to take on the returned input, e.g. :e (edit)
 nnoremap <leader>f :call fzf#run({
 "\    'source': 'git ls-files -cmo --exclude-standard',
-\    'source': 'rg --files --type elixir',
+\    'source': 'rg --files',
+"\    'source': 'rg --files --type elixir',
 \    'sink': 'e',
 \    'window': {'width': 0.9, 'height': 0.7},
 \    'options': '--preview "bat --color=always --style=numbers --line-range=:500 {}"'
 \})<CR>
 
 command! -nargs=* Rg call s:rg_fzf(<q-args>)
+
+function! s:sink(...)
+    let [path, line, column] = split(a:1, ':')[:2]
+
+    execute ':e ' . path
+    execute line
+endfunction
 
 function! s:rg_fzf(query)
     let qry = empty(a:query) ? '' : a:query
@@ -97,10 +111,14 @@ function! s:rg_fzf(query)
     let preview = '--delimiter : --preview "bat --color=always {1} --highlight-line {2}"'
 
     let options = '--ansi --disabled --query "'.qry.'" --bind "start:reload:'.rg.' {q}" --bind "change:reload:sleep 0.01; '.rg.' {q} || true" '.preview
-    let fzf_cmd = {'source': ':', 'sink': 'echo', 'window': {'width': 0.9, 'height': 0.7}, 'options': simple_options}
+    let fzf_cmd = {'source': ':', 'sink': function('s:sink'), 'window': {'width': 0.9, 'height': 0.7}, 'options': options}
     
     call fzf#run(fzf_cmd)
 endfunction
+
+nnoremap <leader>ss :Rg<CR>
+nnoremap <leader>sw :execute 'Rg ' . expand('<cword>')<CR>
+
 
 " TO DO:
 " * fuzzy search git branches and checkout -> git branch | fzf | xargs git

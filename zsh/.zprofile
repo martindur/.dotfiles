@@ -1,3 +1,3 @@
-export EDITOR='hx'
+export EDITOR='nvim'
 
 eval "$(/usr/local/bin/brew shellenv)"
