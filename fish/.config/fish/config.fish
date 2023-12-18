@@ -6,8 +6,8 @@
 set fish_greeting         # Remove default greeting
 #set TERM "alacritty"		# Sets the terminal type
 set EDITOR "nvim"		# $EDITOR use neovim in terminal
-alias vim="nvim"
-alias vi="nvim"
+#alias vim="nvim"
+#alias vi="nvim"
 alias n="nvim"
 
 # VIMmy terminal

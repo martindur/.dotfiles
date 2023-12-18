@@ -85,7 +85,7 @@ keys = [
         desc="Toggle between split and unsplit sides of stack",
     ),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    Key([mod], "t", launch_browser, desc="Launch browser"),
+    #Key([mod], "t", launch_browser, desc="Launch browser"),
     Key([mod, "control"], "w", lazy.spawn('firefox -P work'), desc="Firefox for work"),
     Key([mod, "control"], "p", lazy.spawn('firefox -P dur'), desc="Firefox for personal"),
     Key([mod], "x", lazy.spawn('flameshot gui'), desc="Launch flameshot"),
