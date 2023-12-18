@@ -2,3 +2,5 @@ __pycache__/
 **/packer_compiled.lua
 p.conf
 **/fish_variables
+*.swp
+.netrwhist

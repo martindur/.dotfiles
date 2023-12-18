@@ -43,6 +43,7 @@ set novisualbell
 set noerrorbells
 
 set so=7
+set hidden
 
 set laststatus=2
 set cursorline
@@ -74,12 +75,33 @@ nnoremap <Leader>w :w<CR>
 
 " COMMENTING:
 
-autocmd FileType python,elixir nnoremap <buffer> gc I#<esc>
-autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
+augroup commenting
+    autocmd!
+    autocmd FileType python,elixir nnoremap <buffer> gc I#<esc>
+    autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
+augroup end
 
-   
-autocmd FileType python     :iabbrev <buffer> iff if:<left>
-autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+augroup conditionals_shorthand
+    autocmd!
+    autocmd FileType python     :iabbrev <buffer> iff if:<left>
+    autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+augroup end
+
+" surround current word with "
+nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel
+
+inoremap jk <esc>
+" I might hate myself for doing this, but learning the hard way is the fast
+" way
+inoremap <esc> <nop>
+
+" operator mapping, e.g. run di( with dp, or ci( with cp
+" wunderbar!!
+onoremap p i(
+
+" db -> delete body, e.g. delete up until return (useful in most filetypes,
+" but might want to make a custom one for elixir
+onoremap b /return<cr>
 
 " FUZZY FINDING:
 
