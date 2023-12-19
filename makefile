@@ -2,10 +2,10 @@ bootstrap:
 	./scripts/bootstrap.sh
 
 linux:
-	stow --verbose --restow x fish qtile picom nvim vim bin wezterm
+	stow --verbose --restow vim bin wezterm i3
 
 nix:
-	stow --verbose --restow nvim wezterm
+	sudo nixos-rebuild -I nixos-config=./configuration.nix switch
 
 osx:
 	stow --verbose --restow wezterm yabai zsh skhd homebrew nvim vim bin
