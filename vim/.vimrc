@@ -48,12 +48,16 @@ set hidden
 set laststatus=2
 set cursorline
 
+set autoread " this will reload files that were written to from external programs (e.g. useful for formatters)
+
 set timeoutlen=1000 " the timeout length between key combinations
 set ttimeoutlen=0 " the timeout for key code delays. IMPORTANT: This may be a culprit for mappings that include keys like Esc
 
 " should just be for mac
 if system('uname') =~ "Darwin"
     set rtp+=/usr/local/opt/fzf
+else
+    set rtp+=/etc/profiles/per-user/dur/share/vim-plugins/fzf
 endif
 
 " MAPPINGS
@@ -73,11 +77,15 @@ vnoremap <PageUp> :m '<-2<CR>gv=gv
 nnoremap <Leader>w :w<CR>
 
 
+"function! MixFormat()
+"    silent execute '!mix format '.bufname("%")
+"endfunction
+
 " COMMENTING:
 
 augroup commenting
     autocmd!
-    autocmd FileType python,elixir nnoremap <buffer> gc I#<esc>
+    autocmd FileType python nnoremap <buffer> gc I#<esc>
     autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
 augroup end
 
@@ -86,6 +94,17 @@ augroup conditionals_shorthand
     autocmd FileType python     :iabbrev <buffer> iff if:<left>
     autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
 augroup end
+
+" Vimscript file settings {{{
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+augroup end
+" }}}
+
+"command! MixFormat :silent execute "
+
+nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
 
 " surround current word with "
 nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel
@@ -110,7 +129,7 @@ onoremap b /return<cr>
 " sink: the action to take on the returned input, e.g. :e (edit)
 nnoremap <leader>f :call fzf#run({
 "\    'source': 'git ls-files -cmo --exclude-standard',
-\    'source': 'rg --files',
+\    'source': 'rg --files --hidden',
 "\    'source': 'rg --files --type elixir',
 \    'sink': 'e',
 \    'window': {'width': 0.9, 'height': 0.7},
@@ -165,8 +184,9 @@ set wildignore=*.swp,*.bak,*.pyc,*.erl,*.hrl
 " jump back: C-o
 " jump ahead: C-i
 
+let g:default_ctags_exclude = '--exclude=.git --exclude="*.css" --exclude="*.mk" --exclude="*.html" --exclude="*.beam" --exclude="*.md" --exclude="*.json" --exclude="*.erl" --exclude="Makefile" --exclude="*.pyc" --exclude=__pycache__ --exclude=.cache --exclude=node_modules --exclude="*.txt"'
 " create the `tags` file (may need to install ctags first)
-command! MakeTags !ctags -R .
+command! MakeTags execute '!ctags ' . g:default_ctags_exclude . ' -R .'
 
 nnoremap gd <C-]>
 nnoremap gb <C-t>
