@@ -54,16 +54,12 @@ local dotfiles = {
     id = wezterm.home_dir..'/.dotfiles/wezterm',
   },
   {
-    label = 'fish',
-    id = wezterm.home_dir..'/.dotfiles/fish/.config/fish',
+    label = 'zsh',
+    id = wezterm.home_dir..'/.dotfiles/zsh',
   },
   {
     label = 'bin (scripts)',
     id = wezterm.home_dir..'/.dotfiles/bin/.config/bin',
-  },
-  {
-    label = 'qtile',
-    id = wezterm.home_dir..'/.dotfiles/qtile/.config/qtile',
   },
   {
     label = 'docs',
@@ -86,7 +82,7 @@ config.keys = {
         label = 'quick access to second brain',
         cwd = '/home/dur/2brain',
         domain = 'CurrentPaneDomain',
-        args = { 'nvim', '2brain.md' }
+        args = { 'vim', '2brain.md' }
       },
     },
     {
@@ -126,7 +122,7 @@ config.keys = {
 	},
     },
     {
-	key = "y",
+	key = "q",
 	mods = "CMD",
 	action = wezterm.action.CloseCurrentPane { confirm = true },
     },
@@ -298,29 +294,29 @@ config.keys = {
 	    )
 	end)
     },
-    {
+    --{
 	-- close workspace(all panes in all tabs) from 'current workspaces'
-	key = 'q',
-	mods = "CMD",
-	action = wezterm.action_callback(function(window, pane)
-	    local panes = {}
-	    mux_window = window:mux_window()
-	    wezterm.log_info(mux_window)
+	--key = 'q',
+	--mods = "CMD",
+	--action = wezterm.action_callback(function(window, pane)
+	--    local panes = {}
+	--    mux_window = window:mux_window()
+	--    wezterm.log_info(mux_window)
+    --
+	--    for _, tab in ipairs(mux_window:tabs()) do
+	--       for _, pane in ipairs(tab:panes()) do
+    --		  table.insert(panes, pane:pane_id())
+	--       end
+	--    end
 
-	    for _, tab in ipairs(mux_window:tabs()) do
-	       for _, pane in ipairs(tab:panes()) do
-		  table.insert(panes, pane:pane_id())
-	       end
-	    end
-
-	    wezterm.log_info(panes)
+	--    wezterm.log_info(panes)
 
 	    -- DISABLED. Seems to freeze the terminal
 	    --for _, pane_id in ipairs(panes) do
 		--os.execute("wezterm cli kill-pane --pane-id "..pane_id)
 	    --end
-	end)
-    }
+	--end)
+    --}
 }
 
 -- Launch menu

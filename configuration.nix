@@ -14,6 +14,62 @@
   # boot.loader.systemd-boot.enable = true;
   # boot.loader.efi.canTouchEfiVariables = true;
 
+  nixpkgs.config.allowUnfree = true;
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-25.9.0"
+  ];
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.dur = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    shell = pkgs.zsh;
+    packages = with pkgs; [
+	# essentials
+	gnumake
+	binutils
+	glibc
+	gcc
+	stow
+	universal-ctags
+	git
+	ripgrep
+	fzf
+	bat
+	xclip
+	wezterm
+	neovim
+	helix
+	tree-sitter
+	nodejs
+
+	# apps
+    firefox
+    lazygit
+    chromium
+    tree
+    rofi
+    discord
+    youtube-music
+    flameshot
+
+    # programming
+    elixir
+    python3
+
+    # LSPs
+    nodePackages.pyright
+    lua-language-server
+    elixir-ls
+    vscode-langservers-extracted
+
+	# extras
+	zsh-vi-mode
+	bluez
+    ];
+  };
+
   boot.loader = {
     efi = {
       canTouchEfiVariables = true;
@@ -27,6 +83,8 @@
       efiSupport = true;
     };
   };
+
+  hardware.bluetooth.enable = true;
 
   networking.hostName = "techjanitor"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -48,10 +106,17 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
   # Enable the X11 windowing system.
   services.xserver = {
       enable = true;
       xkb.layout = "us";
+      videoDrivers = ["nvidia"];
       
       desktopManager = {
 	xterm.enable = false;
@@ -70,9 +135,35 @@
 	  dmenu
 	  i3status
 	  i3lock
+	  i3-auto-layout
 	];
       };
   };
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+
+    powerManagement.enable = false;
+
+    powerManagement.finegrained = false;
+    open = false;
+
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+  # docker
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
+    enableNvidia = true;
+  };
+
+  # libnvidia-container does not support cgroups v2 (prior to 1.8.0)
+  # https://github.com/NVIDIA/nvidia-docker/issues/1447
+  systemd.enableUnifiedCgroupHierarchy = false;
+
+  virtualisation.oci-containers.backend = "docker";
 
   
 
@@ -89,34 +180,13 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.dur = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    shell = pkgs.zsh;
-    packages = with pkgs; [
-	# essentials
-	gnumake
-	stow
-	git
-	ripgrep
-	fzf
-	wezterm
 
-	# needed
-      	firefox
-      	tree
-      	rofi
-
-	# extras
-	zsh-vi-mode
-    ];
-  };
+  services.tailscale.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim-full # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #   wget
   ];
 
@@ -133,6 +203,9 @@
 	autosuggestions.enable = true;
 	syntaxHighlighting.enable = true;
   };
+
+  programs._1password.enable = true;
+  programs._1password-gui.enable = true;
 
   # List services that you want to enable:
 

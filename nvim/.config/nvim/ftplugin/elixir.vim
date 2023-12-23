@@ -17,6 +17,8 @@ EOF
 
 call luaeval('start_lsp(elixir_lsp_config)')
 
+lua vim.treesitter.start()
+
 augroup elixir_format
     autocmd!
     autocmd BufWritePost <buffer> :silent execute '!mix format '.bufname("%")
