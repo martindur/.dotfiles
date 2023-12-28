@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+directories=$(find . -maxdepth 1 -type d)
+
+get_directory_tree() {
+  find . -maxdepth 1 -type d -exec basename {} \; 2>/dev/null
+}
+
+
+list_directory_contents() {
+  directory="$1"
+  find "$directory" -maxdepth 1 -type d -exec basename {} \; 2>/dev/null
+}
+
+fzf_recursive() {
+  current_dir="$1"
+
+  selected_entry=$(list_directory_contents "$current_dir" | sed 's/$/\//' | fzf --height=40% --reverse --cycle --delimiter=/ --with-nth=1)
+
+  if [ -n "$selected_entry" ]; then
+    new_dir="$current_dir$selected_entry/"
+    fzf_recursive $new_dir
+  else
+    exit 0
+  fi
+}
+
+fzf_recursive "./" # initial search in current directory
+
+
+# if [ -n "$selected_directory" ]; then
+#   if [[ "$selected_directory" == */ ]]; then
+#     contents=$(list_directory_contents "$selected_directory")
+#     echo "$contents"
+#   else
+#     echo bob
+#   fi
+# else
+#   exit 0
+# fi
+
+
+list_folders() {
+  select folder in */; do
+    if [ -n "$folder" ]; then
+      folder="${folder%/}" # Remove trailing slash
+      break
+    else
+      echo "Invalid selection."
+    fi
+  done
+}
+
+list_contents() {
+  local folder="$1"
+  if [ -d "$folder" ]; then
+    ls "$folder"
+  else
+    echo "invalid folder"
+  fi
+}
+
+#echo "Select top level folder"
+#list_folders
+
+#list_contents "$folder"

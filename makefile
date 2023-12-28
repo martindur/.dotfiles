@@ -2,13 +2,13 @@ bootstrap:
 	./scripts/bootstrap.sh
 
 linux:
-	stow --verbose --restow x fish qtile picom nvim bin p tmux kitty mprocs wezterm
+	stow --verbose --restow zsh vim nvim bin wezterm i3
 
 nix:
-	stow --verbose --restow nvim wezterm
+	sudo nixos-rebuild -I nixos-config=./configuration.nix switch
 
 osx:
-	stow --verbose --restow helix wezterm yabai zsh skhd homebrew nvim vim bin
+	stow --verbose --restow wezterm yabai zsh skhd homebrew nvim vim bin
 
 delete:
 	stow --verbose --delete */

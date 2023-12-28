@@ -1,6 +1,0 @@
-keymap_procs:
-  <C-q>: { c: toggle-focus }
-  <C-a>: null
-keymap_term:
-  reset: true
-  <C-q>: { c: toggle-focus }

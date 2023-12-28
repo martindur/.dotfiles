@@ -1,10 +1,12 @@
 " OPTIONS
 
-set nocompatible
-filetype off
+"set runtimepath^=~/.vim runtimepath+=~/.vim/after
+"let &packpath = &runtimepath
+
+syntax off "relying on treesitter for syntax highlighting
+filetype on 
 let mapleader = " "
 
-syntax on
 set termguicolors
 colorscheme onedark
 
@@ -14,8 +16,6 @@ set tabstop=4 " number of spaces to move by when pressing <TAB>
 set shiftwidth=4
 set expandtab
 set softtabstop=4
-set backspace=indent,eol,start
-set autoindent
 set copyindent
 
 set shiftround
@@ -24,31 +24,18 @@ set matchtime=2 " 2/10th of a second for 'showmatch' to show the matched bracket
 
 set ignorecase
 set smartcase
-set smarttab
-
-set hlsearch " highlight search hits
-set incsearch " show matches for searches incrementally (e.g. while typing pattern) - this is incredibly useful for regex
-
-set history=1000
-set undolevels=1000
 
 set number
 set relativenumber
 
-set clipboard^=unnamedplus
+set clipboard+=unnamedplus
 
 set title
-set ruler
 set novisualbell
 set noerrorbells
 
 set so=7
-set hidden
-
-set laststatus=2
 set cursorline
-
-set autoread " this will reload files that were written to from external programs (e.g. useful for formatters)
 
 set timeoutlen=1000 " the timeout length between key combinations
 set ttimeoutlen=0 " the timeout for key code delays. IMPORTANT: This may be a culprit for mappings that include keys like Esc
@@ -76,24 +63,89 @@ vnoremap <PageUp> :m '<-2<CR>gv=gv
 " quick save
 nnoremap <Leader>w :w<CR>
 
+nnoremap <leader>q :q<cr>
 
-"function! MixFormat()
-"    silent execute '!mix format '.bufname("%")
-"endfunction
+" LSP:
+
+lua <<EOF
+function start_lsp(config)
+    vim.lsp.start(config)
+end
+
+function lsp_attach(client, bufnr)
+    print('attached')
+
+    if client.server_capabilities.completionProvider then
+        vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+    end
+
+    if client.server_capabilities.definitionProvider then
+        vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
+    end
+
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr })
+    vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { buffer = bufnr })
+end
+EOF
+
+
+fun! TabComplete()
+    let char_before_cursor = getline('.')[col('.') - 2]
+
+    if pumvisible()
+        return "\<C-N>"
+    elseif char_before_cursor ==# '.'
+        return "\<C-X>\<C-O>"
+    else
+        return "\<Tab>"
+    endif
+endfun
+
+set completeopt=menu,menuone,noinsert,noselect
+autocmd InsertCharPre * call AutoComplete()
+
+fun! AutoComplete()
+    if v:char =~ '\K'
+        "call feedkeys("\<C-N>\<C-P>", 'n')
+        call feedkeys("\<C-X>\<C-O>", 'n')
+    end
+endfun
+
+inoremap <expr> <Tab> TabComplete() 
+inorema <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+
+function! LspStatus() abort
+    if luaeval('#vim.lsp.buf_get_clients() > 0')
+        let l:client_names = luaeval('vim.tbl_map(function(client) return client.name end, vim.lsp.buf_get_clients())')
+        return join(l:client_names, ', ')
+    else
+        return 'No LSP'
+    endif
+endfunction
+
+set statusline=
+set statusline+=%f\
+set statusline+=%m
+set statusline+=%r
+set statusline+=%y
+set statusline+=%=
+set statusline+=%{LspStatus()}\
+set statusline+=%-14.(%l,%c%V%)\
+set statusline+=%P
 
 " COMMENTING:
 
-augroup commenting
-    autocmd!
-    autocmd FileType python nnoremap <buffer> gc I#<esc>
-    autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
-augroup end
+"augroup commenting
+"    autocmd!
+"    autocmd FileType python nnoremap <buffer> gc I#<esc>
+"    autocmd FileType javascript,typescript nnoremap <buffer> gc I//<esc>
+"augroup end
 
-augroup conditionals_shorthand
-    autocmd!
-    autocmd FileType python     :iabbrev <buffer> iff if:<left>
-    autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
-augroup end
+"augroup conditionals_shorthand
+"    autocmd!
+"    autocmd FileType python     :iabbrev <buffer> iff if:<left>
+"    autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
+"augroup end
 
 " Vimscript file settings {{{
 augroup filetype_vim
@@ -102,7 +154,10 @@ augroup filetype_vim
 augroup end
 " }}}
 
-"command! MixFormat :silent execute "
+augroup highlight_yanked_text
+    autocmd!
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+augroup end
 
 nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
 
@@ -163,33 +218,23 @@ nnoremap <leader>sw :execute 'Rg ' . expand('<cword>')<CR>
 
 " TO DO:
 " * fuzzy search git branches and checkout -> git branch | fzf | xargs git
-" checkout
+
 " * ripgrep -> fuzzy find words through project
 
 " when doing 'find', include subfolders
 set path+=**
 
 " display all matching files when we tab complete
-set wildmenu
 set wildcharm=<TAB>     " needed to open the wildmenu from shortcuts
 set wildignore=*.swp,*.bak,*.pyc,*.erl,*.hrl
 
-
-" NOW WE CAN:
-" use `find *.ex` to find all .ex files recursively searching from pwd
-" on tab completion, retrieve a list of results
-
-" TAG JUMPING
-
-" jump back: C-o
-" jump ahead: C-i
 
 let g:default_ctags_exclude = '--exclude=.git --exclude="*.css" --exclude="*.mk" --exclude="*.html" --exclude="*.beam" --exclude="*.md" --exclude="*.json" --exclude="*.erl" --exclude="Makefile" --exclude="*.pyc" --exclude=__pycache__ --exclude=.cache --exclude=node_modules --exclude="*.txt"'
 " create the `tags` file (may need to install ctags first)
 command! MakeTags execute '!ctags ' . g:default_ctags_exclude . ' -R .'
 
-nnoremap gd <C-]>
-nnoremap gb <C-t>
+"nnoremap gd <C-]>
+"nnoremap gb <C-t>
 
 " NOW WE CAN:
 " - use C-] to jump to tag under cursor
@@ -221,7 +266,7 @@ let g:netrw_liststyle=3		" tree view
 "let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
 " open netrw filebrowser
-nmap <leader>e :Lexplore<CR> 
+"nmap <leader>e :Lexplore<CR> 
 
 " NOW WE CAN:
 " - :edit a folder to open a file browser
