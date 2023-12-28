@@ -88,6 +88,32 @@ function lsp_attach(client, bufnr)
 end
 EOF
 
+
+fun! TabComplete()
+    let char_before_cursor = getline('.')[col('.') - 2]
+
+    if pumvisible()
+        return "\<C-N>"
+    elseif char_before_cursor ==# '.'
+        return "\<C-X>\<C-O>"
+    else
+        return "\<Tab>"
+    endif
+endfun
+
+set completeopt=menu,menuone,noinsert,noselect
+autocmd InsertCharPre * call AutoComplete()
+
+fun! AutoComplete()
+    if v:char =~ '\K'
+        "call feedkeys("\<C-N>\<C-P>", 'n')
+        call feedkeys("\<C-X>\<C-O>", 'n')
+    end
+endfun
+
+inoremap <expr> <Tab> TabComplete() 
+inorema <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+
 function! LspStatus() abort
     if luaeval('#vim.lsp.buf_get_clients() > 0')
         let l:client_names = luaeval('vim.tbl_map(function(client) return client.name end, vim.lsp.buf_get_clients())')
@@ -240,7 +266,7 @@ let g:netrw_liststyle=3		" tree view
 "let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
 " open netrw filebrowser
-nmap <leader>e :Lexplore<CR> 
+"nmap <leader>e :Lexplore<CR> 
 
 " NOW WE CAN:
 " - :edit a folder to open a file browser
