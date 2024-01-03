@@ -1,0 +1,40 @@
+theme="tokyonight"
+
+[keys.insert.j]
+k = "normal_mode"
+l = ["insert_newline", ":insert-output printf '|>'", "goto_line_end", "move_char_right"]
+
+[keys.insert]
+"esc" = "no_op"
+
+[keys.normal."space"]
+w = ":w"
+q = ":q"
+
+[keys.normal]
+#J = ["move_visual_line_down", "repeat_last_motion", "repeat_last_motion", "repeat_last_motion", "repeat_last_motion", "repeat_last_motion"]
+J = [
+  "move_visual_line_down",
+  "move_visual_line_down", 
+  "move_visual_line_down", 
+  "move_visual_line_down",
+  "move_visual_line_down",
+  "move_visual_line_down",
+  "move_visual_line_down",
+  "move_visual_line_down",
+  "move_visual_line_down",
+  "move_visual_line_down",
+  ]
+K = [
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  "move_visual_line_up",
+  ]
+#K = ["move_visual_line_up", "repeat_last_motion", "repeat_last_motion", "repeat_last_motion", "repeat_last_motion", "repeat_last_motion"]

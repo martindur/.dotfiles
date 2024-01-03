@@ -1,0 +1,75 @@
+[language-server.pyright]
+command = "pyright-langserver"
+args = ["--stdio"]
+
+[language-server.black]
+command = "black"
+args = ["-", "--quiet"]
+
+[language-server.elixir-ls]
+command = "elixir-ls"
+
+[language-server.lexical]
+command = '/Users/dur/projects/lexical/_build/dev/package/lexical/bin/start_lexical.sh'
+
+[language-server.scls]
+command = "simple-completion-language-server"
+config = { max_completion_items = 10, snippets_first = false }
+
+[language-server.emmet-ls]
+args = ["--stdio"]
+command = "emmet-language-server"
+
+[language-server.tailwind-ls]
+command = "tailwindcss-language-server"
+args = ["--stdio"]
+config = {}
+
+[language-server.next-ls]
+command = 'nextls'
+args = ['--stdio']
+
+[language-server.html-ls]
+command = 'vscode-html-language-server'
+args = ['--stdio']
+
+[[language]]
+name = "html"
+formatter = { command = 'npx', args = ["prettier", "--parser", "html"] }
+language-servers = [ "vscode-html-language-server", "tailwind-ls", "emmet-ls"]
+
+[[language]]
+name = "python"
+auto-format = true
+roots = ["requirements.txt", "pyproject.toml", ".venv", "venv"]
+language-servers = [
+  { name = "black", only-features = ["format", "diagnostics"]},
+  { name = "pyright", except-features = ["format", "diagnostics"]}
+]
+
+[[language]]
+name = "elixir"
+language-id = "phoenix-heex"
+#scope = "source.elixir"
+#file-types = ["ex", "exs", "heex"]
+#roots = ["mix.exs"]
+diagnostic-severity = "Hint"
+#comment-token = "#"
+#indent = {tab-width = 2, unit = " "}
+auto-format = true
+language-servers = [
+  { name = 'lexical'},
+  { name = 'elixir-ls', only-features = ['workspace-symbols', 'document-symbols']}
+]
+
+[[language]]
+name = "heex"
+language-id = "phoenix-heex"
+auto-format = true
+language-servers = [
+  { name = 'lexical', only-features = ['diagnostics']},
+  { name = 'tailwind-ls' },
+  { name = 'emmet-ls'},
+  { name = 'html-ls' }
+]
+formatter = { command = 'mix', args = ['format', '--stdin-filename', 'stdin.heex', '-'] }
