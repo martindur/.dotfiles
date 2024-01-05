@@ -213,7 +213,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim-full # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #   wget
+    steam-run # intended for running steam executables (gaming), but can be used to run other downloaded binaries, e.g. LSPs
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
