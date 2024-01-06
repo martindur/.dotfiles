@@ -75,16 +75,16 @@ config.keys = {
 	--      mods = "CMD",
 	--       action = act.ShowLauncher,
 	--    },
-	{
-		key = "i",
-		mods = "CMD",
-		action = act.SpawnCommandInNewTab({
-			label = "quick access to second brain",
-			cwd = "/home/dur/2brain",
-			domain = "CurrentPaneDomain",
-			args = { "steam-run", "nvim", "2brain.md" },
-		}),
-	},
+	-- {
+	-- 	key = "i",
+	-- 	mods = "CMD",
+	-- 	action = act.SpawnCommandInNewTab({
+	-- 		label = "quick access to second brain",
+	-- 		cwd = "/home/dur/2brain",
+	-- 		domain = "CurrentPaneDomain",
+	-- 		args = { "steam-run", "nvim", "2brain.md" },
+	-- 	}),
+	-- },
 	{
 		key = "g",
 		mods = "CMD",
@@ -176,10 +176,29 @@ config.keys = {
 		mods = "CMD|CTRL",
 		action = act.SwitchToWorkspace({ name = "default" }),
 	},
+	-- notes workspace
+	{
+		key = "i",
+		mods = "CMD",
+		action = act.SwitchToWorkspace({
+			name = "notes",
+			spawn = { cwd = "/home/dur/documents/notes", label = "notes", args = { "steam-run", "nvim", "." } },
+		}),
+	},
+	{
+		key = "y",
+		mods = "CMD",
+		action = act.SpawnCommandInNewTab({
+			label = "scratchpad for the day!",
+			cwd = "/home/dur/documents/notes",
+			domain = "CurrentPaneDomain",
+			args = { "bash", "-c", "steam-run nvim scratchpads/$(date +'%Y-%m-%d').md" },
+		}),
+	},
 	{
 		key = "o",
 		mods = "CMD",
-		action = act.SwitchToWorkspace({ name = "monitoring", spawn = { args = { "top" } } }),
+		action = act.SwitchWorkspaceRelative(-1),
 	},
 	{
 		-- workspace from 'dotfiles'
