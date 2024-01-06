@@ -224,6 +224,14 @@
   #   enableSSHSupport = true;
   # };
 
+  # sync things
+  services.syncthing = {
+      enable = true;
+      user = "dur";
+      dataDir = "/home/dur/documents";
+      configDir = "/home/dur/.config/syncthing";
+  };
+
   programs.zsh = {
 	enable = true;
 	autosuggestions.enable = true;
