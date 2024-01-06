@@ -28,6 +28,9 @@
     packages = with pkgs; [
 	# essentials
 	gnumake
+	cmake
+	libtool
+	shellcheck
 	binutils
 	glibc
 	gcc
@@ -36,6 +39,7 @@
 	git
 	ripgrep
 	fzf
+	fd
 	bat
 	xclip
 	wezterm
@@ -43,6 +47,7 @@
 	helix
 	tree-sitter
 	nodejs
+	pandoc # document transpiler (e.g. markdown compiling)
 
 	# apps
     firefox
@@ -53,10 +58,28 @@
     discord
     youtube-music
     flameshot
+    emacs29
+    imagemagick
+    unzip
+    isync # email fetching, provides mbsync program for emacs
+    mu # Mu4e mail client (emacs) requires this program
 
     # programming
     elixir
     python3
+    python311Packages.nose3
+    python311Packages.pytest
+    python311Packages.setuptools
+    python311Packages.pyflakes
+    isort
+    pipenv
+    black
+    nixfmt # nix formatter
+    html-tidy # validator and 'tidier' for html
+    stylelint # linting for css
+    jsbeautifier # code formatting for JS/CSS/HTML
+    shfmt
+    inotify-tools
 
     # LSPs
     nodePackages.pyright
@@ -67,8 +90,11 @@
 	# extras
 	zsh-vi-mode
 	bluez
+	fira-code-symbols
     ];
   };
+
+  services.emacs.enable = true;
 
   boot.loader = {
     efi = {
@@ -187,7 +213,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim-full # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #   wget
+    steam-run # intended for running steam executables (gaming), but can be used to run other downloaded binaries, e.g. LSPs
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
