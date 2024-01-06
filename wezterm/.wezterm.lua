@@ -192,7 +192,7 @@ config.keys = {
 			label = "scratchpad for the day!",
 			cwd = "/home/dur/documents/notes",
 			domain = "CurrentPaneDomain",
-			args = { "bash", "-c", "nvim scratchpads/$(date +'%Y-%m-%d').md" },
+			args = { "zsh", "-c", "nvim scratchpads/$(date +'%Y-%m-%d').md" },
 		}),
 	},
 	{
