@@ -182,7 +182,7 @@ config.keys = {
 		mods = "CMD",
 		action = act.SwitchToWorkspace({
 			name = "notes",
-			spawn = { cwd = "/home/dur/documents/notes", label = "notes", args = { "steam-run", "nvim", "." } },
+			spawn = { cwd = "/home/dur/documents/notes", label = "notes", args = { "nvim", "." } },
 		}),
 	},
 	{
@@ -192,7 +192,7 @@ config.keys = {
 			label = "scratchpad for the day!",
 			cwd = "/home/dur/documents/notes",
 			domain = "CurrentPaneDomain",
-			args = { "bash", "-c", "steam-run nvim scratchpads/$(date +'%Y-%m-%d').md" },
+			args = { "bash", "-c", "nvim scratchpads/$(date +'%Y-%m-%d').md" },
 		}),
 	},
 	{
