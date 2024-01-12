@@ -27,9 +27,9 @@ return {
         -- html = {
         --   filetypes = { "heex" },
         -- },
-        -- emmet_ls = {
-        --   filetypes = { "heex" },
-        -- },
+        emmet_ls = {
+          filetypes = { "heex", "html", "elixir" },
+        },
       },
     },
   },

@@ -46,3 +46,12 @@ augroup markdownTodo
     endfunction
 augroup END
 ]])
+
+vim.cmd([[
+augroup ElixirSnippets
+  autocmd!
+  autocmd FileType elixir :iabbrev <buffer> pp \|>
+  autocmd FileType elixir,heex :iabbrev <buffer> xc <%= %><left><left><left>
+  autocmd FileType elixir,heex :iabbrev <buffer> xx <% %><left><left><left>
+augroup end
+]])

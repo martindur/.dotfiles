@@ -6,6 +6,10 @@ local nnoremap = function(lhs, rhs, opts)
   vim.keymap.set("n", lhs, rhs, opts)
 end
 
+local vnoremap = function(lhs, rhs, opts)
+  vim.keymap.set("v", lhs, rhs, opts)
+end
+
 local inoremap = function(lhs, rhs, opts)
   vim.keymap.set("i", lhs, rhs, opts)
 end
@@ -24,3 +28,6 @@ nnoremap("<leader>w", ":w<cr>", { desc = "write buffer" })
 
 nnoremap("J", "10j", { desc = "Fast vertical navigation down" })
 nnoremap("K", "10k", { desc = "Fast vertical navigation up" })
+
+vnoremap("J", "10j", { desc = "Fast vertical navigation down" })
+vnoremap("K", "10k", { desc = "Fast vertical navigation up" })

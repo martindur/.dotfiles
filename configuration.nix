@@ -51,6 +51,7 @@
 
 	# apps
     firefox
+    thunderbird
     lazygit
     chromium
     tree
@@ -80,6 +81,7 @@
     jsbeautifier # code formatting for JS/CSS/HTML
     shfmt
     inotify-tools
+    flyctl
 
     # LSPs
     nodePackages.pyright
