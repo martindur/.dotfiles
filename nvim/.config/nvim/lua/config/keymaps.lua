@@ -18,6 +18,11 @@ local del = vim.keymap.del
 
 inoremap("jk", "<esc>", { desc = "esc from insert mode with jk" })
 
+-- a convenient way to jump right of "pairs" in insert mode
+inoremap("<tab>", function()
+  return vim.fn.search("\\%#[]>)}'\"]", "n") ~= 0 and "<right>" or "<tab>"
+end, { expr = true })
+
 -- I just need a simple and fast write (I don't use windows, my terminal handles that)
 del("n", "<leader>wd")
 del("n", "<leader>ww")

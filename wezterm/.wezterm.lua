@@ -18,6 +18,8 @@ end)
 
 config.color_scheme = "Tokyo Night Moon"
 
+local super = "CMD"
+
 -- helpers
 
 function split(inputstr, sep)
@@ -87,7 +89,7 @@ config.keys = {
 	-- },
 	{
 		key = "g",
-		mods = "CMD",
+		mods = super,
 		action = act.SpawnCommandInNewTab({
 			label = "open lazygit in a new tab",
 			domain = "CurrentPaneDomain",
@@ -97,7 +99,7 @@ config.keys = {
 	-- pane create/remove
 	{
 		key = "m",
-		mods = "CMD",
+		mods = super,
 		action = act.SplitPane({
 			direction = "Right",
 			size = { Percent = 25 },
@@ -105,7 +107,7 @@ config.keys = {
 	},
 	{
 		key = "u",
-		mods = "CMD",
+		mods = super,
 		action = act.SplitPane({
 			direction = "Down",
 			size = { Percent = 30 },
@@ -113,73 +115,73 @@ config.keys = {
 	},
 	{
 		key = "q",
-		mods = "CMD",
+		mods = super,
 		action = wezterm.action.CloseCurrentPane({ confirm = true }),
 	},
 
 	-- pane resizing
 	{
 		key = "LeftArrow",
-		mods = "CMD",
+		mods = super,
 		action = act.AdjustPaneSize({ "Left", 5 }),
 	},
 	{
 		key = "RightArrow",
-		mods = "CMD",
+		mods = super,
 		action = act.AdjustPaneSize({ "Right", 5 }),
 	},
 	{
 		key = "UpArrow",
-		mods = "CMD",
+		mods = super,
 		action = act.AdjustPaneSize({ "Up", 5 }),
 	},
 	{
 		key = "DownArrow",
-		mods = "CMD",
+		mods = super,
 		action = act.AdjustPaneSize({ "Down", 5 }),
 	},
 	-- pane navigation
 	{
-		key = "l",
-		mods = "CMD",
-		action = act.ActivatePaneDirection("Right"),
-	},
-	{
 		key = "h",
-		mods = "CMD",
+		mods = super,
 		action = act.ActivatePaneDirection("Left"),
 	},
 	{
 		key = "j",
-		mods = "CMD",
+		mods = super,
 		action = act.ActivatePaneDirection("Down"),
 	},
 	{
 		key = "k",
-		mods = "CMD",
+		mods = super,
 		action = act.ActivatePaneDirection("Up"),
+	},
+	{
+		key = "l",
+		mods = super,
+		action = act.ActivatePaneDirection("Right"),
 	},
 	-- copy/paste
 	{
 		key = "c",
-		mods = "CMD",
+		mods = super,
 		action = act.CopyTo("Clipboard"),
 	},
 	{
 		key = "v",
-		mods = "CMD",
+		mods = super,
 		action = act.PasteFrom("Clipboard"),
 	},
 	-- workspaces
 	{
 		key = "d",
-		mods = "CMD|CTRL",
+		mods = super .. "|CTRL",
 		action = act.SwitchToWorkspace({ name = "default" }),
 	},
 	-- notes workspace
 	{
 		key = "i",
-		mods = "CMD",
+		mods = super,
 		action = act.SwitchToWorkspace({
 			name = "notes",
 			spawn = { cwd = "/home/dur/documents/notes", label = "notes", args = { "nvim", "." } },
@@ -187,7 +189,7 @@ config.keys = {
 	},
 	{
 		key = "y",
-		mods = "CMD",
+		mods = super,
 		action = act.SpawnCommandInNewTab({
 			label = "scratchpad for the day!",
 			cwd = "/home/dur/documents/notes",
@@ -197,13 +199,13 @@ config.keys = {
 	},
 	{
 		key = "o",
-		mods = "CMD",
+		mods = super,
 		action = act.SwitchWorkspaceRelative(-1),
 	},
 	{
 		-- workspace from 'dotfiles'
 		key = "d",
-		mods = "CMD",
+		mods = super,
 		action = wezterm.action_callback(function(window, pane)
 			window:perform_action(
 				act.InputSelector({
@@ -230,7 +232,7 @@ config.keys = {
 	{
 		-- workspace from 'projects'
 		key = "f",
-		mods = "CMD",
+		mods = super,
 		action = wezterm.action_callback(function(window, pane)
 			local home = wezterm.home_dir
 			local workspaces = {}
@@ -272,7 +274,7 @@ config.keys = {
 	{
 		-- workspace from 'current workspaces'
 		key = "p",
-		mods = "CMD",
+		mods = super,
 		action = wezterm.action_callback(function(window, pane)
 			local home = wezterm.home_dir
 			local workspaces = {}

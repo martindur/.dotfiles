@@ -20,6 +20,8 @@
     "electron-25.9.0"
   ];
 
+  nixpkgs.overlays = [ (import /home/dur/extras/nixpkgs-mozilla/firefox-overlay.nix) ];
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dur = {
     isNormalUser = true;
@@ -51,9 +53,11 @@
 
 	# apps
     firefox
+    latest.firefox-nightly-bin # from firefox-overlay
     thunderbird
     lazygit
     chromium
+    google-chrome
     tree
     rofi
     discord
@@ -64,6 +68,7 @@
     unzip
     isync # email fetching, provides mbsync program for emacs
     mu # Mu4e mail client (emacs) requires this program
+    ngrok
 
     # programming
     elixir
@@ -82,6 +87,7 @@
     shfmt
     inotify-tools
     flyctl
+    yarn
 
     # LSPs
     nodePackages.pyright

@@ -53,5 +53,11 @@ augroup ElixirSnippets
   autocmd FileType elixir :iabbrev <buffer> pp \|>
   autocmd FileType elixir,heex :iabbrev <buffer> xc <%= %><left><left><left>
   autocmd FileType elixir,heex :iabbrev <buffer> xx <% %><left><left><left>
+  autocmd FileType elixir :iabbrev <buffer> hh ~H"""<cr>"""<up><right><right><cr>
 augroup end
+]])
+
+vim.cmd([[
+  autocmd BufRead,BufNewFile *.wgsl set filetype=wgsl
+  autocmd BufRead,BufNewFile *.wgsl.js set filetype=wgsl
 ]])
