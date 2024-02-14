@@ -29,10 +29,19 @@ del("n", "<leader>ww")
 del("n", "<leader>w|")
 del("n", "<leader>w-")
 
-nnoremap("<leader>w", ":w<cr>", { desc = "write buffer" })
+nnoremap("<leader>w", ":w<cr>", { desc = "write buffer", silent = true })
 
-nnoremap("J", "10j", { desc = "Fast vertical navigation down" })
-nnoremap("K", "10k", { desc = "Fast vertical navigation up" })
+nnoremap("J", "10j", { desc = "Fast vertical navigation down", silent = true })
+nnoremap("K", "10k", { desc = "Fast vertical navigation up", silent = true })
 
-vnoremap("J", "10j", { desc = "Fast vertical navigation down" })
-vnoremap("K", "10k", { desc = "Fast vertical navigation up" })
+vnoremap("J", "10j", { desc = "Fast vertical navigation down", silent = true })
+vnoremap("K", "10k", { desc = "Fast vertical navigation up", silent = true })
+
+-- Terminal keys
+nnoremap("<leader>tl", ":vsplit | vertical resize 80 | terminal<cr>", { desc = "Open a terminal in a split to the right", silent = true})
+nnoremap("<leader>tj", ":split | terminal<cr>", { desc = "Open a terminal in a split to the bottom", silent = true})
+
+nnoremap("<C-Up>", ":resize +4<cr>", { silent = true })
+nnoremap("<C-Down>", ":resize -4<cr>", { silent = true })
+nnoremap("<C-Left>", ":vertical resize -4<cr>", { silent = true })
+nnoremap("<C-Right>", ":vertical resize +4<cr>", { silent = true })
