@@ -61,6 +61,7 @@
     tree
     rofi
     discord
+    slack
     youtube-music
     flameshot
     emacs29
@@ -73,6 +74,7 @@
     # programming
     elixir
     python3
+    rustup # Rust toolchain (cargo etc.)
     python311Packages.nose3
     python311Packages.pytest
     python311Packages.setuptools
@@ -88,6 +90,9 @@
     inotify-tools
     flyctl
     yarn
+    bun
+    postgresql_16_jit
+    love # 2d game engine
 
     # LSPs
     nodePackages.pyright

@@ -4,9 +4,6 @@ PATH="$HOME/.cargo/bin:$PATH" # binaries built with rust
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 
-# asdf
-. /usr/local/opt/asdf/libexec/asdf.sh
-
 # Syncs homebrew with packages from brewfile
 alias bsync="brew update && \
     brew bundle install --cleanup --file=~/.config/brewfile --no-lock && \
