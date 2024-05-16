@@ -102,9 +102,11 @@ augroup filetype_vim
 augroup end
 " }}}
 
+au BufRead,BufWrite *.heex set filetype=eelixir
+
 "command! MixFormat :silent execute "
 
-nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
+"nnoremap <leader>g :silent execute "grep! -R " . shellescape(expand("<cWORD>")) . " ."<cr>:copen<cr>
 
 " surround current word with "
 nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel
@@ -161,6 +163,42 @@ nnoremap <leader>ss :Rg<CR>
 nnoremap <leader>sw :execute 'Rg ' . expand('<cword>')<CR>
 
 
+function InitLspPlugins()
+    call plug#begin('~/vimplugins')
+        Plug 'prabirshrestha/vim-lsp'
+        Plug 'mattn/vim-lsp-settings'
+    call plug#end()
+endfunction
+
+call InitLspPlugins()
+
+function g:StartLsp()
+    function! OnLspBufferEnabled() abort
+        setlocal omnifunc=lsp#complete
+        setlocal signcolumn=yes
+        nmap <buffer> gd <plug>(lsp-definition)
+        nmap <buffer> gs <plug>(lsp-document-symbol-search)
+        nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+        nmap <buffer> gh <plug>(lsp-hover)
+        nmap <buffer> gr <plug>(lsp-references)
+        nmap <buffer> <leader>rn <plug>(lsp-rename)
+    endfunction
+
+    augroup lsp_install
+        au!
+        autocmd User lsp_buffer_enabled call OnLspBufferEnabled()
+    augroup END
+endfunction
+
+function! SpawnInFloatTerm(cmd)
+    let buf = term_start(a:cmd, #{hidden: 1, term_finish: 'close'})
+    let winid = popup_create(buf, #{minwidth: 200, minheight: 100})
+endfunction
+
+nnoremap <silent> <leader>g :call SpawnInFloatTerm(['lazygit'])<CR>
+nnoremap <silent> <leader>e :call SpawnInFloatTerm(['vifm', getcwd()])<CR>
+
+
 " TO DO:
 " * fuzzy search git branches and checkout -> git branch | fzf | xargs git
 " checkout
@@ -186,10 +224,10 @@ set wildignore=*.swp,*.bak,*.pyc,*.erl,*.hrl
 
 let g:default_ctags_exclude = '--exclude=.git --exclude="*.css" --exclude="*.mk" --exclude="*.html" --exclude="*.beam" --exclude="*.md" --exclude="*.json" --exclude="*.erl" --exclude="Makefile" --exclude="*.pyc" --exclude=__pycache__ --exclude=.cache --exclude=node_modules --exclude="*.txt"'
 " create the `tags` file (may need to install ctags first)
-command! MakeTags execute '!ctags ' . g:default_ctags_exclude . ' -R .'
+"command! MakeTags execute '!ctags ' . g:default_ctags_exclude . ' -R .'
 
-nnoremap gd <C-]>
-nnoremap gb <C-t>
+"nnoremap gd <C-]>
+"nnoremap gb <C-t>
 
 " NOW WE CAN:
 " - use C-] to jump to tag under cursor
@@ -221,7 +259,7 @@ let g:netrw_liststyle=3		" tree view
 "let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 
 " open netrw filebrowser
-nmap <leader>e :Lexplore<CR> 
+"nmap <leader>e :Lexplore<CR> 
 
 " NOW WE CAN:
 " - :edit a folder to open a file browser
