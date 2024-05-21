@@ -1,5 +1,23 @@
 " OPTIONS
 
+set textwidth=80
+
+function! CenterText()
+    let width = winwidth(0)
+    let textwidth = &textwidth
+    if textwidth == 0
+        let textwidth = 80
+    endif
+
+    let margin = (width - textwidth) / 2
+    if margin > 0
+        echom 'margin big'
+        exe 'setlocal nuw=' . margin
+    endif
+endfunction
+
+"autocmd VimEnter,VimResized * call CenterText()
+
 set nocompatible
 filetype off
 let mapleader = " "
@@ -163,16 +181,23 @@ nnoremap <leader>ss :Rg<CR>
 nnoremap <leader>sw :execute 'Rg ' . expand('<cword>')<CR>
 
 
-function InitLspPlugins()
-    call plug#begin('~/vimplugins')
-        Plug 'prabirshrestha/vim-lsp'
-        Plug 'mattn/vim-lsp-settings'
-    call plug#end()
-endfunction
+call plug#begin('~/vimplugins')
+    " File explorer
+    Plug 'tpope/vim-vinegar'
 
-call InitLspPlugins()
+    " LSP
+    Plug 'prabirshrestha/vim-lsp'
+    Plug 'mattn/vim-lsp-settings'
+call plug#end()
 
-function g:StartLsp()
+let g:lsp_settings = {
+\    "elixir-ls": {
+\        "dialyzerEnabled": v:false
+\    }
+\}
+
+
+function! g:StartLsp()
     function! OnLspBufferEnabled() abort
         setlocal omnifunc=lsp#complete
         setlocal signcolumn=yes
@@ -250,11 +275,11 @@ let g:default_ctags_exclude = '--exclude=.git --exclude="*.css" --exclude="*.mk"
 
 " FILE BROWSING:
 
-let g:netrw_banner=0 		" disable annoying banner
-let g:netrw_browse_split=4 	" open in prior window
-let g:netrw_winsize=15
+" let g:netrw_banner=0 		" disable annoying banner
+" let g:netrw_browse_split=4 	" open in prior window
+" let g:netrw_winsize=15
 "let g:netrw_altv=1 		" open splits to the right
-let g:netrw_liststyle=3		" tree view
+" let g:netrw_liststyle=3		" tree view
 "let g:netrw_list_hide=netrw_gitignore#Hide()
 "let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 

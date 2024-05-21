@@ -44,19 +44,17 @@
 	fd
 	bat
 	xclip
+  ffmpeg-full
 	wezterm
 	neovim
-	helix
 	tree-sitter
 	nodejs
 	pandoc # document transpiler (e.g. markdown compiling)
 
 	# apps
     firefox
-    latest.firefox-nightly-bin # from firefox-overlay
     thunderbird
     lazygit
-    chromium
     google-chrome
     tree
     rofi
@@ -64,12 +62,12 @@
     slack
     youtube-music
     flameshot
-    emacs29
+    vlc
     imagemagick
     unzip
-    isync # email fetching, provides mbsync program for emacs
-    mu # Mu4e mail client (emacs) requires this program
     ngrok
+    reaper # audio DAW
+    insomnia
 
     # programming
     elixir
@@ -93,12 +91,15 @@
     bun
     postgresql_16_jit
     love # 2d game engine
+    vifm-full
 
     # LSPs
     nodePackages.pyright
+    nodePackages.svelte-language-server
     lua-language-server
     elixir-ls
     vscode-langservers-extracted
+    ruff-lsp
 
 	# extras
 	zsh-vi-mode
@@ -106,8 +107,6 @@
 	fira-code-symbols
     ];
   };
-
-  services.emacs.enable = true;
 
   boot.loader = {
     efi = {
@@ -238,6 +237,7 @@
   # };
 
   # sync things
+  # Go to localhost:8384 to see the web interface
   services.syncthing = {
       enable = true;
       user = "dur";

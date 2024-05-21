@@ -15,8 +15,20 @@ return {
         tailwindcss = {
           init_options = {
             userLanguages = {
-              elixir = "phoenix-heex",
-              heex = "phoenix-heex",
+              -- elixir = "phoenix-heex",
+              -- heex = "phoenix-heex",
+              elixir = "html-eex",
+              eelixir = "html-eex",
+              heex = "html-eex",
+            },
+          },
+          settings = {
+            tailwindCSS = {
+              experimental = {
+                classRegex = {
+                  'class[:]\\s*"([^"]*)"',
+                },
+              },
             },
           },
           root_dir = function(fname)

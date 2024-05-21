@@ -30,5 +30,16 @@ fi
 # An easy way to run postgres in a minimal way, without relying on compose or other custom code
 lazy-postgres () {
   docker stop lazy-postgres &> /dev/null
+  docker rm lazy-postgres &> /dev/null
   docker run --name lazy-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -v $PWD/postgres:/var/lib/postgresql/data -d --rm postgres:16
+}
+
+lazy-video () {
+  dir="$HOME/videos/recordings"
+  params=$(flameshot gui -g)
+  array=(`echo $params | sed 's/+/\n/g'`)
+  now=`date "+%F_%H-%M-%S"`
+  filename="${dir}/${now}.mp4"
+  # ffmpeg -f x11grab -framerate 24 -i :0.0 -select_region 1 -show_region 1 "${filename}"
+  ffmpeg -f x11grab -framerate 24 -video_size "${array[1]}" -framerate 24 -i :0.0+"${array[2]}","${array[3]}" "${filename}"
 }

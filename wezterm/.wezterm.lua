@@ -16,7 +16,32 @@ end)
 
 -- Config
 
+local function calculate_padding(window, max_content_width)
+    local current_padding = window:effective_config().window_padding
+    local window_dims = window:get_dimensions()
+
+    -- Toggle padding off, if it's on
+    if current_padding.left ~= "0px" and current_padding.right ~= "0px" then
+        return 0, 0
+    end
+
+    local total_padding = window_dims.pixel_width - max_content_width
+    if total_padding < 0 then
+        return 0, 0
+    end
+
+    local left_padding = math.floor(total_padding / 2)
+    local right_padding = total_padding - left_padding
+    return left_padding, right_padding
+end
+
 config.color_scheme = "Tokyo Night Moon"
+config.window_padding = {
+    left = 0,
+    right = 0,
+    top = 0,
+    bottom = 0
+}
 
 local super = "CMD"
 
@@ -87,6 +112,22 @@ config.keys = {
 	-- 		args = { "steam-run", "nvim", "2brain.md" },
 	-- 	}),
 	-- },
+    {
+        key = "z",
+        mods = super,
+        action = wezterm.action_callback(function(win, pane)
+            -- toggle padding between none, and a focused frame of 480px wide
+            local left, right = calculate_padding(win, 1200)
+            local overrides = win:get_config_overrides() or {}
+            overrides.window_padding = {
+                left = left,
+                right = right,
+                top = 0,
+                bottom = 0
+            }
+            win:set_config_overrides(overrides)
+        end)
+    },
 	{
 		key = "g",
 		mods = super,

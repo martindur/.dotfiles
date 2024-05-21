@@ -154,6 +154,9 @@ augroup filetype_vim
 augroup end
 " }}}
 
+au Bufread,BufNewFile *.heex set filetype=elixir
+
+
 augroup highlight_yanked_text
     autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()

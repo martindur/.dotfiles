@@ -10,6 +10,9 @@ linux-wsl:
 nix:
 	sudo nixos-rebuild -I nixos-config=./configuration.nix switch
 
+nix-upgrade:
+	sudo nixos-rebuild -I nixos-config=./configuration.nix switch --upgrade
+
 nix-wsl:
 	sudo nixos-rebuild -I nixos-config=./configuration-wsl.nix switch
 
