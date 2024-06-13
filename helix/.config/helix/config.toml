@@ -1,11 +1,9 @@
-theme="tokyonight"
-
-[keys.insert.j]
-k = "normal_mode"
-l = ["insert_newline", ":insert-output printf '|>'", "goto_line_end", "move_char_right"]
+theme="dracula"
 
 [keys.insert]
 "esc" = "no_op"
+j = {k = "normal_mode"}
+p = {p = [":insert-output printf '|>'", "goto_line_end", "move_char_right"]}
 
 [keys.normal."space"]
 w = ":w"
