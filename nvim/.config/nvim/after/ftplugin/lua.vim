@@ -1,5 +1,8 @@
 set cms=--\ %s
 
+set shiftwidth=2
+set tabstop=2
+
 lua << EOF
 lua_lsp_config = {
     name = 'lua-ls',
@@ -22,3 +25,8 @@ lua_lsp_config = {
 EOF
 
 call luaeval('start_lsp(lua_lsp_config)')
+
+augroup lua_format
+    autocmd!
+    autocmd BufWritePost <buffer> :silent lua vim.lsp.buf.format()
+augroup end

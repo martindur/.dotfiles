@@ -17,3 +17,9 @@ ts_lsp_config = {
 EOF
 
 call luaeval('start_lsp(ts_lsp_config)')
+
+
+augroup ts_format
+    autocmd!
+    autocmd BufWritePost <buffer> :silent lua vim.lsp.buf.format()
+augroup end

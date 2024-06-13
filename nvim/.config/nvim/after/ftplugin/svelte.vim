@@ -1,5 +1,9 @@
 set cms=//\ %s
 
+set tabstop=2 " number of spaces to move by when pressing <TAB>
+set shiftwidth=2
+set softtabstop=2
+
 :iabbrev <buffer> iff if ()<left>
 
 lua <<EOF

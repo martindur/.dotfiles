@@ -9,6 +9,13 @@ call plug#begin('~/vimplugins')
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'mfussenegger/nvim-dap'
+    Plug 'rcarriga/nvim-dap-ui'
+    Plug 'nvim-neotest/nvim-nio' " nvim-dap-ui dependency
+    Plug 'theHamsta/nvim-dap-virtual-text'
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
+    Plug 'nvim-pack/nvim-spectre'
 call plug#end()
 
 
@@ -82,74 +89,32 @@ nnoremap <leader>w :w<cr>
 nnoremap <leader>q :q<cr>
 
 inoremap jk <esc>
-inoremap <esc> <nop>
+" inoremap <esc> <nop>
 
+	
 " oil.nvim
-nnoremap <silent> <leader>e :Oil<cr>
+" nnoremap <silent> <leader>e :Oil<cr>
 
-
-function! SpawnInFloatTerm(cmd)
-    "let buf = term_start(a:cmd, #{hidden: 1, term_finish: 'close'})
-    let buf = nvim_create_buf(v:false, v:true)
-    let win = nvim_open_win(buf, v:true, {
-                \ 'relative': 'editor',
-    \ 'width': 200,
-    \ 'height': 100,
-    \ 'col': &columns/ 2 - 100,
-    \ 'row': &lines / 2 - 50,
-    \ 'border': 'single',
-    \ 'style': 'minimal'
-    \ })
-
-    call termopen(a:cmd, {'on_exit': {job_id, exit_code, event -> nvim_win_close(win, v:true)}})
-    call nvim_command('startinsert')
-endfunction
-
-nnoremap <silent> <leader>g :call SpawnInFloatTerm(['lazygit'])<CR>
-
-function! TabOrRight()
-    if search('\%#[]>)}''"]', 'n')
-        return "\<right>"
-    endif
-
-    return "\<tab>"
-endfunction
-
-inoremap <expr> <Tab> TabOrRight()
-
-au BufRead,BufWrite *.heex set filetype=eelixir
 
 augroup highlight_yanked_text
     autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup end
 
-function! ToggleQuickFix()
-    if empty(filter(getwininfo(), 'v:val.quickfix'))
-        copen
-    else
-        cclose
-    endif
-endfunction
 
-function! ToggleLoc()
-    if empty(filter(getwininfo(), 'v:val.loclist'))
-        lopen
-    else
-        lclose
-    endif
-endfunction
+nnoremap <leader>F <cmd>Spectre<cr>
 
-nnoremap <silent> qq :call ToggleQuickFix()<cr>
-nnoremap <silent> qo :copen<cr>
-nnoremap <silent> qc :cclose<cr>
+" Fuzzy finder
+nnoremap <leader>f <cmd>Telescope find_files<cr>
+nnoremap <leader>b <cmd>Telescope buffers<cr>
+nnoremap <leader>s <cmd>Telescope live_grep<cr>
 
 lua <<EOF
 
 require('custom.lsp')
 require('custom.cmp')
 
-
+require('dapui').setup()
 
 require("oil").setup()
 require'nvim-treesitter.configs'.setup{highlight={enable=true}}
