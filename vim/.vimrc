@@ -2,29 +2,12 @@
 
 set textwidth=80
 
-function! CenterText()
-    let width = winwidth(0)
-    let textwidth = &textwidth
-    if textwidth == 0
-        let textwidth = 80
-    endif
-
-    let margin = (width - textwidth) / 2
-    if margin > 0
-        echom 'margin big'
-        exe 'setlocal nuw=' . margin
-    endif
-endfunction
-
-"autocmd VimEnter,VimResized * call CenterText()
-
-set nocompatible
-filetype off
+" set nocompatible
+" filetype off
 let mapleader = " "
 
-syntax on
+" syntax on
 set termguicolors
-colorscheme onedark
 
 filetype plugin indent on
 
@@ -32,7 +15,7 @@ set tabstop=4 " number of spaces to move by when pressing <TAB>
 set shiftwidth=4
 set expandtab
 set softtabstop=4
-set backspace=indent,eol,start
+" set backspace=indent,eol,start
 set autoindent
 set copyindent
 
@@ -42,12 +25,12 @@ set matchtime=2 " 2/10th of a second for 'showmatch' to show the matched bracket
 
 set ignorecase
 set smartcase
-set smarttab
+" set smarttab
 
 set hlsearch " highlight search hits
-set incsearch " show matches for searches incrementally (e.g. while typing pattern) - this is incredibly useful for regex
+" set incsearch " show matches for searches incrementally (e.g. while typing pattern) - this is incredibly useful for regex
 
-set history=1000
+" set history=1000
 set undolevels=1000
 
 set number
@@ -56,19 +39,19 @@ set relativenumber
 set clipboard^=unnamedplus
 
 set title
-set ruler
+" set ruler
 set novisualbell
 set noerrorbells
 
 set so=7
 set hidden
 
-set laststatus=2
+" set laststatus=2
 set cursorline
 
-set autoread " this will reload files that were written to from external programs (e.g. useful for formatters)
+" set autoread " this will reload files that were written to from external programs (e.g. useful for formatters)
 
-set timeoutlen=1000 " the timeout length between key combinations
+" set timeoutlen=1000 " the timeout length between key combinations
 set ttimeoutlen=0 " the timeout for key code delays. IMPORTANT: This may be a culprit for mappings that include keys like Esc
 
 " should just be for mac
@@ -94,10 +77,6 @@ vnoremap <PageUp> :m '<-2<CR>gv=gv
 " quick save
 nnoremap <Leader>w :w<CR>
 
-
-"function! MixFormat()
-"    silent execute '!mix format '.bufname("%")
-"endfunction
 
 " COMMENTING:
 
@@ -182,19 +161,55 @@ nnoremap <leader>sw :execute 'Rg ' . expand('<cword>')<CR>
 
 
 call plug#begin('~/vimplugins')
+    Plug 'tpope/vim-sensible'
     " File explorer
     Plug 'tpope/vim-vinegar'
+    Plug 'tpope/vim-commentary'
 
     " LSP
     Plug 'prabirshrestha/vim-lsp'
     Plug 'mattn/vim-lsp-settings'
+
+    " Completion
+    Plug 'lifepillar/vim-mucomplete'
+
+    " colorscheme
+    Plug 'EdenEast/nightfox.nvim'
+    Plug 'dracula/vim', { 'as': 'dracula' }
+
+    " Gleam
+    " Plug 'gleam-lang/gleam.vim'
 call plug#end()
+
+" mu-complete settings
+
+set completeopt+=menuone
+set completeopt+=noselect
+let g:mucomplete#enable_auto_at_startup = 1
+set complete-=i
+set complete-=t
+set shortmess+=c
+set belloff=all
+
+let g:mucomplete#wordlist = {
+    \ '': ['Hello, world!'],
+\}
+
+let g:mucomplete#chains = {}
+let g:mucomplete#chains['default'] = {
+    \ 'default': ['list', 'omni', 'path', 'c-n', 'uspl'],
+    \ '.*string.*': ['uspl'],
+    \ '.*comment.*': ['uspl']
+\}
+
+
+colorscheme nightfox 
 
 let g:lsp_settings = {
 \    "elixir-ls": {
 \        "dialyzerEnabled": v:false
 \    }
-\}
+\   }
 
 
 function! g:StartLsp()
@@ -221,7 +236,7 @@ function! SpawnInFloatTerm(cmd)
 endfunction
 
 nnoremap <silent> <leader>g :call SpawnInFloatTerm(['lazygit'])<CR>
-nnoremap <silent> <leader>e :call SpawnInFloatTerm(['vifm', getcwd()])<CR>
+nnoremap <silent> <leader>e :call SpawnInFloatTerm(['yazi'])<CR>
 
 
 " TO DO:
@@ -233,7 +248,7 @@ nnoremap <silent> <leader>e :call SpawnInFloatTerm(['vifm', getcwd()])<CR>
 set path+=**
 
 " display all matching files when we tab complete
-set wildmenu
+" set wildmenu
 set wildcharm=<TAB>     " needed to open the wildmenu from shortcuts
 set wildignore=*.swp,*.bak,*.pyc,*.erl,*.hrl
 
@@ -253,43 +268,6 @@ let g:default_ctags_exclude = '--exclude=.git --exclude="*.css" --exclude="*.mk"
 
 "nnoremap gd <C-]>
 "nnoremap gb <C-t>
-
-" NOW WE CAN:
-" - use C-] to jump to tag under cursor
-" - use g+C-] for ambiguous tags
-" - use C-t to jump back up the tag stack
-
-" THINGS TO CONSIDER:
-" - this doesn't help if you want a visual list of tags
-
-" AUTOCOMPLETE
-
-" works 'out of the box' with tags
-
-" NOW WE CAN:
-" - use C-x C-n for JUST this file
-" - use C-x C-f for filenames
-" - use C-x C-] for tags only
-" - use C-n for anything specified by the 'complete' option
-" - use C-n and C-p to go back and fourth between suggestions
-
-" FILE BROWSING:
-
-" let g:netrw_banner=0 		" disable annoying banner
-" let g:netrw_browse_split=4 	" open in prior window
-" let g:netrw_winsize=15
-"let g:netrw_altv=1 		" open splits to the right
-" let g:netrw_liststyle=3		" tree view
-"let g:netrw_list_hide=netrw_gitignore#Hide()
-"let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
-
-" open netrw filebrowser
-"nmap <leader>e :Lexplore<CR> 
-
-" NOW WE CAN:
-" - :edit a folder to open a file browser
-" - <CR>/v/t to open in an h-split/v-split/tab
-" - check |netrw-browse-maps| for more mappings
 
 " SNIPPETS
 
