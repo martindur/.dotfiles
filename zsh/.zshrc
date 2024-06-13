@@ -22,7 +22,7 @@ if [[ $(uname) == 'Darwin' ]]; then
 fi
 
 if [[ $(uname) == 'Linux' ]]; then
-  alias nvim='steam-run nvim' # a NixOS 'hack' to run binaries not installed via nix packages. Without this, Mason can't download and run LSPs
+  # alias nvim='steam-run nvim' # a NixOS 'hack' to run binaries not installed via nix packages. Without this, Mason can't download and run LSPs
   alias n='steam-run nvim'
 fi
 
