@@ -3,7 +3,9 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 { config, lib, pkgs, ... }:
-
+let
+  unstable = import <nixos-unstable> {};
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -46,7 +48,9 @@
 	xclip
   ffmpeg-full
 	wezterm
-	neovim
+  yazi
+	unstable.neovim
+	unstable.helix
 	tree-sitter
 	nodejs
 	pandoc # document transpiler (e.g. markdown compiling)
@@ -70,13 +74,18 @@
     insomnia
 
     # programming
+    erlang
     elixir
+    unstable.gleam
     python3
+    typescript
     rustup # Rust toolchain (cargo etc.)
     python311Packages.nose3
     python311Packages.pytest
     python311Packages.setuptools
     python311Packages.pyflakes
+    python311Packages.debugpy
+    python311Packages.python-lsp-server
     isort
     pipenv
     black
@@ -84,6 +93,7 @@
     html-tidy # validator and 'tidier' for html
     stylelint # linting for css
     jsbeautifier # code formatting for JS/CSS/HTML
+    rebar3 # erlang build tool
     shfmt
     inotify-tools
     flyctl
@@ -96,6 +106,7 @@
     # LSPs
     nodePackages.pyright
     nodePackages.svelte-language-server
+    nodePackages.typescript-language-server
     lua-language-server
     elixir-ls
     vscode-langservers-extracted
@@ -253,6 +264,8 @@
 
   programs._1password.enable = true;
   programs._1password-gui.enable = true;
+
+  programs.steam.enable = true;
 
   # List services that you want to enable:
 
