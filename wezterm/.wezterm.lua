@@ -77,6 +77,10 @@ local dotfiles = {
 		id = wezterm.home_dir .. "/.dotfiles/vim",
 	},
 	{
+		label = "helix",
+		id = wezterm.home_dir .. "/.dotfiles/helix/.config/helix",
+	},
+	{
 		label = "wezterm",
 		id = wezterm.home_dir .. "/.dotfiles/wezterm",
 	},
@@ -127,6 +131,27 @@ config.keys = {
             }
             win:set_config_overrides(overrides)
         end)
+    },
+    {
+    	key = "t",
+    	mods = super,
+    	action = wezterm.action_callback(function(win, pane)
+    		local tabs = win:mux_window():tabs_with_info()
+    		if #tabs < 2 then
+    			win:perform_action(
+    				act.SpawnTab 'CurrentPaneDomain',
+    				pane
+    			)
+    		elseif #tabs == 2 then
+    			local switch_to_tab = tabs[1].is_active and tabs[2] or tabs[2].is_active and tabs[1]
+    			win:perform_action(
+    				act.ActivateTab(switch_to_tab.index),
+    				pane
+    			)
+    		else
+    			print("This keybinding is not supported outside the first two tabs")
+        end
+    	end)
     },
 	{
 		key = "g",
