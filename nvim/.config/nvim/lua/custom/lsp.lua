@@ -96,10 +96,14 @@ function lsp_attach(client, bufnr)
     vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
   end
 
+  local builtin = require('telescope.builtin')
+
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr })
   vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { buffer = bufnr })
   vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, { buffer = bufnr })
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr })
+  -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr })
+  vim.keymap.set('n', '<leader>r', builtin.lsp_references, { buffer = bufnr })
+  -- vim.keymap.set('n', '<leader>s', builtin.lsp_document_symbols, { buffer = bufnr })
 end
 
 -- MAPPINGS / COMMANDS

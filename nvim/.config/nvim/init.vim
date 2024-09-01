@@ -16,6 +16,7 @@ call plug#begin('~/vimplugins')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
     Plug 'nvim-pack/nvim-spectre'
+    Plug 'folke/trouble.nvim'
 call plug#end()
 
 
@@ -82,6 +83,11 @@ let mapleader = " "
 nnoremap J 10j
 nnoremap K 10k
 
+nnoremap <C-l> <C-w>l
+nnoremap <C-k> <C-w>k
+nnoremap <C-j> <C-w>j
+nnoremap <C-h> <C-w>h
+
 vnoremap J 10j
 vnoremap K 10k
 
@@ -104,16 +110,24 @@ augroup end
 
 nnoremap <leader>F <cmd>Spectre<cr>
 
-" Fuzzy finder
+" PLUGIN: Telescope (fuzzy finder)
 nnoremap <leader>f <cmd>Telescope find_files<cr>
 nnoremap <leader>b <cmd>Telescope buffers<cr>
-nnoremap <leader>s <cmd>Telescope live_grep<cr>
+nnoremap <leader>t <cmd>Telescope live_grep<cr>
+
+" PLUGIN: Trouble
+
+nnoremap <leader>xx <cmd>Trouble diagnostics toggle focus=true<cr>
+nnoremap <leader>xe <cmd>Trouble diagnostics toggle focus=true filter.severity=vim.diagnostic.severity.ERROR<cr>
+nnoremap <leader>xw <cmd>Trouble diagnostics toggle focus=true filter.severity=vim.diagnostic.severity.WARNING<cr>
+nnoremap <leader>s <cmd>Trouble symbols toggle pinned=true results.win.relative=win results.win.position=right<cr>
 
 lua <<EOF
 
 require('custom.lsp')
 require('custom.cmp')
 
+require('trouble').setup()
 require('dapui').setup()
 
 require("oil").setup()

@@ -7,6 +7,9 @@ onoremap <silent> F :<C-U>normal! 0f(hviw<CR>
 " wunderbar!!
 onoremap <silent> p i(
 
+" find a better mapping, t is used for e.g. delete to x
+" onoremap <silent> t i"
+
 " db -> delete body, e.g. delete up until return (useful in most filetypes,
 " but might want to make a custom one for elixir
 onoremap <silent> b /return<cr>
@@ -52,9 +55,10 @@ function! NextLineWithEmptySpace()
     let @/ = l:save_search
 endfunction
 
-" nnoremap <leader>j :/\v^\s*$<cr>:nohlsearch<cr>
-nnoremap j :/\v\S<cr>:nohlsearch<cr>
-nnoremap k :?\v\S<cr>:nohlsearch<cr>
+
+" Jumps over white space
+" nnoremap j :/\v\S<cr>:nohlsearch<cr>
+" nnoremap k :?\v\S<cr>:nohlsearch<cr>
 
 
 " QUICKFIX

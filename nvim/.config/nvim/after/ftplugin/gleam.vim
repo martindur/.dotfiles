@@ -1,5 +1,8 @@
 set cms=//\ %s
 
+set shiftwidth=2
+set tabstop=2
+
 :iabbrev <buffer> pp \|>
 
 lua << EOF
