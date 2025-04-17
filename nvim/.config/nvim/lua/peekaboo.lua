@@ -61,7 +61,7 @@ function M.live_grep(query)
     --bind 'enter:execute-silent(echo {q} > %s)+accept' \
     --delimiter : \
     --nth 3.. \
-    --preview 'bat --style=numbers --color=always --highlight-line {2} {1}'
+    --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
     > %s]],
     query,
     query,
