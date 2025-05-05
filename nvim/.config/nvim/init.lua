@@ -5,6 +5,7 @@ vim.g.mapleader = " "
 vim.cmd.colorscheme("habamax")
 
 vim.opt.relativenumber = true
+vim.opt.number = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.smarttab = true
@@ -83,13 +84,18 @@ vim.keymap.set({'n'}, '<leader>e', function() util.floating_process('yazi') end)
   -- '--header', 'CTRL-. show hidden'
 -- }
 
-vim.keymap.set({'n'}, '<leader>f', peekaboo.find_files)
-vim.keymap.set({'n'}, '<leader>b', peekaboo.find_buffers)
-vim.keymap.set({'n'}, '<leader>F', peekaboo.find_files_include_hidden)
-vim.keymap.set({'n'}, '<leader>t', function() peekaboo.live_grep() end)
-vim.keymap.set({'n'}, ',', peekaboo.last_query)
+vim.keymap.set({'n'}, '<leader>f', peekaboo.find_files, { desc = "find project files with fzf"})
+vim.keymap.set({'n'}, '<leader>b', peekaboo.find_buffers, { desc = "find files from current buffers"})
+vim.keymap.set({'n'}, '<leader>F', peekaboo.find_files_include_hidden, { desc = "find files, including hidden" })
+vim.keymap.set({'n'}, '<leader>t', function() peekaboo.live_grep() end, { desc = "find files by searching for string in file" })
+vim.keymap.set({'n'}, ',', peekaboo.last_query, { desc = "re-run last query" })
 -- vim.keymap.set('i', '<c-space>', function() vim.lsp.completion.get() end) -- switches language in OSX
 
+
+vim.keymap.set('n', '<leader>p', require("ai").new_chat)
+
+
+--require('witch').setup()
 
 -- Maybe?
 --vim.keymap.set('i', '<Tab>', function()
@@ -106,10 +112,22 @@ vim.keymap.set({'n'}, ',', peekaboo.last_query)
 -- history | fzf --tac --no-sort
 
 -- TODO:
--- * easy default window open function (popup) DONE
--- * fzf find files (popup) DONE
--- * fzf find files with hidden (popup) DONE
--- * fzf live grep (popup) DONE
--- * yazi (popup) DONE
--- * lazygit (popup) DONE
 -- * quick open terminal (toggleable?)
+-- * simple which key
+-- * consolidate themes (keep habamax?)
+-- * AI buffer v1 (simple buffer chat)
+-- * AI buffer v2 (context via vectorized database of code, using pgvector)
+--
+
+-- PLUGINS
+
+vim.cmd('source ' .. vim.fn.stdpath("config") .. '/plugme.vim')
+-- .ass is used for AI assistant filetype
+require('render-markdown').setup({
+  file_types = { 'markdown', 'ass' }
+})
+vim.treesitter.language.register('markdown', 'ass')
+
+require('nvim-treesitter.configs').setup({
+  highlight = { enable = true }
+})

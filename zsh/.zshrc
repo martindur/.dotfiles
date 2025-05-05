@@ -1,5 +1,7 @@
 PATH="$HOME/.config/bin:$PATH" # all my custom runnable scripts
 PATH="$HOME/.cargo/bin:$PATH" # binaries built with rust
+PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH" # postgres utility (psql, pg_dump, etc.)
+PATH="$HOME/.bun/bin:$PATH" # bun global packages
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
@@ -9,17 +11,12 @@ alias bsync="brew update && \
     brew bundle install --cleanup --file=~/.config/brewfile --no-lock && \
     brew upgrade"
 
-# OSX
-if [[ $(uname) == 'Darwin' ]]; then
-# Syntax highlighting
-  source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+alias bsyncr="brew update && \
+    brew bundle install --cleanup --file=~/.config/reshape.brewfile && \
+    brew upgrade"
 
-  # pyenv
-  PYENV_ROOT="$HOME/.pyenv"
-  PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
-fi
+alias python="python3"
+
 
 if [[ $(uname) == 'Linux' ]]; then
   # alias nvim='steam-run nvim' # a NixOS 'hack' to run binaries not installed via nix packages. Without this, Mason can't download and run LSPs
@@ -43,3 +40,29 @@ lazy-video () {
   # ffmpeg -f x11grab -framerate 24 -i :0.0 -select_region 1 -show_region 1 "${filename}"
   ffmpeg -f x11grab -framerate 24 -video_size "${array[1]}" -framerate 24 -i :0.0+"${array[2]}","${array[3]}" "${filename}"
 }
+
+if [ -f ~/.env ]; then
+    export $(grep -v '^#' ~/.env | xargs)
+else
+    echo ".env file not found"
+fi
+
+# OSX
+if [[ $(uname) == 'Darwin' ]]; then
+  # pyenv
+  PYENV_ROOT="$HOME/.pyenv"
+  PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init -)"
+
+# Syntax highlighting
+  source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+
+# Created by `pipx` on 2024-09-24 13:45:52
+export PATH="$PATH:/Users/dur/.local/bin"
+
+source /Users/dur/.config/broot/launcher/bash/br
+
+eval "$(starship init zsh)"

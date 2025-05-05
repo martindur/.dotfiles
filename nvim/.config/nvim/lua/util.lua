@@ -49,5 +49,13 @@ function M.get_file_first_line(filepath)
   return line, nil
 end
 
+function M.load_json(path)
+  local f = assert(io.open(path, "r"), "Unable to open JSON file: " .. path)
+  local content = f:read("*a")
+  f:close()
+
+  return vim.json.decode(content)
+end
+
 
 return M
