@@ -1,0 +1,53 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "bindings": {
+      "cmd-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "cmd-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "cmd-j": ["workspace::ActivatePaneInDirection", "Down"],
+      "cmd-k": ["workspace::ActivatePaneInDirection", "Up"],
+      "cmd-m": "workspace::ToggleBottomDock",
+      "cmd-f": "projects::OpenRecent"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {}
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      // "j k": ["workspace::SendKeystrokes", "escape"]
+    }
+  },
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      "j k": "vim::NormalBefore"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "J": ["workspace::SendKeystrokes", "1 0 j"],
+      "K": ["workspace::SendKeystrokes", "1 0 k"],
+      "space f": "file_finder::Toggle",
+      "space g": [
+        "task::Spawn",
+        { "task_name": "start lazygit", "reveal_target": "center" }
+      ]
+    }
+  },
+  {
+    "context": "vim_mode == insert && extension==gleam",
+    "bindings": {
+      "p p space": ["workspace::SendKeystrokes", "| > space"]
+    }
+  }
+]
