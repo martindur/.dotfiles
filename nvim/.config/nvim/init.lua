@@ -124,10 +124,62 @@ vim.keymap.set('n', '<leader>p', require("ai").new_chat)
 vim.cmd('source ' .. vim.fn.stdpath("config") .. '/plugme.vim')
 -- .ass is used for AI assistant filetype
 require('render-markdown').setup({
-  file_types = { 'markdown', 'ass' }
+  file_types = { 'markdown', 'ass', 'codecompanion' }
 })
 vim.treesitter.language.register('markdown', 'ass')
 
 require('nvim-treesitter.configs').setup({
   highlight = { enable = true }
+})
+
+require('codecompanion').setup({
+  strategies = {
+    chat = {
+      adapter = "anthropic",
+      slash_commands = {
+        ["git_files"] = {
+          description = "List git files",
+          ---@param chat CodeCompanion.Chat
+          callback = function(chat)
+            local handle = io.popen("git ls-files")
+            if handle ~= nil then
+              local result = handle:read("*a")
+              handle:close()
+              chat:add_reference({ role = "user", content = result }, "git", "<git_files>")
+            else
+              return vim.notify("No git files available", vim.log.levels.INFO)
+            end
+          end,
+          opts = {
+            contains_code = false
+          }
+        }
+      },
+      keymaps = {
+        completion = {
+          modes = {
+            i = "<C-.>"
+          }
+        }
+      },
+      tools = {
+        opts = {
+          auto_submit_errors = false,
+          auto_submit_success = true
+        }
+      }
+    },
+    inline = {
+      adapter = "anthropic"
+    }
+  }
+})
+
+vim.keymap.set('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { desc = "AI Actions" })
+vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "AI Chat" })
+
+local diff = require('mini.diff')
+
+diff.setup({
+  source = diff.gen_source.none()
 })
