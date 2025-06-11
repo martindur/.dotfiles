@@ -1,8 +1,7 @@
 local util = require('util')
-local peekaboo = require('peekaboo')
+-- local peekaboo = require('peekaboo')
 
 vim.g.mapleader = " "
-vim.cmd.colorscheme("habamax")
 
 vim.opt.relativenumber = true
 vim.opt.number = true
@@ -29,79 +28,46 @@ vim.opt.listchars = { space = '_', tab = '>~' }
 -- LSP --
 ---------
 
--- LUA --
-vim.lsp.config.lua_ls = {
-	cmd = { 'lua-language-server' },
-	filetypes = { 'lua' },
-	root_markers = { '.luarc.json', '.luarc.jsonc'},
-	telemetry = { enabled = false },
-	formatters = {
-		ignoreComments = false,
-	},
-	settings = {
-		Lua = {
-			runtime = {
-				version = "LuaJIT"
-			},
-			signatureHelp = { enabled = true }
-		}
-	}
-}
-
-vim.lsp.enable("lua_ls")
+require('lsp').setup()
 
 
 -- LSP AUTO COMPLETE --
 
-vim.api.nvim_create_autocmd('LspAttach', {
-	callback = function(ev)
-		local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
-		if client:supports_method('textDocument/completion') then
-      -- Trigger autocompletion on EVERY keypress. May be slow!
-      --local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-      --client.server_capabilities.completionProvider.triggerCharacters = chars
-			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-		end
-	end
-})
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   callback = function(ev)
+--     local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+--     if client:supports_method('textDocument/completion') then
+--       -- Trigger autocompletion on EVERY keypress. May be slow!
+--       --local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+--       --client.server_capabilities.completionProvider.triggerCharacters = chars
+--       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+--     end
+--   end
+-- })
 
 vim.diagnostic.config({ virtual_lines = true })
 
 -- KEY MAP --
 
-vim.keymap.set({'n', 'v'}, 'J', '10j')
-vim.keymap.set({'n', 'v'}, 'K', '10k')
+vim.keymap.set({ 'n', 'v' }, 'J', '10j')
+vim.keymap.set({ 'n', 'v' }, 'K', '10k')
 vim.keymap.set('i', 'jk', '<esc>')
 
 -- File finding --
-vim.keymap.set({'n'}, '<leader>g', function() util.floating_process('lazygit') end)
-vim.keymap.set({'n'}, '<leader>e', function() util.floating_process('yazi') end)
+vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit') end)
+vim.keymap.set({ 'n' }, '<leader>e', function() util.floating_process('yazi') end)
 
--- local find_files = {
---   'fzf',
---   '--preview', 'bat --style=numbers --color=always {}',
---   '--bind', "ctrl-.:reload(fd --type f --hidden --exclude .git --include '.*')",
-  -- '--header', 'CTRL-. show hidden'
--- }
+-- vim.keymap.set({ 'n' }, '<leader>f', peekaboo.find_files, { desc = "find project files with fzf" })
+-- vim.keymap.set({ 'n' }, '<leader>b', peekaboo.find_buffers, { desc = "find files from current buffers" })
+-- vim.keymap.set({ 'n' }, '<leader>F', peekaboo.find_files_include_hidden, { desc = "find files, including hidden" })
+-- vim.keymap.set({ 'n' }, '<leader>t', function() peekaboo.live_grep() end,
+--   { desc = "find files by searching for string in file" })
+-- vim.keymap.set({ 'n' }, ',', peekaboo.last_query, { desc = "re-run last query" })
 
-vim.keymap.set({'n'}, '<leader>f', peekaboo.find_files, { desc = "find project files with fzf"})
-vim.keymap.set({'n'}, '<leader>b', peekaboo.find_buffers, { desc = "find files from current buffers"})
-vim.keymap.set({'n'}, '<leader>F', peekaboo.find_files_include_hidden, { desc = "find files, including hidden" })
-vim.keymap.set({'n'}, '<leader>t', function() peekaboo.live_grep() end, { desc = "find files by searching for string in file" })
-vim.keymap.set({'n'}, ',', peekaboo.last_query, { desc = "re-run last query" })
--- vim.keymap.set('i', '<c-space>', function() vim.lsp.completion.get() end) -- switches language in OSX
-
-
-vim.keymap.set('n', '<leader>p', require("ai").new_chat)
+-- vim.keymap.set('n', '<leader>p', require("ai").new_chat)
 
 
 --require('witch').setup()
-
--- Maybe?
---vim.keymap.set('i', '<Tab>', function()
---  return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>"
---end)
-
 
 -- FUNCTIONALITY --
 
@@ -122,6 +88,7 @@ vim.keymap.set('n', '<leader>p', require("ai").new_chat)
 -- PLUGINS
 
 vim.cmd('source ' .. vim.fn.stdpath("config") .. '/plugme.vim')
+vim.cmd.colorscheme("kanagawa")
 -- .ass is used for AI assistant filetype
 require('render-markdown').setup({
   file_types = { 'markdown', 'ass', 'codecompanion' }
@@ -132,10 +99,32 @@ require('nvim-treesitter.configs').setup({
   highlight = { enable = true }
 })
 
+
+local fzflua = require('fzf-lua')
+fzflua.setup({
+  "hide" -- hide the fzf process when closing, for a better resume experience
+})
+
+vim.keymap.set({ 'n' }, '<leader>f', fzflua.files, { desc = "find project files with fzf" })
+vim.keymap.set({ 'n' }, '<leader>b', fzflua.buffers, { desc = "find files from current buffers" })
+vim.keymap.set({ 'n' }, '<leader>t', fzflua.tabs, { desc = "switch tabs" })
+-- vim.keymap.set({ 'n' }, '<leader>F', peekaboo.find_files_include_hidden, { desc = "find files, including hidden" })
+vim.keymap.set({ 'n' }, '<leader>t', fzflua.live_grep_native,
+  { desc = "find files by searching for string in file" })
+vim.keymap.set({ 'n' }, '<leader>w', fzflua.grep_cword, { desc = "grep word under cursor" })
+vim.keymap.set({ 'n' }, ',', fzflua.resume, { desc = "re-run last query" })
+
+
+
+
 require('codecompanion').setup({
   strategies = {
     chat = {
-      adapter = "anthropic",
+      adapter = {
+        name = "openai",
+        model = "o4-mini-2025-04-16", -- ideal for coding (fast)
+        --model = "o3-2025-04-16", -- ideal for research, planning (slow)
+      },
       slash_commands = {
         ["git_files"] = {
           description = "List git files",
@@ -170,7 +159,17 @@ require('codecompanion').setup({
       }
     },
     inline = {
-      adapter = "anthropic"
+      adapter = "openai"
+    }
+  },
+  extensions = {
+    history = {
+      enable = true
+    },
+    vectorcode = {
+      opts = {
+        add_tool = true
+      }
     }
   }
 })
@@ -178,8 +177,23 @@ require('codecompanion').setup({
 vim.keymap.set('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { desc = "AI Actions" })
 vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "AI Chat" })
 
-local diff = require('mini.diff')
-
-diff.setup({
-  source = diff.gen_source.none()
+-- CONFORM (FORMATTING) --
+require("conform").setup({
+  formatters_by_ft = {
+    lua = { "stylua" },
+    python = { "ruff", "black" },
+    rust = { "rustfmt", lsp_format = "fallback" },
+    javascript = { "prettierd", "prettier", stop_after_first = true },
+    typescript = { "prettierd", "prettier", stop_after_first = true },
+    astro = { "prettierd", "prettier", stop_after_first = true },
+    svelte = { "prettierd", "prettier", stop_after_first = true },
+  },
+  format_on_save = {
+    timeout_ms = 500,
+    lsp_format = "fallback"
+  }
 })
+
+
+-- AUTOCOMPLETION --
+require('blink.cmp').setup()

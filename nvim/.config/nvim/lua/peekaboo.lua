@@ -28,15 +28,17 @@ local on_exit = function(filepath, callback)
   end
 end
 
-function M.find_files(query)
+function M.find_files(query, callback)
   query = query or ""
   local file = vim.fn.tempname()
   local cmd = string.format("fd --type f | fzf --query='%s' --bind 'enter:execute-silent(echo {q} > %s)+accept' --ansi --preview 'bat --style=numbers --color=always {}' > %s", query, default_query_path, file)
 
-  util.floating_process(cmd, on_exit(file, function(line)
+  callback = callback or function(line)
     vim.fn.writefile({"find_files"}, last_query_type)
     vim.cmd('edit ' .. vim.fn.fnameescape(line))
-  end))
+  end
+
+  util.floating_process(cmd, on_exit(file, callback))
 end
 
 function M.find_files_include_hidden(query)
