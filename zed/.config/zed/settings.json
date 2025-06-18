@@ -10,10 +10,10 @@
   "features": {
     "edit_prediction_provider": "zed"
   },
-  "assistant": {
+  "agent": {
     "default_model": {
-      "provider": "anthropic",
-      "model": "claude-3-5-sonnet-latest"
+      "provider": "openai",
+      "model": "o4-mini"
     },
     "version": "2"
   },
@@ -23,7 +23,7 @@
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "One Dark"
+    "dark": "Kanagawa Wave"
   },
   "relative_line_numbers": true
 }

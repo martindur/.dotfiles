@@ -31,6 +31,12 @@ lazy-postgres () {
   docker run --name lazy-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -v $PWD/postgres:/var/lib/postgresql/data -d --rm postgres:16
 }
 
+lazy-chroma () {
+  docker stop lazy-chroma &> /dev/null
+  docker rm lazy-chroma &> /dev/null
+  docker run --name lazy-chroma -p 8000:8000 -v $PWD/chroma-data:/data -d --rm chromadb/chroma:0.6.3
+}
+
 lazy-video () {
   dir="$HOME/videos/recordings"
   params=$(flameshot gui -g)
@@ -41,11 +47,59 @@ lazy-video () {
   ffmpeg -f x11grab -framerate 24 -video_size "${array[1]}" -framerate 24 -i :0.0+"${array[2]}","${array[3]}" "${filename}"
 }
 
+# wrapper over yazi to open file (intended to be called from zed task)
+function ya_zed() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+	yazi "$@" --chooser-file="$tmp"
+
+	local opened_file=$(cat -- "$tmp" | head -n 1)
+	zed -- "$opened_file"
+
+	rm -f -- "$tmp"
+	exit
+}
+
+function zed_file_search() {
+  local FILE
+  FILE=$(
+    rg --files --hidden --color=always \
+      --glob '!**/.git' \
+      --glob '!**/node_modules' \
+      --glob '!**/.venv' \
+    | fzf --ansi --preview 'bat --decorations=always --color=always {} --style=full --line-range :50' \
+      --layout=reverse
+  )
+
+  if [ -n "$FILE" ]; then
+    zed "$FILE"
+  fi
+}
+
 if [ -f ~/.env ]; then
     export $(grep -v '^#' ~/.env | xargs)
 else
     echo ".env file not found"
 fi
+
+function zed_open_project() {
+  local PROJECT_DIR
+  PROJECT_DIR=$(
+    fd --type d -d 1 . ~/projects \
+    | fzf --layout=reverse
+  )
+
+  if [ -n "$PROJECT_DIR" ]; then
+    zed "$PROJECT_DIR"
+  fi
+}
+
+# Created by `pipx` on 2024-09-24 13:45:52
+export PATH="$PATH:/Users/dur/.local/bin"
+
+source /Users/dur/.config/broot/launcher/bash/br
+
+eval "$(starship init zsh)"
+
 
 # OSX
 if [[ $(uname) == 'Darwin' ]]; then
@@ -55,14 +109,16 @@ if [[ $(uname) == 'Darwin' ]]; then
   eval "$(pyenv init -)"
 
 # Syntax highlighting
-  source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+  # ZSH_HIGHLIGHT_FILE="$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  # ZSH_HIGHLIGHT_ZWC="${ZSH_HIGHLIGHT_FILE}.zwc"
+  #
+  # if [[ ! -f $ZSH_HIGHLIGHT_ZWC || $ZSH_HIGHLIGHT_FILE -nt $ZSH_HIGHLIGHT_ZWC ]]; then
+  #   zcompile -q -- "$ZSH_HIGHLIGHT_FILE"
+  # fi
+
+  # source "$ZSH_HIGHLIGHT_FILE"
+
+  # source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-
-
-# Created by `pipx` on 2024-09-24 13:45:52
-export PATH="$PATH:/Users/dur/.local/bin"
-
-source /Users/dur/.config/broot/launcher/bash/br
-
-eval "$(starship init zsh)"

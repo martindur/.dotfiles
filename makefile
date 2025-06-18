@@ -17,7 +17,7 @@ nix-wsl:
 	sudo nixos-rebuild -I nixos-config=./configuration-wsl.nix switch
 
 osx:
-	stow --verbose --restow wezterm zsh homebrew nvim vim bin aerospace helix zed
+	stow --verbose --restow wezterm zsh homebrew nvim vim bin aerospace helix zed yazi
 
 delete:
 	stow --verbose --delete */

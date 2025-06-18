@@ -8,22 +8,40 @@
 [
   {
     "bindings": {
-      "cmd-h": ["workspace::ActivatePaneInDirection", "Left"],
-      "cmd-l": ["workspace::ActivatePaneInDirection", "Right"],
-      "cmd-j": ["workspace::ActivatePaneInDirection", "Down"],
-      "cmd-k": ["workspace::ActivatePaneInDirection", "Up"],
-      "cmd-m": "workspace::ToggleBottomDock",
-      "cmd-f": "projects::OpenRecent"
+      "cmd-h": "workspace::ActivatePaneLeft",
+      "cmd-l": "workspace::ActivatePaneRight",
+      "cmd-j": "workspace::ActivatePaneDown",
+      "cmd-k": "workspace::ActivatePaneUp",
+      "cmd-m": "workspace::ToggleBottomDock"
     }
   },
   {
-    "context": "Workspace",
-    "bindings": {}
-  },
-  {
-    "context": "Editor",
+    "context": "Workspace || VimControl",
     "bindings": {
-      // "j k": ["workspace::SendKeystrokes", "escape"]
+      "cmd-f": [
+        "task::Spawn",
+        { "task_name": "open project", "reveal_target": "center" }
+      ],
+      "cmd-.": [
+        "task::Spawn",
+        { "task_name": "open dotfiles", "reveal_target": "center" }
+      ],
+      "space f": [
+        "task::Spawn",
+        { "task_name": "search:files", "reveal_target": "center" }
+      ],
+      "space t": [
+        "task::Spawn",
+        { "task_name": "grep files", "reveal_target": "center" }
+      ],
+      "space g": [
+        "task::Spawn",
+        { "task_name": "lazygit", "reveal_target": "center" }
+      ],
+      "space e": [
+        "task::Spawn",
+        { "task_name": "manage files", "reveal_target": "center" }
+      ]
     }
   },
   {
@@ -36,12 +54,7 @@
     "context": "VimControl && !menu",
     "bindings": {
       "J": ["workspace::SendKeystrokes", "1 0 j"],
-      "K": ["workspace::SendKeystrokes", "1 0 k"],
-      "space f": "file_finder::Toggle",
-      "space g": [
-        "task::Spawn",
-        { "task_name": "start lazygit", "reveal_target": "center" }
-      ]
+      "K": ["workspace::SendKeystrokes", "1 0 k"]
     }
   },
   {
