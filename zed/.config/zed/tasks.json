@@ -46,9 +46,46 @@
     "shell": "system"
   },
   {
-    "label": "start lazygit",
+    "label": "lazygit",
     "command": "lazygit",
     "hide": "on_success",
     "reveal": "always"
+  },
+  {
+    "label": "manage files",
+    "command": "ya_zed $ZED_FILE",
+    "hide": "always",
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true
+  },
+  {
+    "label": "search:files",
+    "command": "zed_file_search",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "reveal": "always",
+    "hide": "always"
+  },
+  {
+    "label": "open project",
+    "command": "zed_open_project",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "reveal": "always",
+    "hide": "always"
+  },
+  {
+    "label": "open dotfiles",
+    "command": "zed ~/.dotfiles",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "reveal": "always",
+    "hide": "always"
+  },
+  {
+    "label": "grep files",
+    "command": "zed \"$(tv text)\"",
+    "hide": "always",
+    "use_new_terminal": true
   }
 ]
