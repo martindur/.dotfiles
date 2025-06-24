@@ -1,0 +1,81 @@
+#!/usr/bin/env sh
+# zed-dev — start / attach / stop dev servers without tmux.
+#   start  <cmd…>   : run cmd in background; if already running, attach instead
+#   attach          : pick a running server and stream its log
+#   stop            : pick a running server and kill it
+#
+# Each server logs to ~/.cache/zed-dev/<name>.log and stores its PID in a .pid file.
+# Default <name> = git-root folder + "-dev"   (override with DEV_SESSION_NAME).
+
+set -e
+
+CACHE="$HOME/.cache/zed-dev"
+mkdir -p "$CACHE"
+
+cmd=$1; shift || true
+name="${DEV_SESSION_NAME:-$(basename "$(git -C . rev-parse --show-toplevel 2>/dev/null || pwd)")-dev}"
+log="$CACHE/$name.log"
+pidfile="$CACHE/$name.pid"
+
+_is_alive() {
+  [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null
+}
+
+start() {
+  if [ $# -eq 0 ]; then
+    echo "usage: zed-dev start <command> [args…]" >&2
+    exit 1
+  fi
+
+  if _is_alive; then
+    echo "🔄  $name already running – attaching…" >&2
+    exec tail -F -n 200 "$log"
+  fi
+
+  echo "🚀  starting $name ➜ $*" >&2
+  nohup "$@" >"$log" 2>&1 &
+  echo $! >"$pidfile"
+  disown                       # harmless on non-zsh shells
+}
+
+_list_live() {
+    for f in "$CACHE"/*.pid; do
+        [ -e "$f" ] || continue
+        pid=$(cat "$f") || continue
+        kill -0 "$pid" 2>/dev/null || continue
+        n=$(basename "$f" .pid)
+        cmdline=$(ps -o command= -p "$pid" 2>/dev/null)
+        printf '%s\t%s\n' "$n" "$cmdline"
+    done
+}
+
+attach() {
+  sel=$(_list_live | fzf --prompt='attach > ' --height=40% --reverse | cut -f1) || exit 0
+  [ -z "$sel" ] && exit 0
+  log="$CACHE/$sel.log"
+
+  command -v nvim >/dev/null || { echo "nvim not found"; exit 1 }
+  command -v bat >/dev/null || { echo "bat not found"; exit 1 }
+
+  exec nvim +'set noswapfile nobackup nowritebackup' \
+            +'setlocal nomodified' \
+            +"terminal sh -c 'tail -n 200 -F \"$log\" | bat --paging=never --style=plain --color=always -l log'" \
+            +'tnoremap <buffer> q <C-\><C-n>' \
+            +'nnoremap <buffer> q :q<CR>' \
+            +'startinsert'
+}
+
+stop() {
+  sel=$(_list_live | fzf --prompt='stop > ' --height=40% --reverse | cut -f1) || exit 0
+  [ -z "$sel" ] && exit 0
+  pid=$(cat "$CACHE/$sel.pid")
+  echo "🗑️  stopping $sel (pid $pid)" >&2
+  kill "$pid" && rm -f "$CACHE/$sel".{pid,log}
+}
+
+case $cmd in
+  start)  start "$@" ;;
+  attach) attach      ;;
+  stop)   stop        ;;
+  *)      echo "usage: zed-dev {start|attach|stop}" >&2 ;;
+esac

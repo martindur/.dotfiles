@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+# Search project text and open the selection in Zed
+
+SEARCH_ROOT="."
+
+RG_OPTS='--line-number --column --no-heading --color=always --smart-case --hidden \
+        --glob "!**/.git/*" --glob "!**/node_modules/*" --glob "!**/.venv/*"'
+
+RELOAD_CMD="reload:rg $RG_OPTS {q} \"$SEARCH_ROOT\" || true"
+
+SELECTED=$(fzf --ansi --phony --delimiter : \
+        --preview 'bat --style=numbers,changes --color=always --highlight-line {2} {1}' \
+        --preview-window=up,60%,border \
+        --height=80% --layout=reverse \
+        --bind "start:$RELOAD_CMD" \
+        --bind "change:$RELOAD_CMD" \
+        --prompt="LiveGrep > "
+)
+
+# RESULT format: path:line:col:text
+[ -z "$SELECTED" ] && exit 0
+
+FILE=$(printf "%s\n" "$SELECTED" | cut -d':' -f1)
+LINE=$(printf "%s\n" "$SELECTED" | cut -d':' -f2)
+k
+# Jump to the match in Zed (line numbers are 1-based)
+zed "$FILE:$LINE"
