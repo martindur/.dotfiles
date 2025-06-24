@@ -1,4 +1,6 @@
-PATH="$HOME/.config/bin:$PATH" # all my custom runnable scripts
+# zmodload zsh/zprof
+
+# PATH="$HOME/.config/bin:$PATH" # all my custom runnable scripts
 PATH="$HOME/.cargo/bin:$PATH" # binaries built with rust
 PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH" # postgres utility (psql, pg_dump, etc.)
 PATH="$HOME/.bun/bin:$PATH" # bun global packages
@@ -59,66 +61,25 @@ function ya_zed() {
 	exit
 }
 
-function zed_file_search() {
-  local FILE
-  FILE=$(
-    rg --files --hidden --color=always \
-      --glob '!**/.git' \
-      --glob '!**/node_modules' \
-      --glob '!**/.venv' \
-    | fzf --ansi --preview 'bat --decorations=always --color=always {} --style=full --line-range :50' \
-      --layout=reverse
-  )
-
-  if [ -n "$FILE" ]; then
-    zed "$FILE"
-  fi
-}
-
 if [ -f ~/.env ]; then
     export $(grep -v '^#' ~/.env | xargs)
 else
     echo ".env file not found"
 fi
 
-function zed_open_project() {
-  local PROJECT_DIR
-  PROJECT_DIR=$(
-    fd --type d -d 1 . ~/projects \
-    | fzf --layout=reverse
-  )
-
-  if [ -n "$PROJECT_DIR" ]; then
-    zed "$PROJECT_DIR"
-  fi
-}
-
 # Created by `pipx` on 2024-09-24 13:45:52
 export PATH="$PATH:/Users/dur/.local/bin"
-
-source /Users/dur/.config/broot/launcher/bash/br
 
 eval "$(starship init zsh)"
 
 
 # OSX
 if [[ $(uname) == 'Darwin' ]]; then
-  # pyenv
-  PYENV_ROOT="$HOME/.pyenv"
-  PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)"
-
 # Syntax highlighting
 
-  # ZSH_HIGHLIGHT_FILE="$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-  # ZSH_HIGHLIGHT_ZWC="${ZSH_HIGHLIGHT_FILE}.zwc"
-  #
-  # if [[ ! -f $ZSH_HIGHLIGHT_ZWC || $ZSH_HIGHLIGHT_FILE -nt $ZSH_HIGHLIGHT_ZWC ]]; then
-  #   zcompile -q -- "$ZSH_HIGHLIGHT_FILE"
-  # fi
-
-  # source "$ZSH_HIGHLIGHT_FILE"
-
   # source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source $(brew --prefix)/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+
+# zprof
