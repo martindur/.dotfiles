@@ -54,8 +54,8 @@ attach() {
   [ -z "$sel" ] && exit 0
   log="$CACHE/$sel.log"
 
-  command -v nvim >/dev/null || { echo "nvim not found"; exit 1 }
-  command -v bat >/dev/null || { echo "bat not found"; exit 1 }
+  command -v nvim >/dev/null || { echo "nvim not found"; exit 1; }
+  command -v bat >/dev/null || { echo "bat not found"; exit 1; }
 
   exec nvim +'set noswapfile nobackup nowritebackup' \
             +'setlocal nomodified' \
