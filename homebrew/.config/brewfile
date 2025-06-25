@@ -1,52 +1,90 @@
 # shell, terminal and editor related
 
-brew "zsh-syntax-highlighting"
+brew "zsh-fast-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "bat"
+brew "vim"
 brew "nvim"
 brew "stow"
 brew "ripgrep"
+brew "fd"
 brew "fzf"
+brew "lazygit"
+brew "lazydocker"
+brew "yazi"
+brew "htop"
 cask "wezterm"
-cask "fig" # IDE-like auto completion for the terminal, for a wide range of CLIs
-cask "chromedriver"
-
-# Mounting network drives via SSH
-cask "macfuse"
-# brew "sshfs" # installed from GUI (had to)
-
+cask "ghostty"
+brew "viu"
 
 # development
 
-cask "docker"
-brew "elixir"
-brew "go@1.20"
-brew "rust"
+cask "zed"
+# cask "docker"
+cask "orbstack"
+# cask "pgadmin4"
+cask "datagrip"
+cask "insomnia"
+cask "ngrok"
 brew "pyenv"
+brew "uv"
+brew "rye"
+brew "oven-sh/bun/bun"
 brew "node@20"
-cask "livebook" # Jupyter-like notebooks for elixir
+brew "gleam"
+brew "elixir"
+brew "go"
+#brew "libpq" # psql, pg_dump
+brew "postgresql@15"
+brew "gh"
+brew "pipx"
+# brew "watchexec"
+# brew "entr"
+brew "dbmate"
+brew "flyctl"
+brew "ansible"
+brew "starship"
+tap "dhth/tap"
+brew "dhth/tap/prs"
+tap "jorgerojas26/lazysql"
+brew "lazysql"
+# brew "rustup"
+# brew "rust"
 
 ## LSPs
 
-brew "elixir-ls"
+brew "typescript"
 brew "tailwindcss-language-server"
 brew "typescript-language-server"
-brew "pyright"
+brew "basedpyright"
+brew "ruff"
 brew "black"
 brew "lua-language-server"
-
+brew "vscode-langservers-extracted" # HTML, CSS, JS(eslint), JSON, MD
+brew "sql-language-server"
+brew "prettierd"
 
 # WM
 
-tap "koekeishiya/formulae"
-brew "koekeishiya/formulae/yabai"
-brew "koekeishiya/formulae/skhd"
-
+cask "nikitabobko/tap/aerospace"
 
 # user
 
-cask "discord"
-cask "google-chrome"
-cask "1password"
+#cask "discord"
+#cask "google-chrome"
+#cask "1password"
+cask "slack"
 cask "tailscale"
 cask "figma"
+cask "flameshot"
+cask "firefox"
+cask "linear-linear"
+cask "gitify"
+
+# AI
+
+brew "ollama"
+
+# Game dev
+
+cask "love"

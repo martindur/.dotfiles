@@ -13,10 +13,6 @@ alias bsync="brew update && \
     brew bundle install --cleanup --file=~/.config/brewfile --no-lock && \
     brew upgrade"
 
-alias bsyncr="brew update && \
-    brew bundle install --cleanup --file=~/.config/reshape.brewfile && \
-    brew upgrade"
-
 alias python="python3"
 
 
@@ -75,9 +71,7 @@ eval "$(starship init zsh)"
 
 # OSX
 if [[ $(uname) == 'Darwin' ]]; then
-# Syntax highlighting
-
-  # source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  # Syntax highlighting
   source $(brew --prefix)/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
   source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
