@@ -33,17 +33,13 @@ require('lsp').setup()
 
 -- LSP AUTO COMPLETE --
 
--- vim.api.nvim_create_autocmd('LspAttach', {
---   callback = function(ev)
---     local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
---     if client:supports_method('textDocument/completion') then
---       -- Trigger autocompletion on EVERY keypress. May be slow!
---       --local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
---       --client.server_capabilities.completionProvider.triggerCharacters = chars
---       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
---     end
---   end
--- })
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = args.buf })
+    vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { buffer = args.buf })
+    -- vim.keymap.set('n', '<leader>r', tsb.lsp_references, { buffer = args.buf })
+  end
+})
 
 vim.diagnostic.config({ virtual_lines = true })
 

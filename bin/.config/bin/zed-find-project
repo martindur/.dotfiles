@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+# fuzzy-open a project in Zed
+
+PROJECT_DIR=$(
+  fd --type d -d 1 . ~/projects \
+  | fzf --layout=reverse
+)
+
+[ -n "$PROJECT_DIR" ] && zed "$PROJECT_DIR"

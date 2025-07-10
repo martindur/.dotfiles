@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# fuzzy-open a file in Zed
+
+FILE=$(
+  rg --files --hidden --color=always \
+     --glob '!**/.git' \
+     --glob '!**/node_modules' \
+     --glob '!**/.venv' |
+  fzf --ansi \
+      --preview 'bat --decorations=always --color=always {} --style=full --line-range :50' \
+      --layout=reverse
+)
+
+[ -n "$FILE" ] && zed "$FILE"

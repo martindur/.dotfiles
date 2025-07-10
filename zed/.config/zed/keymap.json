@@ -20,19 +20,24 @@
     "bindings": {
       "cmd-f": [
         "task::Spawn",
-        { "task_name": "open project", "reveal_target": "center" }
+        { "task_name": "find-project", "reveal_target": "center" }
       ],
       "cmd-.": [
         "task::Spawn",
         { "task_name": "open dotfiles", "reveal_target": "center" }
-      ],
+      ]
+    }
+  },
+  {
+    "context": "EmptyPane || SharedScreen || VimControl",
+    "bindings": {
       "space f": [
         "task::Spawn",
-        { "task_name": "search:files", "reveal_target": "center" }
+        { "task_name": "find-file", "reveal_target": "center" }
       ],
       "space t": [
         "task::Spawn",
-        { "task_name": "grep files", "reveal_target": "center" }
+        { "task_name": "live-grep", "reveal_target": "center" }
       ],
       "space g": [
         "task::Spawn",
@@ -40,7 +45,15 @@
       ],
       "space e": [
         "task::Spawn",
-        { "task_name": "manage files", "reveal_target": "center" }
+        { "task_name": "manage-files", "reveal_target": "center" }
+      ],
+      "space p f": [
+        "task::Spawn",
+        { "task_name": "zed-dev: attach", "reveal_target": "center" }
+      ],
+      "space p s": [
+        "task::Spawn",
+        { "task_name": "zed-dev: stop", "reveal_target": "center" }
       ]
     }
   },

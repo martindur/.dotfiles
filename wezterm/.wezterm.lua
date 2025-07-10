@@ -121,7 +121,7 @@ config.keys = {
         mods = super,
         action = wezterm.action_callback(function(win, pane)
             -- toggle padding between none, and a focused frame of 480px wide
-            local left, right = calculate_padding(win, 1200)
+            local left, right = calculate_padding(win, 2400)
             local overrides = win:get_config_overrides() or {}
             overrides.window_padding = {
                 left = left,
