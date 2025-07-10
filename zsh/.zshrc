@@ -19,6 +19,8 @@ alias python="python3"
 if [[ $(uname) == 'Linux' ]]; then
   # alias nvim='steam-run nvim' # a NixOS 'hack' to run binaries not installed via nix packages. Without this, Mason can't download and run LSPs
   alias n='steam-run nvim'
+  # NixOS package that for some reason thought the official cli name just wasn't good enough.
+  alias zed='zeditor'
 fi
 
 # Runs a postgres container and maps the data volume to the given project folders directory
