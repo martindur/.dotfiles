@@ -2,7 +2,7 @@ bootstrap:
 	./scripts/bootstrap.sh
 
 linux:
-	stow --verbose --restow zsh vim nvim bin wezterm i3 helix zed
+	stow --verbose --restow zsh vim nvim bin wezterm i3 zed
 
 linux-wsl:
 	stow --verbose --restow zsh vim nvim bin wezterm
