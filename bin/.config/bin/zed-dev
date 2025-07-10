@@ -59,7 +59,8 @@ attach() {
 
   exec nvim +'set noswapfile nobackup nowritebackup' \
             +'setlocal nomodified' \
-            +"terminal sh -c 'tail -n 200 -F \"$log\" | bat --paging=never --style=plain --color=always -l log'" \
+            +"terminal sh -c 'tail -F \"$log\"'" \
+            # +"terminal sh -c 'tail -n 200 -F \"$log\" | bat --paging=never --style=plain --color=always -l log'" \
             +'tnoremap <buffer> q <C-\><C-n>' \
             +'nnoremap <buffer> q :q<CR>' \
             +'startinsert'

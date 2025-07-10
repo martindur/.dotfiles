@@ -12,8 +12,8 @@
   },
   "agent": {
     "default_model": {
-      "provider": "openai",
-      "model": "o4-mini"
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-latest"
     },
     "version": "2"
   },
@@ -21,6 +21,7 @@
   "ui_font_size": 12,
   "buffer_font_size": 12,
   "pane_split_direction_vertical": "right",
+  "restore_on_startup": "none",
   "theme": {
     "mode": "system",
     "light": "One Light",
