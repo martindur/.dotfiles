@@ -1,6 +1,6 @@
 # zmodload zsh/zprof
 
-# PATH="$HOME/.config/bin:$PATH" # all my custom runnable scripts
+PATH="$HOME/.config/bin:$PATH" # all my custom runnable scripts
 PATH="$HOME/.cargo/bin:$PATH" # binaries built with rust
 PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH" # postgres utility (psql, pg_dump, etc.)
 PATH="$HOME/.bun/bin:$PATH" # bun global packages

@@ -12,7 +12,8 @@
       "cmd-l": "workspace::ActivatePaneRight",
       "cmd-j": "workspace::ActivatePaneDown",
       "cmd-k": "workspace::ActivatePaneUp",
-      "cmd-m": "workspace::ToggleBottomDock"
+      "cmd-m": "workspace::ToggleBottomDock",
+      "cmd-a": "agent::Chat"
     }
   },
   {
@@ -31,22 +32,26 @@
   {
     "context": "EmptyPane || SharedScreen || VimControl",
     "bindings": {
+      // File finding
       "space f": [
         "task::Spawn",
         { "task_name": "find-file", "reveal_target": "center" }
       ],
+      "space b": "tab_switcher::ToggleAll",
       "space t": [
         "task::Spawn",
         { "task_name": "live-grep", "reveal_target": "center" }
-      ],
-      "space g": [
-        "task::Spawn",
-        { "task_name": "lazygit", "reveal_target": "center" }
       ],
       "space e": [
         "task::Spawn",
         { "task_name": "manage-files", "reveal_target": "center" }
       ],
+      // git
+      "space g": [
+        "task::Spawn",
+        { "task_name": "lazygit", "reveal_target": "center" }
+      ],
+      // process management
       "space p f": [
         "task::Spawn",
         { "task_name": "zed-dev: attach", "reveal_target": "center" }
@@ -54,7 +59,9 @@
       "space p s": [
         "task::Spawn",
         { "task_name": "zed-dev: stop", "reveal_target": "center" }
-      ]
+      ],
+      // Agent / AI
+      "space c c": "agent::ToggleFocus"
     }
   },
   {

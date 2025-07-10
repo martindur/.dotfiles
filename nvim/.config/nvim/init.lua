@@ -111,6 +111,14 @@ vim.keymap.set({ 'n' }, '<leader>w', fzflua.grep_cword, { desc = "grep word unde
 vim.keymap.set({ 'n' }, ',', fzflua.resume, { desc = "re-run last query" })
 
 
+vim.diagnostic.config({
+  virtual_lines = {
+    severity = "ERROR"
+  },
+  signs = {
+    severity = "HINT"
+  }
+})
 
 
 require('codecompanion').setup({
