@@ -1,1 +1,0 @@
--- TODO: snippet 'add' function: https://github.com/boltlessengineer/NativeVim/blob/main/lua/core/snippet.lua

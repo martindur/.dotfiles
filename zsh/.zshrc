@@ -47,6 +47,13 @@ lazy-video () {
   ffmpeg -f x11grab -framerate 24 -video_size "${array[1]}" -framerate 24 -i :0.0+"${array[2]}","${array[3]}" "${filename}"
 }
 
+
+# Start Dozzle with static name and port; no-op if already running or name conflicts.
+dozzle() {
+  docker start dozzle >/dev/null 2>&1 || \
+  docker run -d --name dozzle -p 8888:8080 -v /var/run/docker.sock:/var/run/docker.sock amir20/dozzle:latest >/dev/null 2>&1
+}
+
 # wrapper over yazi to open file (intended to be called from zed task)
 function ya_zed() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
@@ -59,11 +66,11 @@ function ya_zed() {
 	exit
 }
 
-if [ -f ~/.env ]; then
-    export $(grep -v '^#' ~/.env | xargs)
-else
-    echo ".env file not found"
-fi
+# if [ -f ~/.env ]; then
+#     export $(grep -v '^#' ~/.env | xargs)
+# else
+#     echo ".env file not found"
+# fi
 
 # Created by `pipx` on 2024-09-24 13:45:52
 export PATH="$PATH:/Users/dur/.local/bin"

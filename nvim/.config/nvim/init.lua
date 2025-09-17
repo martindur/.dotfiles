@@ -1,5 +1,4 @@
 local util = require('util')
--- local peekaboo = require('peekaboo')
 
 vim.g.mapleader = " "
 
@@ -41,8 +40,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 
-vim.diagnostic.config({ virtual_lines = true })
-
 -- KEY MAP --
 
 vim.keymap.set({ 'n', 'v' }, 'J', '10j')
@@ -51,19 +48,19 @@ vim.keymap.set('i', 'jk', '<esc>')
 
 -- File finding --
 vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit') end)
-vim.keymap.set({ 'n' }, '<leader>e', function() util.floating_process('yazi') end)
+vim.keymap.set({ 'n' }, '<leader>e', function()
+  local dir = vim.fn.expand('%:p:h')
+  if dir == '' then dir = vim.loop.cwd() end
+  util.floating_process('yazi "' .. dir .. '"')
+end)
 
--- vim.keymap.set({ 'n' }, '<leader>f', peekaboo.find_files, { desc = "find project files with fzf" })
--- vim.keymap.set({ 'n' }, '<leader>b', peekaboo.find_buffers, { desc = "find files from current buffers" })
--- vim.keymap.set({ 'n' }, '<leader>F', peekaboo.find_files_include_hidden, { desc = "find files, including hidden" })
--- vim.keymap.set({ 'n' }, '<leader>t', function() peekaboo.live_grep() end,
---   { desc = "find files by searching for string in file" })
--- vim.keymap.set({ 'n' }, ',', peekaboo.last_query, { desc = "re-run last query" })
+vim.keymap.set({ 'n' }, '<leader>1', '<cmd>tabn 1<cr>')
+vim.keymap.set({ 'n' }, '<leader>2', '<cmd>tabn 2<cr>')
+vim.keymap.set({ 'n' }, '<leader>3', '<cmd>tabn 3<cr>')
+vim.keymap.set({ 'n' }, '<leader>4', '<cmd>tabn 4<cr>')
+vim.keymap.set({ 'n' }, '<leader>5', '<cmd>tabn 5<cr>')
 
--- vim.keymap.set('n', '<leader>p', require("ai").new_chat)
-
-
---require('witch').setup()
+vim.keymap.set({ 't' }, '<c-x>', '<c-\\><c-n>')
 
 -- FUNCTIONALITY --
 
@@ -84,7 +81,7 @@ vim.keymap.set({ 'n' }, '<leader>e', function() util.floating_process('yazi') en
 -- PLUGINS
 
 vim.cmd('source ' .. vim.fn.stdpath("config") .. '/plugme.vim')
-vim.cmd.colorscheme("kanagawa")
+vim.cmd.colorscheme("tokyonight-night")
 -- .ass is used for AI assistant filetype
 require('render-markdown').setup({
   file_types = { 'markdown', 'ass', 'codecompanion' }
@@ -98,7 +95,14 @@ require('nvim-treesitter.configs').setup({
 
 local fzflua = require('fzf-lua')
 fzflua.setup({
-  "hide" -- hide the fzf process when closing, for a better resume experience
+  "hide", -- hide the fzf process when closing, for a better resume experience
+  buffers = {
+    cwd_only = true,
+    -- no_term_buffers = false
+    -- current_tab_only = true,
+    show_unlisted = true,
+    show_unloaded = true
+  }
 })
 
 vim.keymap.set({ 'n' }, '<leader>f', fzflua.files, { desc = "find project files with fzf" })
@@ -110,24 +114,29 @@ vim.keymap.set({ 'n' }, '<leader>t', fzflua.live_grep_native,
 vim.keymap.set({ 'n' }, '<leader>w', fzflua.grep_cword, { desc = "grep word under cursor" })
 vim.keymap.set({ 'n' }, ',', fzflua.resume, { desc = "re-run last query" })
 
-
 vim.diagnostic.config({
-  virtual_lines = {
-    severity = "ERROR"
-  },
-  signs = {
-    severity = "HINT"
-  }
+  virtual_text = false,
+  virtual_lines = { severity = { min = vim.diagnostic.severity.ERROR } },
+  underline = { severity = { min = vim.diagnostic.severity.ERROR } },
+  signs = { severity = { min = vim.diagnostic.severity.WARN } },
 })
 
+
+require('mcphub').setup({
+  config = vim.fn.expand("~/.config/mcphub/servers.json"),
+  port = 37373,
+  workspace = {
+    enabled = true,
+    look_for = { ".mcphub/servers.json" }
+  }
+})
 
 require('codecompanion').setup({
   strategies = {
     chat = {
       adapter = {
-        name = "openai",
-        model = "o4-mini-2025-04-16", -- ideal for coding (fast)
-        --model = "o3-2025-04-16", -- ideal for research, planning (slow)
+        name = "copilot",
+        model = "gpt-5",
       },
       slash_commands = {
         ["git_files"] = {
@@ -163,7 +172,8 @@ require('codecompanion').setup({
       }
     },
     inline = {
-      adapter = "openai"
+      adapter = "copilot",
+      model = "gpt-5"
     }
   },
   extensions = {
@@ -173,6 +183,18 @@ require('codecompanion').setup({
     vectorcode = {
       opts = {
         add_tool = true
+      }
+    },
+    mcphub = {
+      callback = "mcphub.extensions.codecompanion",
+      opts = {
+        make_tools = true,
+        show_server_tools_in_chat = true,
+        add_mcp_prefix_to_tool_names = false,
+        show_result_in_chat = true,
+        format_tool = nil,
+        make_vars = true,
+        make_slash_commands = true
       }
     }
   }
@@ -201,3 +223,16 @@ require("conform").setup({
 
 -- AUTOCOMPLETION --
 require('blink.cmp').setup()
+
+-- PROJECTS --
+-- require('projects').setup({
+--   pick = { root = vim.fn.expand('~') .. '/projects', depth = 1 },
+--   set_tabline = true
+-- })
+--
+-- vim.keymap.set('n', '<leader>pp', function() require('projects').pick() end)
+-- vim.keymap.set('n', '<leader>pr', function()
+--   vim.ui.input({ prompt = 'Rename tab:' }, function(name)
+--     if name then require('projects').rename(name) end
+--   end)
+-- end)
