@@ -18,8 +18,8 @@ end)
 
 config.font_size = 16
 config.line_height = 1.2
-config.font = wezterm.font("BlexMono Nerd Font Mono")
--- config.color_scheme = "Tokyo Night Moon"
+--config.font = wezterm.font("BlexMono Nerd Font Mono")
+--config.color_scheme = "Tokyo Night Moon"
 config.color_scheme = "tokyonight_night"
 config.colors = {
   cursor_bg = '#7aa2f7',
@@ -54,7 +54,7 @@ local function calculate_padding(window, max_content_width)
 end
 
 
-local super = "CMD"
+local super = "ALT"
 
 -- helpers
 

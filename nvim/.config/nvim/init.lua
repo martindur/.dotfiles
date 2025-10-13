@@ -122,21 +122,21 @@ vim.diagnostic.config({
 })
 
 
-require('mcphub').setup({
-  config = vim.fn.expand("~/.config/mcphub/servers.json"),
-  port = 37373,
-  workspace = {
-    enabled = true,
-    look_for = { ".mcphub/servers.json" }
-  }
-})
+-- require('mcphub').setup({
+--   config = vim.fn.expand("~/.config/mcphub/servers.json"),
+--   port = 37373,
+--   workspace = {
+--     enabled = true,
+--     look_for = { ".mcphub/servers.json" }
+--   }
+-- })
 
 require('codecompanion').setup({
   strategies = {
     chat = {
       adapter = {
         name = "copilot",
-        model = "gpt-5",
+        model = "claude-4.5",
       },
       slash_commands = {
         ["git_files"] = {
@@ -168,35 +168,45 @@ require('codecompanion').setup({
         opts = {
           auto_submit_errors = false,
           auto_submit_success = true
+        },
+        ["cmd_runner"] = {
+          requires_approval = true,
+        },
+        ["create_file"] = {
+          requires_approval = false
+        },
+        ["insert_edit_into_file"] = {
+          requires_approval = { buffer = false, file = false },
+          user_confirmation = false
         }
       }
     },
     inline = {
       adapter = "copilot",
-      model = "gpt-5"
+      model = "claude-4.5"
     }
   },
   extensions = {
     history = {
       enable = true
     },
-    vectorcode = {
-      opts = {
-        add_tool = true
-      }
-    },
-    mcphub = {
-      callback = "mcphub.extensions.codecompanion",
-      opts = {
-        make_tools = true,
-        show_server_tools_in_chat = true,
-        add_mcp_prefix_to_tool_names = false,
-        show_result_in_chat = true,
-        format_tool = nil,
-        make_vars = true,
-        make_slash_commands = true
-      }
-    }
+    -- vectorcode = {
+    --   opts = {
+    --     add_tool = true
+    --   }
+    -- },
+    -- mcphub = {
+    --   callback = "mcphub.extensions.codecompanion",
+    --   opts = {
+    --     make_tools = true,
+    --     show_server_tools_in_chat = true,
+    --     add_mcp_prefix_to_tool_names = false,
+    --     show_result_in_chat = true,
+    --     format_tool = nil,
+    --     make_vars = true,
+    --     make_slash_commands = true
+    --   }
+    -- }
   }
 })
 
