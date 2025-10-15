@@ -6,4 +6,4 @@ PROJECT_DIR=$(
   | fzf --layout=reverse
 )
 
-[ -n "$PROJECT_DIR" ] && zed "$PROJECT_DIR"
+[ -n "$PROJECT_DIR" ] && zeditor "$PROJECT_DIR"

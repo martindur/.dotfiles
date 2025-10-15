@@ -24,4 +24,4 @@ FILE=$(printf "%s\n" "$SELECTED" | cut -d':' -f1)
 LINE=$(printf "%s\n" "$SELECTED" | cut -d':' -f2)
 k
 # Jump to the match in Zed (line numbers are 1-based)
-zed "$FILE:$LINE"
+zeditor "$FILE:$LINE"

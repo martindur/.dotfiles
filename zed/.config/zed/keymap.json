@@ -9,10 +9,17 @@
   {
     "bindings": {
       "cmd-h": "workspace::ActivatePaneLeft",
+      "alt-h": "workspace::ActivatePaneLeft",
       "cmd-l": "workspace::ActivatePaneRight",
+      "alt-l": "workspace::ActivatePaneRight",
       "cmd-j": "workspace::ActivatePaneDown",
+      "alt-j": "workspace::ActivatePaneDown",
       "cmd-k": "workspace::ActivatePaneUp",
+      "alt-k": "workspace::ActivatePaneUp",
       "cmd-m": "workspace::ToggleBottomDock",
+      "alt-m": "workspace::ToggleBottomDock",
+      "alt-r": "workspace::ToggleRightDock",
+      "alt-b": "workspace::ToggleLeftDock",
       "cmd-a": "agent::Chat"
     }
   },
@@ -20,6 +27,10 @@
     "context": "Workspace || VimControl",
     "bindings": {
       "cmd-f": [
+        "task::Spawn",
+        { "task_name": "find-project", "reveal_target": "center" }
+      ],
+      "alt-f": [
         "task::Spawn",
         { "task_name": "find-project", "reveal_target": "center" }
       ],

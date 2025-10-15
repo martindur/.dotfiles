@@ -136,7 +136,7 @@ require('codecompanion').setup({
     chat = {
       adapter = {
         name = "copilot",
-        model = "claude-4.5",
+        model = "claude-sonnet-4.5",
       },
       slash_commands = {
         ["git_files"] = {
@@ -167,23 +167,36 @@ require('codecompanion').setup({
       tools = {
         opts = {
           auto_submit_errors = false,
-          auto_submit_success = true
+          auto_submit_success = true,
+          default_tools = {
+            "read_file",
+            "create_file",
+            "grep_search",
+            "file_search",
+            "insert_edit_into_file"
+          }
         },
         ["cmd_runner"] = {
-          requires_approval = true,
+          opts = {
+            requires_approval = true,
+          }
         },
         ["create_file"] = {
-          requires_approval = false
+          opts = {
+            requires_approval = false
+          }
         },
         ["insert_edit_into_file"] = {
-          requires_approval = { buffer = false, file = false },
-          user_confirmation = false
+          opts = {
+            requires_approval = { buffer = false, file = false },
+            user_confirmation = false
+          }
         }
       }
     },
     inline = {
       adapter = "copilot",
-      model = "claude-4.5"
+      model = "claude-sonnet-4.5"
     }
   },
   extensions = {

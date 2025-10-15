@@ -11,4 +11,4 @@ FILE=$(
       --layout=reverse
 )
 
-[ -n "$FILE" ] && zed "$FILE"
+[ -n "$FILE" ] && zeditor "$FILE"

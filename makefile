@@ -1,5 +1,5 @@
 linux:
-	stow --verbose --restow zsh vim nvim bin i3 zed yazi
+	stow --verbose --restow bash vim nvim bin i3 zed yazi
 
 nix:
 	sudo nixos-rebuild -I nixos-config=./configuration.nix switch

@@ -12,19 +12,27 @@
   },
   "agent": {
     "default_model": {
-      "provider": "anthropic",
-      "model": "claude-sonnet-4-latest"
+      "provider": "copilot_chat",
+      "model": "claude-sonnet-4.5"
+    }
+  },
+  "context_servers": {
+    "playwright": {
+      "enabled": true,
+      "source": "custom",
+      "command": "bunx",
+      "args": ["@playwright/mcp@latest", "--browser", "firefox"]
     }
   },
   "vim_mode": true,
-  "ui_font_size": 16,
-  "buffer_font_size": 16,
+  "ui_font_size": 11,
+  "buffer_font_size": 11,
   "pane_split_direction_vertical": "right",
   "restore_on_startup": "none",
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Kanagawa Wave"
+    "dark": "Tokyo Night"
   },
   "relative_line_numbers": true,
   "languages": {
