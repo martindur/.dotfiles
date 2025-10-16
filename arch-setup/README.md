@@ -55,6 +55,30 @@ sudo reboot
 
 You'll be greeted by lightdm and can log into your i3 session.
 
+## Optional Setup Scripts
+
+Run these as needed for additional hardware/features:
+
+```bash
+# Bluetooth support
+./bluetooth.sh
+
+# Audio support (PipeWire)
+./audio.sh
+
+# NetworkManager (if not already configured)
+./network.sh
+
+# Touchpad support (for laptops)
+./touchpad.sh
+
+# Firewall (UFW - deny all incoming, allow tailscale)
+./firewall.sh
+
+# Tailscale VPN
+./tailscale.sh
+```
+
 ## Manual Steps
 
 If you need to re-stow configs later:
