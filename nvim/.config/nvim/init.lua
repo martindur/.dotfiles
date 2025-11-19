@@ -81,6 +81,11 @@ vim.keymap.set({ 't' }, '<c-x>', '<c-\\><c-n>')
 -- PLUGINS
 
 vim.cmd('source ' .. vim.fn.stdpath("config") .. '/plugme.vim')
+
+
+require('tokyonight').setup({
+  transparent = true
+})
 vim.cmd.colorscheme("tokyonight-night")
 -- .ass is used for AI assistant filetype
 require('render-markdown').setup({
@@ -96,6 +101,14 @@ require('nvim-treesitter.configs').setup({
 local fzflua = require('fzf-lua')
 fzflua.setup({
   "hide", -- hide the fzf process when closing, for a better resume experience
+  keymap = {
+    fzf = {
+      ["ctrl-q"] = "select-all+accept",
+    },
+  },
+  files = {
+    fd_opts = "--color=never --type f --hidden --follow --exclude .git",
+  },
   buffers = {
     cwd_only = true,
     -- no_term_buffers = false
@@ -136,7 +149,7 @@ require('codecompanion').setup({
     chat = {
       adapter = {
         name = "copilot",
-        model = "gpt-5",
+        model = "sonnet-4.5",
       },
       slash_commands = {
         ["git_files"] = {
@@ -173,17 +186,12 @@ require('codecompanion').setup({
     },
     inline = {
       adapter = "copilot",
-      model = "gpt-5"
+      model = "sonnet-4.5",
     }
   },
   extensions = {
     history = {
       enable = true
-    },
-    vectorcode = {
-      opts = {
-        add_tool = true
-      }
     },
     mcphub = {
       callback = "mcphub.extensions.codecompanion",
@@ -221,9 +229,22 @@ require("conform").setup({
 })
 
 
+-- SNACKS --
+require('snacks').setup({
+  picker = { enabled = true },
+  gh = { enabled = true }
+});
+
+vim.keymap.set('n', '<leader>pr', function()
+  Snacks.picker.gh_pr()
+end)
+
+
 -- AUTOCOMPLETION --
 require('blink.cmp').setup()
 
+-- OTHER --
+require('mdx').setup()
 -- PROJECTS --
 -- require('projects').setup({
 --   pick = { root = vim.fn.expand('~') .. '/projects', depth = 1 },

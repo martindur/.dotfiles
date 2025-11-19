@@ -17,8 +17,26 @@ end)
 -- Config
 
 config.font_size = 16
-config.line_height = 1.2
-config.font = wezterm.font("BlexMono Nerd Font Mono")
+config.line_height = 1
+config.font = wezterm.font("Fira Code")
+config.bold_brightens_ansi_colors = true
+config.font_rules = {
+  {
+    intensity = "Bold",
+    italic = true,
+    font = wezterm.font({ family = "Maple Mono", weight = "Bold", style = "Italic" })
+  },
+  {
+    intensity = "Half",
+    italic = true,
+    font = wezterm.font({ family = "Maple Mono", weight = "DemiBold", style = "Italic" })
+  },
+  {
+    intensity = "Normal",
+    italic = true,
+    font = wezterm.font({ family = "Maple Mono", style = "Italic" })
+  }
+}
 -- config.color_scheme = "Tokyo Night Moon"
 config.color_scheme = "tokyonight_night"
 config.colors = {
@@ -32,6 +50,7 @@ config.window_padding = {
   bottom = 0
 }
 config.window_decorations = 'RESIZE'
+config.window_background_opacity = 0.85
 config.enable_tab_bar = false
 
 local function calculate_padding(window, max_content_width)
@@ -135,18 +154,7 @@ config.keys = {
   {
     key = "z",
     mods = super,
-    action = wezterm.action_callback(function(win, pane)
-      -- toggle padding between none, and a focused frame of 480px wide
-      local left, right = calculate_padding(win, 2400)
-      local overrides = win:get_config_overrides() or {}
-      overrides.window_padding = {
-        left = left,
-        right = right,
-        top = 0,
-        bottom = 0
-      }
-      win:set_config_overrides(overrides)
-    end)
+    action = act.TogglePaneZoomState,
   },
   {
     key = "t",
