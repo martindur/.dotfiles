@@ -15,6 +15,10 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.smartindent = true
 
+-- Use ripgrep for :grep command
+vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
+vim.opt.grepformat = "%f:%l:%c:%m"
+
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.cursorline = true
@@ -45,6 +49,27 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.keymap.set({ 'n', 'v' }, 'J', '10j')
 vim.keymap.set({ 'n', 'v' }, 'K', '10k')
 vim.keymap.set('i', 'jk', '<esc>')
+
+-- Search with word under cursor pre-filled
+vim.keymap.set('n', '/', function()
+  local word = vim.fn.expand('<cword>')
+  if word ~= '' then
+    vim.fn.feedkeys('/' .. word, 'n')
+  else
+    vim.fn.feedkeys('/', 'n')
+  end
+end)
+
+-- Grep word under cursor and open quickfix
+vim.keymap.set('n', 'g/', function()
+  local word = vim.fn.expand('<cword>')
+  if word ~= '' then
+    vim.cmd('silent grep! ' .. vim.fn.shellescape(word))
+    vim.cmd('copen')
+  else
+    vim.notify('No word under cursor', vim.log.levels.WARN)
+  end
+end)
 
 -- File finding --
 vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit') end)
@@ -210,6 +235,15 @@ require('codecompanion').setup({
 
 vim.keymap.set('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { desc = "AI Actions" })
 vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "AI Chat" })
+
+
+-- CHECKS --
+
+vim.api.nvim_create_user_command("RuffCheck", function()
+  vim.cmd("cexpr system('uv run ruff check --output-format=concise --select=F .')")
+  vim.cmd("copen")
+end, {})
+
 
 -- CONFORM (FORMATTING) --
 require("conform").setup({
