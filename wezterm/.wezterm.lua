@@ -107,8 +107,12 @@ local dotfiles = {
     id = wezterm.home_dir .. "/.dotfiles/vim",
   },
   {
-    label = "helix",
-    id = wezterm.home_dir .. "/.dotfiles/helix/.config/helix",
+    label = "aerospace",
+    id = wezterm.home_dir .. "/.dotfiles/aerospace/.config/aerospace",
+  },
+  {
+    label = "sketchybar",
+    id = wezterm.home_dir .. "/.dotfiles/sketchybar/.config/sketchybar",
   },
   {
     label = "wezterm",

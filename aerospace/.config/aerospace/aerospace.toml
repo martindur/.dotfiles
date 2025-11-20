@@ -7,8 +7,10 @@
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 
-accordion-padding = 0
+# Automatically hide macOS menu bar
+automatically-unhide-macos-hidden-apps = true
 
+accordion-padding = 0
 
 # Mouse follows focus when focused monitor changes
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
@@ -22,6 +24,11 @@ after-startup-command = ['exec-and-forget sketchybar']
 exec-on-workspace-change = ['/bin/bash', '-c',
     'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
+
+# Add gaps for SketchyBar at the top
+# Adjust the value based on your SketchyBar height (default is usually 32-40px)
+[gaps]
+outer.top = 30
 
 
 [mode.main.binding]

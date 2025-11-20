@@ -8,7 +8,7 @@ nix-upgrade:
 	sudo nixos-rebuild -I nixos-config=./configuration.nix switch --upgrade
 
 osx:
-	stow --verbose --restow wezterm zsh homebrew nvim vim bin aerospace zed yazi
+	stow --verbose --restow wezterm zsh homebrew nvim vim bin aerospace zed yazi sketchybar
 
 delete:
 	stow --verbose --delete */

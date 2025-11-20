@@ -19,6 +19,9 @@ vim.opt.smartindent = true
 vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
 vim.opt.grepformat = "%f:%l:%c:%m"
 
+-- Jump to quickfix results in another window automatically
+vim.opt.switchbuf = "useopen,uselast"
+
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.cursorline = true
@@ -70,6 +73,15 @@ vim.keymap.set('n', 'g/', function()
     vim.notify('No word under cursor', vim.log.levels.WARN)
   end
 end)
+
+-- Auto-navigate when moving in quickfix window
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'qf',
+  callback = function()
+    vim.keymap.set('n', 'j', 'j<cr><c-w>p', { buffer = true })
+    vim.keymap.set('n', 'k', 'k<cr><c-w>p', { buffer = true })
+  end
+})
 
 -- File finding --
 vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit') end)
