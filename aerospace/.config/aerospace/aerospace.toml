@@ -28,7 +28,11 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 # Add gaps for SketchyBar at the top
 # Adjust the value based on your SketchyBar height (default is usually 32-40px)
 [gaps]
-outer.top = 30
+outer.top = [
+  { monitor."built-in" = 0 },
+  { monitor."main" = 30 },
+  30
+]
 
 
 [mode.main.binding]
