@@ -89,6 +89,13 @@ vim.lsp.config.json_ls = {
   root_markers = { '.git' }
 }
 
+-- ZIG --
+vim.lsp.config.zig_ls = {
+  cmd = { 'zls' },
+  filetypes = { 'zig' },
+  root_markers = { '.git' }
+}
+
 function M.setup()
   vim.lsp.enable("lua_ls")
   vim.lsp.enable("ts_ls")
@@ -98,6 +105,7 @@ function M.setup()
   vim.lsp.enable("tailwindcss_ls")
   vim.lsp.enable("sql_ls")
   vim.lsp.enable("json_ls")
+  vim.lsp.enable("zig_ls")
 end
 
 return M

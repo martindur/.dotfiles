@@ -1,11 +1,17 @@
 local M = {}
 
-function M.floating_process(cmd, on_exit)
-  local buf = vim.api.nvim_create_buf(false, true)
-  on_exit = on_exit or function() end
+---@param cmd string
+---@param opts? { width?: number, height?: number, on_exit?: function }
+function M.floating_process(cmd, opts)
+  opts = opts or {}
+  local on_exit = opts.on_exit or function() end
+  local width_pct = opts.width or 0.8
+  local height_pct = opts.height or 0.8
 
-  local width = math.floor(vim.o.columns * 0.8)
-  local height = math.floor(vim.o.lines * 0.8)
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  local width = math.floor(vim.o.columns * width_pct)
+  local height = math.floor(vim.o.lines * height_pct)
   local row = math.floor((vim.o.lines - height) / 2)
   local col = math.floor((vim.o.columns - width) / 2)
 

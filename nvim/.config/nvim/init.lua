@@ -43,7 +43,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = args.buf })
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { buffer = args.buf })
-    -- vim.keymap.set('n', '<leader>r', tsb.lsp_references, { buffer = args.buf })
+    vim.keymap.set('n', 'gr', function() require('fzf-lua').lsp_references() end,
+      { buffer = args.buf, desc = "LSP references" })
   end
 })
 
@@ -83,13 +84,17 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
+
 -- File finding --
-vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit') end)
-vim.keymap.set({ 'n' }, '<leader>e', function()
-  local dir = vim.fn.expand('%:p:h')
-  if dir == '' then dir = vim.loop.cwd() end
-  util.floating_process('yazi "' .. dir .. '"')
-end)
+vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit', { width = 1, height = 1 }) end)
+
+-- NOTE: Disabling yazi for now, to test out oil exclusively
+-- vim.keymap.set({ 'n' }, '<leader>e', function()
+--   local dir = vim.fn.expand('%:p:h')
+--   if dir == '' then dir = vim.loop.cwd() end
+--   util.floating_process('yazi "' .. dir .. '"')
+-- end)
+vim.keymap.set({ 'n' }, '<leader>e', '<cmd>Oil --float<cr>')
 
 vim.keymap.set({ 'n' }, '<leader>1', '<cmd>tabn 1<cr>')
 vim.keymap.set({ 'n' }, '<leader>2', '<cmd>tabn 2<cr>')
@@ -120,19 +125,20 @@ vim.keymap.set({ 't' }, '<c-x>', '<c-\\><c-n>')
 vim.cmd('source ' .. vim.fn.stdpath("config") .. '/plugme.vim')
 
 
+require('oil').setup({
+  keymaps = {
+    ["q"] = { "actions.close", mode = "n" },
+  }
+})
+
 require('tokyonight').setup({
   transparent = true
 })
-vim.cmd.colorscheme("tokyonight-night")
--- .ass is used for AI assistant filetype
-require('render-markdown').setup({
-  file_types = { 'markdown', 'ass', 'codecompanion' }
-})
-vim.treesitter.language.register('markdown', 'ass')
+vim.cmd.colorscheme("tokyonight")
 
-require('nvim-treesitter.configs').setup({
-  highlight = { enable = true }
-})
+-- require('nvim-treesitter.configs').setup({
+--   highlight = { enable = true }
+-- })
 
 
 local fzflua = require('fzf-lua')
@@ -171,82 +177,22 @@ vim.diagnostic.config({
   signs = { severity = { min = vim.diagnostic.severity.WARN } },
 })
 
-
-require('mcphub').setup({
-  config = vim.fn.expand("~/.config/mcphub/servers.json"),
-  port = 37373,
-  workspace = {
-    enabled = true,
-    look_for = { ".mcphub/servers.json" }
-  }
-})
-
-require('codecompanion').setup({
-  strategies = {
-    chat = {
-      adapter = {
-        name = "copilot",
-        model = "sonnet-4.5",
-      },
-      slash_commands = {
-        ["git_files"] = {
-          description = "List git files",
-          ---@param chat CodeCompanion.Chat
-          callback = function(chat)
-            local handle = io.popen("git ls-files")
-            if handle ~= nil then
-              local result = handle:read("*a")
-              handle:close()
-              chat:add_reference({ role = "user", content = result }, "git", "<git_files>")
-            else
-              return vim.notify("No git files available", vim.log.levels.INFO)
-            end
-          end,
-          opts = {
-            contains_code = false
-          }
-        }
-      },
-      keymaps = {
-        completion = {
-          modes = {
-            i = "<C-.>"
-          }
-        }
-      },
-      tools = {
-        opts = {
-          auto_submit_errors = false,
-          auto_submit_success = true
-        }
-      }
+-- TROUBLE (DIAGNOSTICS)
+require('trouble').setup({
+  win = { position = "right" },
+  modes = {
+    diagnostics = {
+      filter = { severity = vim.diagnostic.severity.ERROR },
     },
-    inline = {
-      adapter = "copilot",
-      model = "sonnet-4.5",
-    }
   },
-  extensions = {
-    history = {
-      enable = true
-    },
-    mcphub = {
-      callback = "mcphub.extensions.codecompanion",
-      opts = {
-        make_tools = true,
-        show_server_tools_in_chat = true,
-        add_mcp_prefix_to_tool_names = false,
-        show_result_in_chat = true,
-        format_tool = nil,
-        make_vars = true,
-        make_slash_commands = true
-      }
-    }
-  }
 })
+vim.keymap.set('n', '<leader>dd', '<cmd>Trouble diagnostics toggle<cr>', { desc = "Workspace diagnostics" })
+vim.keymap.set('n', '<leader>db', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', { desc = "Buffer diagnostics" })
+vim.keymap.set('n', '<leader>ds', '<cmd>Trouble symbols toggle<cr>', { desc = "Document symbols" })
 
-vim.keymap.set('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { desc = "AI Actions" })
-vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "AI Chat" })
+
+-- Diff view
+require('diff').setup()
 
 
 -- CHECKS --
@@ -290,7 +236,6 @@ end)
 require('blink.cmp').setup()
 
 -- OTHER --
-require('mdx').setup()
 -- PROJECTS --
 -- require('projects').setup({
 --   pick = { root = vim.fn.expand('~') .. '/projects', depth = 1 },
