@@ -1,0 +1,24 @@
+theme = "tokyonight_moon_transparent"
+
+[editor]
+line-number = "relative"
+
+[editor.file-picker]
+hidden = false
+
+[editor.soft-wrap]
+enable = true
+
+[keys.normal]
+J = "@10j"
+K = "@10k"
+space.g = ":sh wez-spawn --cwd \"$(pwd)\" -- lazygit"
+space.e = ":sh hx-yazi \"$(dirname '%{buffer_name}' 2>/dev/null || pwd)\""
+space.d = ":sh hx-delta '%{buffer_name}'"
+
+[keys.select]
+J = "@10j"
+K = "@10k"
+
+[keys.insert]
+j = { k = "normal_mode" }

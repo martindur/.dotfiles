@@ -1,0 +1,73 @@
+#!/bin/bash
+# Spawn a command in a new wezterm tab, return to original tab when done
+# Optionally capture output via --chooser-file and send it back to the original pane
+#
+# Usage: wez-spawn [OPTIONS] -- COMMAND [ARGS...]
+#
+# Options:
+#   --cwd DIR           Working directory for the spawned command
+#   --chooser-file      Capture output file and send ':open <file>' to original pane
+#   --send-keys KEYS    Send these keys to original pane after command exits
+#                       (use %FILE% placeholder for chooser-file contents)
+#
+# Examples:
+#   wez-spawn -- lazygit
+#   wez-spawn --cwd /path/to/dir -- lazygit
+#   wez-spawn --chooser-file --send-keys ':open %FILE%' -- yazi --chooser-file=
+
+set -e
+
+# Defaults
+CWD="$(pwd)"
+CHOOSER_FILE=""
+SEND_KEYS=""
+
+# Parse options
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --cwd)
+      CWD="$2"
+      shift 2
+      ;;
+    --chooser-file)
+      CHOOSER_FILE="$(mktemp)"
+      shift
+      ;;
+    --send-keys)
+      SEND_KEYS="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+# Remaining args are the command
+COMMAND=("$@")
+
+# Capture current pane and tab info
+ORIGINAL_PANE=$WEZTERM_PANE
+ORIGINAL_TAB=$(wezterm cli list --format json | jq -r ".[] | select(.pane_id == $WEZTERM_PANE) | .tab_id")
+
+# Build the command to run in the spawned tab
+if [[ -n "$CHOOSER_FILE" ]]; then
+  # Replace placeholder in command args with actual temp file path
+  COMMAND=("${COMMAND[@]//\{\}/$CHOOSER_FILE}")
+fi
+
+# Build the after-command script
+AFTER_CMD="wezterm cli activate-tab --tab-id $ORIGINAL_TAB"
+
+if [[ -n "$CHOOSER_FILE" && -n "$SEND_KEYS" ]]; then
+  AFTER_CMD="$AFTER_CMD; if [ -s $CHOOSER_FILE ]; then FILE=\$(cat $CHOOSER_FILE); KEYS=\"$SEND_KEYS\"; KEYS=\"\${KEYS//\%FILE\%/\$FILE}\"; printf '%s\r' \"\$KEYS\" | wezterm cli send-text --pane-id $ORIGINAL_PANE --no-paste; fi; rm -f $CHOOSER_FILE"
+elif [[ -n "$CHOOSER_FILE" ]]; then
+  AFTER_CMD="$AFTER_CMD; rm -f $CHOOSER_FILE"
+fi
+
+# Spawn the command in a new tab
+wezterm cli spawn --cwd "$CWD" -- bash -c "${COMMAND[*]}; $AFTER_CMD" > /dev/null
