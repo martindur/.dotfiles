@@ -289,6 +289,84 @@ local function get_line_highlight(line_type)
   end
 end
 
+---Get the treesitter language for a file path
+---@param filepath string
+---@return string|nil
+local function get_lang_from_path(filepath)
+  local ft = vim.filetype.match({ filename = filepath })
+  if not ft then
+    return nil
+  end
+  -- Map filetype to treesitter language (they're usually the same, but not always)
+  local lang = vim.treesitter.language.get_lang(ft)
+  if lang and pcall(vim.treesitter.language.inspect, lang) then
+    return lang
+  end
+  return nil
+end
+
+---Get syntax highlights for a code string using treesitter
+---@param code string[] array of code lines
+---@param lang string treesitter language
+---@return table[] highlights array of {line_idx, hl_group, col_start, col_end}
+local function get_syntax_highlights(code, lang)
+  local highlights = {}
+
+  -- Join lines for parsing
+  local source = table.concat(code, "\n")
+
+  -- Try to get a parser for this language
+  local ok, parser = pcall(vim.treesitter.get_string_parser, source, lang)
+  if not ok or not parser then
+    return highlights
+  end
+
+  -- Parse the code
+  local trees = parser:parse()
+  if not trees or #trees == 0 then
+    return highlights
+  end
+
+  -- Get the highlights query for this language
+  local query_ok, query = pcall(vim.treesitter.query.get, lang, "highlights")
+  if not query_ok or not query then
+    return highlights
+  end
+
+  -- Iterate over captures
+  for id, node, _ in query:iter_captures(trees[1]:root(), source) do
+    local name = query.captures[id]
+    local start_row, start_col, end_row, end_col = node:range()
+
+    -- Convert capture name to highlight group (e.g., "keyword" -> "@keyword")
+    local hl_group = "@" .. name
+
+    -- Handle single-line captures
+    if start_row == end_row then
+      table.insert(highlights, {
+        line = start_row + 1, -- 1-indexed
+        hl_group = hl_group,
+        col_start = start_col,
+        col_end = end_col,
+      })
+    else
+      -- Multi-line capture: add highlight for each line
+      for row = start_row, end_row do
+        local cs = row == start_row and start_col or 0
+        local ce = row == end_row and end_col or -1
+        table.insert(highlights, {
+          line = row + 1,
+          hl_group = hl_group,
+          col_start = cs,
+          col_end = ce,
+        })
+      end
+    end
+  end
+
+  return highlights
+end
+
 ---Render the zdiff buffer
 local function render()
   if not state.buf or not vim.api.nvim_buf_is_valid(state.buf) then
@@ -299,6 +377,7 @@ local function render()
 
   local lines = {}
   local highlights = {} -- {line_idx, hl_group, col_start, col_end}
+  local syntax_highlights = {} -- collected after we know line positions
   state.line_map = {}
 
   -- Header
@@ -346,6 +425,13 @@ local function render()
           file.hunks = get_file_diff(file.path, state.mode)
         end
 
+        -- Get language for syntax highlighting
+        local lang = get_lang_from_path(file.path)
+
+        -- Collect all code lines and their buffer positions for syntax highlighting
+        local code_lines = {}
+        local code_line_mapping = {} -- maps code line index to {buffer_line, prefix_len}
+
         for hunk_idx, hunk in ipairs(file.hunks) do
           -- Hunk header
           local hunk_header = string.format(
@@ -379,7 +465,33 @@ local function render()
               lnum = diff_line.new_lnum or diff_line.old_lnum,
             }
 
+            -- Add diff background highlight
             table.insert(highlights, { #lines, get_line_highlight(diff_line.type), 0, -1 })
+
+            -- Track for syntax highlighting
+            if lang then
+              table.insert(code_lines, diff_line.text)
+              table.insert(code_line_mapping, { buffer_line = #lines, prefix_len = #prefix })
+            end
+          end
+        end
+
+        -- Apply syntax highlighting if we have a language
+        if lang and #code_lines > 0 then
+          local syn_hls = get_syntax_highlights(code_lines, lang)
+          for _, hl in ipairs(syn_hls) do
+            local mapping = code_line_mapping[hl.line]
+            if mapping then
+              -- Offset columns by prefix length
+              local col_start = mapping.prefix_len + hl.col_start
+              local col_end = hl.col_end == -1 and -1 or (mapping.prefix_len + hl.col_end)
+              table.insert(syntax_highlights, {
+                mapping.buffer_line,
+                hl.hl_group,
+                col_start,
+                col_end,
+              })
+            end
           end
         end
       end
@@ -389,12 +501,20 @@ local function render()
   -- Set lines
   vim.api.nvim_buf_set_lines(state.buf, 0, -1, false, lines)
 
-  -- Apply highlights
+  -- Apply diff highlights first (background)
   local ns = vim.api.nvim_create_namespace("zdiff")
   vim.api.nvim_buf_clear_namespace(state.buf, ns, 0, -1)
   for _, hl in ipairs(highlights) do
     local line_idx, hl_group, col_start, col_end = hl[1], hl[2], hl[3], hl[4]
     vim.api.nvim_buf_add_highlight(state.buf, ns, hl_group, line_idx - 1, col_start, col_end)
+  end
+
+  -- Apply syntax highlights on top (foreground colors)
+  local ns_syntax = vim.api.nvim_create_namespace("zdiff_syntax")
+  vim.api.nvim_buf_clear_namespace(state.buf, ns_syntax, 0, -1)
+  for _, hl in ipairs(syntax_highlights) do
+    local line_idx, hl_group, col_start, col_end = hl[1], hl[2], hl[3], hl[4]
+    vim.api.nvim_buf_add_highlight(state.buf, ns_syntax, hl_group, line_idx - 1, col_start, col_end)
   end
 
   vim.api.nvim_buf_set_option(state.buf, "modifiable", false)
