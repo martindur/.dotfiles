@@ -44,7 +44,7 @@ local toggle_expand
 
 -- Configuration
 M.config = {
-  default_expanded = true, -- Whether files are expanded by default
+  default_expanded = false, -- Whether files are expanded by default
   keymaps = {
     goto_file = "<CR>",
     toggle = "<Tab>",
