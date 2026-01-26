@@ -451,10 +451,42 @@ goto_source = function()
   vim.cmd("normal! zz") -- Center the line
 end
 
----Refresh the diff view
+---Refresh the diff view, preserving expanded state and cursor position
 local function refresh()
+  -- Remember which files were expanded (by path)
+  local expanded_paths = {}
+  for _, file in ipairs(state.files) do
+    if file.expanded then
+      expanded_paths[file.path] = true
+    end
+  end
+
+  -- Remember cursor position
+  local cursor_line = nil
+  if state.win and vim.api.nvim_win_is_valid(state.win) then
+    cursor_line = vim.api.nvim_win_get_cursor(state.win)[1]
+  end
+
+  -- Reload files
   state.files = load_files(state.mode)
+
+  -- Restore expanded state
+  for _, file in ipairs(state.files) do
+    if expanded_paths[file.path] then
+      file.expanded = true
+      -- Re-fetch hunks for expanded files
+      file.hunks = get_file_diff(file.path, state.mode)
+    end
+  end
+
   render()
+
+  -- Restore cursor position (clamped to valid range)
+  if cursor_line and state.win and vim.api.nvim_win_is_valid(state.win) then
+    local line_count = vim.api.nvim_buf_line_count(state.buf)
+    cursor_line = math.min(cursor_line, line_count)
+    vim.api.nvim_win_set_cursor(state.win, { cursor_line, 0 })
+  end
 end
 
 ---Toggle between uncommitted and main modes
@@ -520,6 +552,15 @@ function M.open(mode)
   vim.keymap.set("n", M.config.keymaps.close, close, opts)
   vim.keymap.set("n", M.config.keymaps.refresh, refresh, opts)
   vim.keymap.set("n", M.config.keymaps.toggle_mode, toggle_mode, opts)
+
+  -- Auto-refresh when returning to zdiff buffer
+  vim.api.nvim_create_autocmd("BufEnter", {
+    buffer = state.buf,
+    callback = function()
+      state.win = vim.api.nvim_get_current_win()
+      refresh()
+    end,
+  })
 
   -- Load and render
   refresh()
