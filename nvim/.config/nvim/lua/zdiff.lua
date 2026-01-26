@@ -496,11 +496,9 @@ function M.open(mode)
   vim.api.nvim_buf_set_name(state.buf, "zdiff")
   vim.api.nvim_buf_set_option(state.buf, "filetype", "zdiff")
 
-  -- Create window (vertical split on the right)
-  vim.cmd("botright vsplit")
+  -- Open in current window
   state.win = vim.api.nvim_get_current_win()
   vim.api.nvim_win_set_buf(state.win, state.buf)
-  vim.api.nvim_win_set_width(state.win, 80)
 
   -- Window options
   vim.api.nvim_win_set_option(state.win, "number", false)
