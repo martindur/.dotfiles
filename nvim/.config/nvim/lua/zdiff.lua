@@ -147,11 +147,11 @@ end
 ---@return number old_start, number old_count, number new_start, number new_count
 local function parse_hunk_header(header)
   local old_start, old_count, new_start, new_count =
-    header:match("^@@ %-(%d+),?(%d*) %+(%d+),?(%d*) @@")
+      header:match("^@@ %-(%d+),?(%d*) %+(%d+),?(%d*) @@")
   return tonumber(old_start) or 0,
-    tonumber(old_count) or 1,
-    tonumber(new_start) or 0,
-    tonumber(new_count) or 1
+      tonumber(old_count) or 1,
+      tonumber(new_start) or 0,
+      tonumber(new_count) or 1
 end
 
 ---Parse diff output for a single file into hunks
@@ -480,13 +480,20 @@ end
 ---Create the zdiff buffer and window
 ---@param mode? "uncommitted"|"main"
 function M.open(mode)
-  state.mode = mode or "uncommitted"
-
   -- Check if we're in a git repo
   if not get_git_root() then
     vim.notify("Not in a git repository", vim.log.levels.ERROR)
     return
   end
+
+  -- If zdiff buffer already exists, just switch to it
+  if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
+    state.win = vim.api.nvim_get_current_win()
+    vim.api.nvim_win_set_buf(state.win, state.buf)
+    return
+  end
+
+  state.mode = mode or "uncommitted"
 
   -- Create buffer
   state.buf = vim.api.nvim_create_buf(false, true)
