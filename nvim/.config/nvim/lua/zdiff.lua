@@ -6,7 +6,7 @@ local M = {}
 ---@field status string git status (M, A, D, etc.)
 ---@field insertions number lines added
 ---@field deletions number lines deleted
----@field expanded boolean whether the file is expanded
+---@field expanded boolean whether file is expanded
 ---@field hunks ZdiffHunk[] parsed diff hunks
 
 ---@class ZdiffHunk
@@ -40,13 +40,14 @@ local state = {
 
 -- Forward declarations
 local goto_source
+local toggle_expand
 
 -- Configuration
 M.config = {
-  context_lines = 3,
+  default_expanded = true, -- Whether files are expanded by default
   keymaps = {
-    toggle = "<CR>",
     goto_file = "<CR>",
+    toggle = "<Tab>",
     close = "q",
     refresh = "R",
     toggle_mode = "m",
@@ -247,7 +248,7 @@ local function load_files(mode)
       status = info.status,
       insertions = info.insertions,
       deletions = info.deletions,
-      expanded = false,
+      expanded = M.config.default_expanded,
       hunks = {},
     })
   end
@@ -338,7 +339,7 @@ local function render()
       -- Highlight -M in red
       table.insert(highlights, { #lines, "DiffDelete", del_start, del_end })
 
-      -- If expanded, show hunks
+      -- Show hunks only if expanded
       if file.expanded then
         -- Load hunks if not already loaded
         if #file.hunks == 0 then
@@ -348,7 +349,7 @@ local function render()
         for hunk_idx, hunk in ipairs(file.hunks) do
           -- Hunk header
           local hunk_header = string.format(
-            "    @@ -%d,%d +%d,%d @@",
+            "  @@ -%d,%d +%d,%d @@",
             hunk.old_start,
             hunk.old_count,
             hunk.new_start,
@@ -360,13 +361,11 @@ local function render()
 
           -- Diff lines
           for line_idx, diff_line in ipairs(hunk.lines) do
-            local prefix = "    "
+            local prefix = "  "
             if diff_line.type == "add" then
-              prefix = "   +"
+              prefix = " +"
             elseif diff_line.type == "del" then
-              prefix = "   -"
-            else
-              prefix = "    "
+              prefix = " -"
             end
 
             local display_line = prefix .. diff_line.text
@@ -401,21 +400,30 @@ local function render()
   vim.api.nvim_buf_set_option(state.buf, "modifiable", false)
 end
 
----Toggle expansion of file under cursor
-local function toggle_file()
+---Toggle expand/collapse for file under cursor
+toggle_expand = function()
+  if not state.win or not vim.api.nvim_win_is_valid(state.win) then
+    return
+  end
+
   local cursor_line = vim.api.nvim_win_get_cursor(state.win)[1]
   local mapping = state.line_map[cursor_line]
 
-  if mapping and mapping.file_idx and not mapping.line_idx then
-    -- On a file header or hunk header, toggle the file
-    local file = state.files[mapping.file_idx]
-    if file then
-      file.expanded = not file.expanded
-      render()
+  if not mapping or not mapping.file_idx then
+    return
+  end
+
+  local file = state.files[mapping.file_idx]
+  if file then
+    file.expanded = not file.expanded
+    render()
+    -- Keep cursor on the file header
+    for lnum, map in pairs(state.line_map) do
+      if map.file_idx == mapping.file_idx and not map.hunk_idx then
+        vim.api.nvim_win_set_cursor(state.win, { lnum, 0 })
+        break
+      end
     end
-  elseif mapping and mapping.file_idx and mapping.lnum then
-    -- On a diff line, go to file
-    goto_source()
   end
 end
 
@@ -453,18 +461,16 @@ end
 
 ---Refresh the diff view, preserving expanded state and cursor position
 local function refresh()
-  -- Remember which files were expanded (by path)
-  local expanded_paths = {}
-  for _, file in ipairs(state.files) do
-    if file.expanded then
-      expanded_paths[file.path] = true
-    end
-  end
-
   -- Remember cursor position
   local cursor_line = nil
   if state.win and vim.api.nvim_win_is_valid(state.win) then
     cursor_line = vim.api.nvim_win_get_cursor(state.win)[1]
+  end
+
+  -- Remember expanded state by path
+  local expanded_state = {}
+  for _, file in ipairs(state.files) do
+    expanded_state[file.path] = file.expanded
   end
 
   -- Reload files
@@ -472,10 +478,8 @@ local function refresh()
 
   -- Restore expanded state
   for _, file in ipairs(state.files) do
-    if expanded_paths[file.path] then
-      file.expanded = true
-      -- Re-fetch hunks for expanded files
-      file.hunks = get_file_diff(file.path, state.mode)
+    if expanded_state[file.path] ~= nil then
+      file.expanded = expanded_state[file.path]
     end
   end
 
@@ -492,9 +496,8 @@ end
 ---Toggle between uncommitted and main modes
 local function toggle_mode()
   state.mode = state.mode == "uncommitted" and "main" or "uncommitted"
-  -- Reset expansion and reload
+  -- Clear hunks so they get reloaded
   for _, file in ipairs(state.files) do
-    file.expanded = false
     file.hunks = {}
   end
   refresh()
@@ -548,7 +551,8 @@ function M.open(mode)
 
   -- Set up keymaps
   local opts = { buffer = state.buf, silent = true }
-  vim.keymap.set("n", M.config.keymaps.toggle, toggle_file, opts)
+  vim.keymap.set("n", M.config.keymaps.goto_file, goto_source, opts)
+  vim.keymap.set("n", M.config.keymaps.toggle, toggle_expand, opts)
   vim.keymap.set("n", M.config.keymaps.close, close, opts)
   vim.keymap.set("n", M.config.keymaps.refresh, refresh, opts)
   vim.keymap.set("n", M.config.keymaps.toggle_mode, toggle_mode, opts)
