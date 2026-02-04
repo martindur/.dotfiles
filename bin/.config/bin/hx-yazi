@@ -1,7 +1,0 @@
-#!/bin/bash
-# Open yazi in a new wezterm tab, return to helix and open selected file
-# Usage: hx-yazi [DIR]
-
-DIR="${1:-.}"
-
-wez-spawn --cwd "$DIR" --chooser-file --send-keys ':open %FILE%' -- yazi --chooser-file={}
