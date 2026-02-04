@@ -96,6 +96,13 @@ vim.lsp.config.zig_ls = {
   root_markers = { '.git' }
 }
 
+-- SWIFT --
+vim.lsp.config.sourcekit_ls = {
+  cmd = { 'sourcekit-lsp' },
+  filetypes = { 'swift', 'objc', 'objcpp', 'c', 'cpp' },
+  root_markers = { 'Package.swift', '.git', 'compile_commands.json' }
+}
+
 function M.setup()
   vim.lsp.enable("lua_ls")
   vim.lsp.enable("ts_ls")
@@ -106,6 +113,7 @@ function M.setup()
   vim.lsp.enable("sql_ls")
   vim.lsp.enable("json_ls")
   vim.lsp.enable("zig_ls")
+  vim.lsp.enable("sourcekit_ls")
 end
 
 return M

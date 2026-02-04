@@ -111,5 +111,5 @@ esc = 'mode main'
 
 
 [[on-window-detected]]
-if.app-id = "com.mitchellh.ghostty"
-run = ["layout floating"]
+if.app-name-regex-substring = "love"
+run = 'layout tiling'

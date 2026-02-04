@@ -17,6 +17,10 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'kristijanhusak/vim-dadbod-completion'
 
+" git diff
+"Plug 'martindur/zdiff.nvim'
+Plug '~/projects/zdiff.nvim' " DEVELOPMENT
+
 " COLORSCHEME
 "Plug 'rebelot/kanagawa.nvim'
 "Plug 'rose-pine/neovim'

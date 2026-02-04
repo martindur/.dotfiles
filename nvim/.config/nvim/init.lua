@@ -140,6 +140,14 @@ vim.cmd.colorscheme("tokyonight")
 --   highlight = { enable = true }
 -- })
 
+-- Enable treesitter highlighting for all filetypes with a parser
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(args)
+    -- Try to start treesitter highlighting, silently fail if no parser
+    pcall(vim.treesitter.start, args.buf)
+  end
+})
+
 
 local fzflua = require('fzf-lua')
 fzflua.setup({
@@ -191,8 +199,11 @@ vim.keymap.set('n', '<leader>db', '<cmd>Trouble diagnostics toggle filter.buf=0<
 vim.keymap.set('n', '<leader>ds', '<cmd>Trouble symbols toggle<cr>', { desc = "Document symbols" })
 
 
--- Diff view
-require('diff').setup()
+
+-- Zdiff (multi-buffer diff view)
+require('zdiff').setup()
+vim.keymap.set('n', '<leader>dz', function() require('zdiff').open() end, { desc = "Open zdiff view" })
+vim.keymap.set('n', '<leader>dm', function() require('zdiff').open("main") end, { desc = "Open zdiff vs main" })
 
 
 -- CHECKS --
