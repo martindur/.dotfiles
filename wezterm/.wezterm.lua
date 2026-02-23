@@ -94,6 +94,22 @@ function split(inputstr, sep)
   return t
 end
 
+local function get_codex_agent_statuses()
+  local status_script = wezterm.home_dir .. "/.config/bin/codex-sketchybar-status"
+  local success, stdout, stderr = wezterm.run_child_process({ status_script })
+
+  if not success or not stdout or stdout == "" then
+    return {}
+  end
+
+  local ok, parsed = pcall(wezterm.json_parse, stdout)
+  if not ok or type(parsed) ~= "table" then
+    return {}
+  end
+
+  return parsed
+end
+
 -- Get git project info for current pane
 local function get_git_project_info(pane)
   local cwd = pane:get_current_working_dir()
@@ -208,6 +224,61 @@ local dotfiles = {
 -- Key mappings
 
 config.keys = {
+  {
+    -- show codex agent workspaces/statuses
+    key = "a",
+    mods = super,
+    action = wezterm.action_callback(function(window, pane)
+      local agents = get_codex_agent_statuses()
+      if #agents == 0 then
+        window:toast_notification("wezterm", "No active Codex agents", nil, 2500)
+        return
+      end
+
+      local choices = {}
+      for i, agent in ipairs(agents) do
+        local workspace = agent.workspace or ""
+        local state = agent.state or "idle"
+        local status_text = state
+        if state == "working" then
+          status_text = "work"
+        end
+
+        local label = string.format("%d. %s [%s]", i, workspace, status_text)
+        table.insert(choices, {
+          id = tostring(i),
+          label = label,
+        })
+      end
+
+      window:perform_action(
+        act.InputSelector({
+          title = "Codex Agents (workspace [status])",
+          choices = choices,
+          fuzzy = true,
+          action = wezterm.action_callback(function(inner_window, inner_pane, id, _label)
+            if not id then
+              return
+            end
+
+            local index = tonumber(id)
+            if not index or not agents[index] then
+              return
+            end
+
+            local selected = agents[index]
+            if selected.workspace and selected.workspace ~= "" then
+              inner_window:perform_action(
+                act.SwitchToWorkspace({ name = selected.workspace }),
+                inner_pane
+              )
+            end
+          end),
+        }),
+        pane
+      )
+    end),
+  },
   {
     key = 'w',
     mods = 'CMD',

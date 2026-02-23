@@ -7,7 +7,7 @@ sketchybar --add event aerospace_workspace_change
 for sid in $(aerospace list-workspaces --all); do
     sketchybar --add item space.$sid left \
         --subscribe space.$sid aerospace_workspace_change \
-        --set space.$sid \
+k       --set space.$sid \
         label="$sid" \
         label.font="Hack Nerd Font:Bold:13.0" \
         label.color=$COTTON_CANDY \
@@ -91,6 +91,14 @@ sketchybar --add item clock right \
            --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change \
+           --add item codex.1 right \
+           --set codex.1 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 1" \
+           --add item codex.2 right \
+           --set codex.2 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 2" \
+           --add item codex.3 right \
+           --set codex.3 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 3" \
+           --add item codex.4 right \
+           --set codex.4 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 4" \
            --add alias "MeetingBar,Item-0" right \
            --set "MeetingBar,Item-0" \
                  icon.drawing=off \
