@@ -95,8 +95,16 @@ function split(inputstr, sep)
 end
 
 local function get_codex_agent_statuses()
-  local status_script = wezterm.home_dir .. "/.config/bin/codex-sketchybar-status"
-  local success, stdout, stderr = wezterm.run_child_process({ status_script })
+  local agentman_bin = wezterm.home_dir .. "/.cargo/bin/agentman"
+  local success, stdout, stderr = wezterm.run_child_process({
+    agentman_bin, "status", "--max-age-ms", "1500", "--cache-path", "/tmp/agentman-status.json"
+  })
+
+  if not success or not stdout or stdout == "" then
+    success, stdout, stderr = wezterm.run_child_process({
+      "agentman", "status", "--max-age-ms", "1500", "--cache-path", "/tmp/agentman-status.json"
+    })
+  end
 
   if not success or not stdout or stdout == "" then
     return {}
