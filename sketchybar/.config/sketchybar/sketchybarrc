@@ -90,16 +90,15 @@ sketchybar --add item clock right \
            --subscribe volume volume_change \
            --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
-           --subscribe battery system_woke power_source_change \
-           --add item codex.1 right \
-           --set codex.1 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 1" \
-           --add item codex.2 right \
-           --set codex.2 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 2" \
-           --add item codex.3 right \
-           --set codex.3 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 3" \
-           --add item codex.4 right \
-           --set codex.4 update_freq=2 icon=󰚩 script="$PLUGIN_DIR/codex_agents.sh 4" \
-           --add alias "MeetingBar,Item-0" right \
+           --subscribe battery system_woke power_source_change
+
+AGENT_SLOTS="${AGENT_SLOTS:-8}"
+for slot in $(seq 1 "$AGENT_SLOTS"); do
+  sketchybar --add item "agent.$slot" right \
+             --set "agent.$slot" update_freq=2 icon=󰚩 script="$PLUGIN_DIR/agents.sh $slot"
+done
+
+sketchybar --add alias "MeetingBar,Item-0" right \
            --set "MeetingBar,Item-0" \
                  icon.drawing=off \
                  label.drawing=off \
