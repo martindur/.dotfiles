@@ -96,6 +96,13 @@ vim.lsp.config.zig_ls = {
   root_markers = { '.git' }
 }
 
+-- PURESCRIPT --
+vim.lsp.config.purescript_ls = {
+  cmd = { 'purescript-language-server', '--stdio' },
+  filetypes = { 'purescript' },
+  root_markers = { 'spago.dhall', 'spago.yaml', 'bower.json', 'psc-package.json', '.git' }
+}
+
 -- SWIFT --
 vim.lsp.config.sourcekit_ls = {
   cmd = { 'sourcekit-lsp' },
@@ -114,6 +121,7 @@ function M.setup()
   vim.lsp.enable("json_ls")
   vim.lsp.enable("zig_ls")
   vim.lsp.enable("sourcekit_ls")
+  vim.lsp.enable("purescript_ls")
 end
 
 return M

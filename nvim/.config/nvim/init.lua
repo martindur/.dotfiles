@@ -43,7 +43,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = args.buf })
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { buffer = args.buf })
-    vim.keymap.set('n', 'gr', function() require('fzf-lua').lsp_references() end,
+    vim.keymap.set('n', 'gr', function() require('snacks').picker.lsp_references() end,
       { buffer = args.buf, desc = "LSP references" })
   end
 })
@@ -136,9 +136,12 @@ require('tokyonight').setup({
 })
 vim.cmd.colorscheme("tokyonight")
 
--- require('nvim-treesitter.configs').setup({
---   highlight = { enable = true }
--- })
+-- Ensure parsers are installed (runs async, no-op if already installed)
+require('nvim-treesitter').install {
+  'elixir', 'html', 'javascript', 'json', 'lua', 'python',
+  'sql', 'svelte', 'toml', 'typescript', 'vim', 'yaml',
+  'purescript', 'zig', 'astro', 'css', 'markdown',
+}
 
 -- Enable treesitter highlighting for all filetypes with a parser
 vim.api.nvim_create_autocmd('FileType', {
@@ -149,34 +152,21 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 
-local fzflua = require('fzf-lua')
-fzflua.setup({
-  "hide", -- hide the fzf process when closing, for a better resume experience
-  keymap = {
-    fzf = {
-      ["ctrl-q"] = "select-all+accept",
-    },
-  },
-  files = {
-    fd_opts = "--color=never --type f --hidden --follow --exclude .git",
-  },
-  buffers = {
-    cwd_only = true,
-    -- no_term_buffers = false
-    -- current_tab_only = true,
-    show_unlisted = true,
-    show_unloaded = true
-  }
-})
+local snacks = require('snacks')
+vim.keymap.set({ 'n' }, '<leader>f', function() snacks.picker.files() end, { desc = "find project files" })
+vim.keymap.set({ 'n' }, '<leader>b', function() snacks.picker.buffers() end, { desc = "find files from current buffers" })
+vim.keymap.set({ 'n' }, '<leader>t', function() snacks.picker.grep() end, { desc = "live grep" })
+vim.keymap.set({ 'n' }, '<leader>w', function() snacks.picker.grep_word() end, { desc = "grep word under cursor" })
+vim.keymap.set({ 'n' }, ',', function() snacks.picker.resume() end, { desc = "re-run last query" })
 
-vim.keymap.set({ 'n' }, '<leader>f', fzflua.files, { desc = "find project files with fzf" })
-vim.keymap.set({ 'n' }, '<leader>b', fzflua.buffers, { desc = "find files from current buffers" })
-vim.keymap.set({ 'n' }, '<leader>t', fzflua.tabs, { desc = "switch tabs" })
--- vim.keymap.set({ 'n' }, '<leader>F', peekaboo.find_files_include_hidden, { desc = "find files, including hidden" })
-vim.keymap.set({ 'n' }, '<leader>t', fzflua.live_grep_native,
-  { desc = "find files by searching for string in file" })
-vim.keymap.set({ 'n' }, '<leader>w', fzflua.grep_cword, { desc = "grep word under cursor" })
-vim.keymap.set({ 'n' }, ',', fzflua.resume, { desc = "re-run last query" })
+-- Agents picker: find files in .agents/ subdirectory, ignoring gitignore
+vim.keymap.set({ 'n' }, '<leader>a', function()
+  snacks.picker.files({
+    cwd = vim.fn.getcwd() .. '/.agents',
+    hidden = true,
+    ignored = true, -- include gitignored files
+  })
+end, { desc = "find files in .agents/" })
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -201,7 +191,11 @@ vim.keymap.set('n', '<leader>ds', '<cmd>Trouble symbols toggle<cr>', { desc = "D
 
 
 -- Zdiff (multi-buffer diff view)
-require('zdiff').setup()
+require('zdiff').setup({
+  diff = {
+    show_line_numbers = "both",
+  }
+})
 vim.keymap.set('n', '<leader>dz', function() require('zdiff').open() end, { desc = "Open zdiff view" })
 vim.keymap.set('n', '<leader>dm', function() require('zdiff').open("main") end, { desc = "Open zdiff vs main" })
 
