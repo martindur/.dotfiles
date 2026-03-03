@@ -4,9 +4,7 @@ PATH="$HOME/.config/bin:$PATH" # all my custom runnable scripts
 PATH="$HOME/.cargo/bin:$PATH" # binaries built with rust
 PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH" # postgres utility (psql, pg_dump, etc.)
 PATH="$HOME/.bun/bin:$PATH" # bun global packages
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+PATH="$HOME/.local/share/mise/shims:$PATH" # mise shims (dev tool package management)
 
 # Syncs homebrew with packages from brewfile
 alias bsync="brew update && \
@@ -66,23 +64,27 @@ function ya_zed() {
 	exit
 }
 
-# if [ -f ~/.env ]; then
-#     export $(grep -v '^#' ~/.env | xargs)
-# else
-#     echo ".env file not found"
-# fi
-
 # Created by `pipx` on 2024-09-24 13:45:52
 export PATH="$PATH:/Users/dur/.local/bin"
 
+export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 eval "$(starship init zsh)"
 
 
 # OSX
-if [[ $(uname) == 'Darwin' ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
   # Syntax highlighting
-  source $(brew --prefix)/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  if [ -n "${HOMEBREW_PREFIX:-}" ]; then
+    if [ -r "${HOMEBREW_PREFIX}/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]; then
+      source "${HOMEBREW_PREFIX}/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+    fi
+    if [ -r "${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+      source "${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    fi
+  fi
 fi
 
 # zprof
+
+# bun completions
+[ -s "/Users/dur/.bun/_bun" ] && source "/Users/dur/.bun/_bun"
