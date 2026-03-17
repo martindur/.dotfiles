@@ -1,5 +1,3 @@
-local util = require('util')
-
 vim.g.mapleader = " "
 
 vim.opt.relativenumber = true
@@ -86,7 +84,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 
 -- File finding --
-vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit', { width = 1, height = 1 }) end)
+vim.keymap.set({ 'n' }, '<leader>g', function() Snacks.lazygit() end, { desc = "Lazygit" })
 
 vim.keymap.set({ 'n' }, '<leader>e', '<cmd>Oil --float<cr>')
 
@@ -155,19 +153,6 @@ vim.diagnostic.config({
   signs = { severity = { min = vim.diagnostic.severity.WARN } },
 })
 
--- TROUBLE (DIAGNOSTICS)
-require('trouble').setup({
-  win = { position = "right" },
-  modes = {
-    diagnostics = {
-      filter = { severity = vim.diagnostic.severity.ERROR },
-    },
-  },
-})
-vim.keymap.set('n', '<leader>dd', '<cmd>Trouble diagnostics toggle<cr>', { desc = "Workspace diagnostics" })
-vim.keymap.set('n', '<leader>db', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', { desc = "Buffer diagnostics" })
-vim.keymap.set('n', '<leader>ds', '<cmd>Trouble symbols toggle<cr>', { desc = "Document symbols" })
-
 
 
 -- Zdiff (multi-buffer diff view)
@@ -208,6 +193,7 @@ require("conform").setup({
 
 -- SNACKS --
 require('snacks').setup({
+  lazygit = { enabled = true },
   picker = { enabled = true },
   gh = { enabled = true }
 });

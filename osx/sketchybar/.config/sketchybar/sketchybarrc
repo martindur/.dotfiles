@@ -92,12 +92,6 @@ sketchybar --add item clock right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change
 
-AGENT_SLOTS="${AGENT_SLOTS:-8}"
-for slot in $(seq 1 "$AGENT_SLOTS"); do
-  sketchybar --add item "agent.$slot" right \
-             --set "agent.$slot" update_freq=2 icon=󰚩 script="$PLUGIN_DIR/agents.sh $slot"
-done
-
 sketchybar --add alias "MeetingBar,Item-0" right \
            --set "MeetingBar,Item-0" \
                  icon.drawing=off \

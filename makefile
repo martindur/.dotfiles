@@ -1,5 +1,5 @@
 STOW = stow --target=$(HOME)
-SHARED = zsh vim nvim bin wezterm yazi
+SHARED = zsh vim nvim bin wezterm
 
 .PHONY: linux nix nix-upgrade osx delete
 

@@ -1,3 +1,0 @@
-#!/usr/bin/fish
-
-xrandr --output HDMI-1 --scale $argv[1]x$argv[1]
