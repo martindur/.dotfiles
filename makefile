@@ -1,18 +1,23 @@
+STOW = stow --target=$(HOME)
 SHARED = zsh vim nvim bin wezterm yazi
 
+.PHONY: linux nix nix-upgrade osx delete
+
 linux:
-	stow --verbose --restow $(SHARED) i3
+	$(STOW) --dir=shared --verbose --restow $(SHARED)
+	$(STOW) --dir=linux --verbose --restow i3
 
 nix:
-	sudo nixos-rebuild -I nixos-config=./configuration.nix switch
+	sudo nixos-rebuild -I nixos-config=./linux/configuration.nix switch
 
 nix-upgrade:
-	sudo nixos-rebuild -I nixos-config=./configuration.nix switch --upgrade
+	sudo nixos-rebuild -I nixos-config=./linux/configuration.nix switch --upgrade
 
-mac:
-	stow --verbose --restow $(SHARED) aerospace sketchybar
-
-osx: mac
+osx:
+	$(STOW) --dir=shared --verbose --restow $(SHARED)
+	$(STOW) --dir=osx --verbose --restow aerospace sketchybar
 
 delete:
-	stow --verbose --delete */
+	$(STOW) --dir=osx --verbose --delete aerospace sketchybar || true
+	$(STOW) --dir=linux --verbose --delete i3 || true
+	$(STOW) --dir=shared --verbose --delete $(SHARED)

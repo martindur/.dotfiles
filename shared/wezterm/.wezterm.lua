@@ -192,40 +192,32 @@ local dotfiles = {
     id = wezterm.home_dir .. "/" .. ".dotfiles",
   },
   {
-    label = "homebrew",
-    id = wezterm.home_dir .. "/.dotfiles/homebrew/.config",
-  },
-  {
     label = "nvim",
-    id = wezterm.home_dir .. "/.dotfiles/nvim/.config/nvim",
+    id = wezterm.home_dir .. "/.dotfiles/shared/nvim/.config/nvim",
   },
   {
     label = "vim",
-    id = wezterm.home_dir .. "/.dotfiles/vim",
+    id = wezterm.home_dir .. "/.dotfiles/shared/vim",
   },
   {
     label = "aerospace",
-    id = wezterm.home_dir .. "/.dotfiles/aerospace/.config/aerospace",
+    id = wezterm.home_dir .. "/.dotfiles/osx/aerospace/.config/aerospace",
   },
   {
     label = "sketchybar",
-    id = wezterm.home_dir .. "/.dotfiles/sketchybar/.config/sketchybar",
+    id = wezterm.home_dir .. "/.dotfiles/osx/sketchybar/.config/sketchybar",
   },
   {
     label = "wezterm",
-    id = wezterm.home_dir .. "/.dotfiles/wezterm",
+    id = wezterm.home_dir .. "/.dotfiles/shared/wezterm",
   },
   {
     label = "zsh",
-    id = wezterm.home_dir .. "/.dotfiles/zsh",
+    id = wezterm.home_dir .. "/.dotfiles/shared/zsh",
   },
   {
     label = "bin (scripts)",
-    id = wezterm.home_dir .. "/.dotfiles/bin/.config/bin",
-  },
-  {
-    label = "docs",
-    id = wezterm.home_dir .. "/.dotfiles/docs",
+    id = wezterm.home_dir .. "/.dotfiles/shared/bin/.config/bin",
   },
 }
 
