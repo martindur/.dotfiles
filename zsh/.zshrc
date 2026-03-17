@@ -2,14 +2,8 @@
 
 PATH="$HOME/.config/bin:$PATH" # all my custom runnable scripts
 PATH="$HOME/.cargo/bin:$PATH" # binaries built with rust
-PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH" # postgres utility (psql, pg_dump, etc.)
 PATH="$HOME/.bun/bin:$PATH" # bun global packages
-PATH="$HOME/.local/share/mise/shims:$PATH" # mise shims (dev tool package management)
-
-# Syncs homebrew with packages from brewfile
-alias bsync="brew update && \
-    brew bundle install --cleanup --file=~/.config/brewfile --no-lock && \
-    brew upgrade"
+PATH="$HOME/.local/share/mise/shims:$PATH" # project tool shims
 
 alias python="python3"
 
@@ -17,8 +11,10 @@ alias python="python3"
 if [[ $(uname) == 'Linux' ]]; then
   # alias nvim='steam-run nvim' # a NixOS 'hack' to run binaries not installed via nix packages. Without this, Mason can't download and run LSPs
   alias n='steam-run nvim'
-  # NixOS package that for some reason thought the official cli name just wasn't good enough.
-  alias zed='zeditor'
+fi
+
+if [[ "$OSTYPE" == darwin* ]]; then
+  PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH" # postgres utility (psql, pg_dump, etc.)
 fi
 
 # Runs a postgres container and maps the data volume to the given project folders directory
@@ -52,21 +48,6 @@ dozzle() {
   docker run -d --name dozzle -p 8888:8080 -v /var/run/docker.sock:/var/run/docker.sock amir20/dozzle:latest >/dev/null 2>&1
 }
 
-# wrapper over yazi to open file (intended to be called from zed task)
-function ya_zed() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
-	yazi "$@" --chooser-file="$tmp"
-
-	local opened_file=$(cat -- "$tmp" | head -n 1)
-	zed -- "$opened_file"
-
-	rm -f -- "$tmp"
-	exit
-}
-
-# Created by `pipx` on 2024-09-24 13:45:52
-export PATH="$PATH:/Users/dur/.local/bin"
-
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 eval "$(starship init zsh)"
 
@@ -88,3 +69,5 @@ fi
 
 # bun completions
 [ -s "/Users/dur/.bun/_bun" ] && source "/Users/dur/.bun/_bun"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

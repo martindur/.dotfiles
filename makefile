@@ -1,5 +1,7 @@
+SHARED = zsh vim nvim bin wezterm yazi
+
 linux:
-	stow --verbose --restow zsh vim nvim bin wezterm i3 zed yazi
+	stow --verbose --restow $(SHARED) i3
 
 nix:
 	sudo nixos-rebuild -I nixos-config=./configuration.nix switch
@@ -7,8 +9,10 @@ nix:
 nix-upgrade:
 	sudo nixos-rebuild -I nixos-config=./configuration.nix switch --upgrade
 
-osx:
-	stow --verbose --restow wezterm zsh homebrew nvim vim bin aerospace yazi sketchybar
+mac:
+	stow --verbose --restow $(SHARED) aerospace sketchybar
+
+osx: mac
 
 delete:
 	stow --verbose --delete */

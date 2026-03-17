@@ -1,16 +1,18 @@
 
 # Dotfiles
 
-System installs & configuration files
+Personal configuration, managed with GNU Stow.
 
-## dotfiles
+Shared tools live at the repo root and are intended to work on both macOS and Linux.
+OS-specific config is kept separate:
 
-All configurations, with convention to support GNU stow as management
+- `aerospace/` and `sketchybar/` are macOS-only
+- `i3/` is Linux-only
+- `configuration.nix` is the only package/system declaration that remains
 
-## docs
+Useful targets:
 
-Docs for installs & packages
-
-## scripts
-
-Helper scripts
+- `make mac`
+- `make linux`
+- `make nix`
+- `make nix-upgrade`

@@ -4,3 +4,4 @@ p.conf
 **/fish_variables
 *.swp
 .netrwhist
+*.zwc

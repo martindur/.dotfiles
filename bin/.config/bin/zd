@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-# "proper" alias for zed-dev start
-exec zed-dev start "$@"

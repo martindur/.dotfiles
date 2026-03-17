@@ -88,12 +88,6 @@ vim.api.nvim_create_autocmd('FileType', {
 -- File finding --
 vim.keymap.set({ 'n' }, '<leader>g', function() util.floating_process('lazygit', { width = 1, height = 1 }) end)
 
--- NOTE: Disabling yazi for now, to test out oil exclusively
--- vim.keymap.set({ 'n' }, '<leader>e', function()
---   local dir = vim.fn.expand('%:p:h')
---   if dir == '' then dir = vim.loop.cwd() end
---   util.floating_process('yazi "' .. dir .. '"')
--- end)
 vim.keymap.set({ 'n' }, '<leader>e', '<cmd>Oil --float<cr>')
 
 vim.keymap.set({ 'n' }, '<leader>1', '<cmd>tabn 1<cr>')
@@ -105,20 +99,6 @@ vim.keymap.set({ 'n' }, '<leader>5', '<cmd>tabn 5<cr>')
 vim.keymap.set({ 't' }, '<c-x>', '<c-\\><c-n>')
 
 -- FUNCTIONALITY --
-
--- search git log (keeps the selected item while searching, provided it matches):
--- git log --oneline --graph --color=always | nl | fzf --ansi --track --no-sort --layout=reverse-list
-
--- search (and execute?) command history:
--- history | fzf --tac --no-sort
-
--- TODO:
--- * quick open terminal (toggleable?)
--- * simple which key
--- * consolidate themes (keep habamax?)
--- * AI buffer v1 (simple buffer chat)
--- * AI buffer v2 (context via vectorized database of code, using pgvector)
---
 
 -- PLUGINS
 
@@ -239,17 +219,3 @@ end)
 
 -- AUTOCOMPLETION --
 require('blink.cmp').setup()
-
--- OTHER --
--- PROJECTS --
--- require('projects').setup({
---   pick = { root = vim.fn.expand('~') .. '/projects', depth = 1 },
---   set_tabline = true
--- })
---
--- vim.keymap.set('n', '<leader>pp', function() require('projects').pick() end)
--- vim.keymap.set('n', '<leader>pr', function()
---   vim.ui.input({ prompt = 'Rename tab:' }, function(name)
---     if name then require('projects').rename(name) end
---   end)
--- end)
