@@ -13,6 +13,7 @@ Shells:
 
 - `shared/zsh/` is the minimal compatibility shell config
 - `shared/nushell/` is the primary interactive shell config
+- to make Nushell the macOS login shell, `nu` must be present in `/etc/shells` and then selected with `chsh -s "$(command -v nu)"`
 
 Stow commands target `$HOME` explicitly so the setup stays portable across macOS and Linux.
 

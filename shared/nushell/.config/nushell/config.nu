@@ -11,7 +11,7 @@ def create-left-prompt [] {
   if ($branch | is-empty) {
     $dir
   } else {
-    [$dir " (" $branch ")"] | str join
+    [$dir " " (ansi dark_gray) "(" (ansi cyan) $branch (ansi dark_gray) ")" (ansi reset)] | str join
   }
 }
 
