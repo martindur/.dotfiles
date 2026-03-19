@@ -126,6 +126,106 @@ local function get_worktrees(git_root)
   return worktrees
 end
 
+local function project_worktree_choices(project_path, git_root, current_path)
+  local choices = {}
+
+  for _, wt in ipairs(get_worktrees(git_root)) do
+    local label = wt.branch or basename(wt.path)
+    local tags = {}
+
+    if wt.path == project_path then
+      table.insert(tags, "main")
+    end
+
+    if current_path and wt.path == current_path then
+      table.insert(tags, "current")
+    end
+
+    if #tags > 0 then
+      label = label .. " [" .. table.concat(tags, ", ") .. "]"
+    end
+
+    table.insert(choices, { id = wt.path, label = label })
+  end
+
+  table.sort(choices, function(a, b)
+    local a_current = a.label:find("%[current") ~= nil
+    local b_current = b.label:find("%[current") ~= nil
+    if a_current ~= b_current then
+      return a_current
+    end
+
+    local a_main = a.label:find("%[main") ~= nil or a.label:find(", main") ~= nil
+    local b_main = b.label:find("%[main") ~= nil or b.label:find(", main") ~= nil
+    if a_main ~= b_main then
+      return a_main
+    end
+
+    return a.label < b.label
+  end)
+
+  return choices
+end
+
+local function show_worktree_picker(window, pane, title, choices)
+  if #choices == 0 then
+    window:toast_notification("wezterm", "No worktrees found", nil, 3000)
+    return
+  end
+
+  window:perform_action(
+    act.InputSelector({
+      title = title,
+      choices = choices,
+      fuzzy = true,
+      action = wezterm.action_callback(function(inner_window, inner_pane, id, label)
+        if id and label then
+          inner_window:perform_action(
+            act.SwitchToWorkspace({
+              name = label,
+              spawn = {
+                label = label,
+                cwd = id,
+              },
+            }),
+            inner_pane
+          )
+        end
+      end),
+    }),
+    pane
+  )
+end
+
+local function project_context_action(project_name, project_path)
+  return wezterm.action_callback(function(window, pane)
+    local project_info = get_git_project_info(pane)
+    local cwd = pane:get_current_working_dir()
+    local current_path = cwd and cwd.file_path or nil
+
+    if project_info then
+      local choices = project_worktree_choices(project_path, project_info.git_root, current_path)
+      for _, choice in ipairs(choices) do
+        if choice.id == project_path then
+          show_worktree_picker(window, pane, "Choose " .. project_name .. " worktree", choices)
+          return
+        end
+      end
+    end
+
+    window:perform_action(
+      act.SwitchToWorkspace({
+        name = project_name,
+        spawn = {
+          label = project_name,
+          cwd = project_path,
+        },
+      }),
+      pane
+    )
+  end)
+end
+
 config.keys = {
   {
     key = 'w',
@@ -224,22 +324,7 @@ config.keys = {
     action = act.PasteFrom("Clipboard"),
   },
   {
-    key = "d",
-    mods = super .. "|CTRL",
-    action = act.SwitchToWorkspace({ name = "default" }),
-  },
-  {
-    key = "i",
-    mods = super,
-    action = act.SwitchWorkspaceRelative(1),
-  },
-  {
-    key = "o",
-    mods = super,
-    action = act.SwitchWorkspaceRelative(-1),
-  },
-  {
-    key = "d",
+    key = ".",
     mods = super,
     action = act.SwitchToWorkspace({
       name = "dotfiles",
@@ -248,6 +333,16 @@ config.keys = {
         cwd = wezterm.home_dir .. "/.dotfiles",
       },
     }),
+  },
+  {
+    key = "d",
+    mods = super,
+    action = project_context_action("discovery", wezterm.home_dir .. "/projects/discovery"),
+  },
+  {
+    key = "b",
+    mods = super,
+    action = project_context_action("brisk", wezterm.home_dir .. "/projects/brisk"),
   },
   {
     key = "f",
@@ -314,45 +409,14 @@ config.keys = {
     mods = super,
     action = wezterm.action_callback(function(window, pane)
       local project_info = get_git_project_info(pane)
+      local cwd = pane:get_current_working_dir()
+      local current_path = cwd and cwd.file_path or nil
       if not project_info then
         window:toast_notification("wezterm", "Not in a git repository", nil, 3000)
         return
       end
 
-      local worktrees = get_worktrees(project_info.git_root)
-      if #worktrees == 0 then
-        window:toast_notification("wezterm", "No worktrees found", nil, 3000)
-        return
-      end
-
-      local choices = {}
-      for _, wt in ipairs(worktrees) do
-        local label = wt.branch or basename(wt.path)
-        table.insert(choices, { id = wt.path, label = label })
-      end
-
-      window:perform_action(
-        act.InputSelector({
-          title = "Choose Worktree",
-          choices = choices,
-          fuzzy = true,
-          action = wezterm.action_callback(function(inner_window, inner_pane, id, label)
-            if id and label then
-              inner_window:perform_action(
-                act.SwitchToWorkspace({
-                  name = label,
-                  spawn = {
-                    label = label,
-                    cwd = id,
-                  },
-                }),
-                inner_pane
-              )
-            end
-          end),
-        }),
-        pane
-      )
+      show_worktree_picker(window, pane, "Choose Worktree", project_worktree_choices(project_info.git_root, project_info.git_root, current_path))
     end),
   },
 }
