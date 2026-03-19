@@ -13,4 +13,5 @@ path add "~/.local/bin"
 if $nu.os-info.name == "macos" {
   path add "/opt/homebrew/bin"
   path add "/opt/homebrew/sbin"
+  path add "~/.orbstack/bin"
 }

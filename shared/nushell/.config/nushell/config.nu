@@ -2,7 +2,17 @@ $env.config = ($env.config
   | upsert show_banner false
   | upsert edit_mode vi
   | upsert buffer_editor "nvim"
+  | upsert history {
+      file_format: sqlite
+      max_size: 1_000_000
+      sync_on_enter: true
+      isolation: true
+    }
 )
+
+# Nushell 0.111.0 does not support history.path yet.
+# When 0.112+ is available, move history to XDG state instead of leaving it
+# under the active config directory.
 
 def create-left-prompt [] {
   let dir = ($env.PWD | path basename)
