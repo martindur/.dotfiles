@@ -12,25 +12,8 @@ end)
 
 config.font_size = 16
 config.line_height = 1
-config.font = wezterm.font("Fira Code")
+config.font = wezterm.font("CaskaydiaCove Nerd Font")
 config.bold_brightens_ansi_colors = true
-config.font_rules = {
-  {
-    intensity = "Bold",
-    italic = true,
-    font = wezterm.font({ family = "Maple Mono", weight = "Bold", style = "Italic" })
-  },
-  {
-    intensity = "Half",
-    italic = true,
-    font = wezterm.font({ family = "Maple Mono", weight = "DemiBold", style = "Italic" })
-  },
-  {
-    intensity = "Normal",
-    italic = true,
-    font = wezterm.font({ family = "Maple Mono", style = "Italic" })
-  }
-}
 config.color_scheme = "tokyonight_night"
 config.colors = {
   cursor_bg = '#7aa2f7',
@@ -50,6 +33,9 @@ config.set_environment_variables = {
 }
 
 local super = "CMD"
+if not wezterm.target_triple:find("darwin") then
+  super = "ALT"
+end
 
 local function detect_nu()
   local success, stdout = wezterm.run_child_process({ "/bin/sh", "-lc", "command -v nu || true" })
@@ -229,7 +215,7 @@ end
 config.keys = {
   {
     key = 'w',
-    mods = 'CMD',
+    mods = super,
     action = wezterm.action.CloseCurrentPane { confirm = false },
   },
   {
