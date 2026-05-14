@@ -28,7 +28,7 @@ in
   users.users.dur = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
-    shell = pkgs.zsh;
+    shell = pkgs.bashInteractive;
     packages = with pkgs; [
 	# essentials
 	gnumake
@@ -113,7 +113,6 @@ in
     ruff-lsp
 
 	# extras
-	zsh-vi-mode
 	bluez
 	fira-code-symbols
     ];
@@ -254,12 +253,6 @@ in
       user = "dur";
       dataDir = "/home/dur/documents";
       configDir = "/home/dur/.config/syncthing";
-  };
-
-  programs.zsh = {
-	enable = true;
-	autosuggestions.enable = true;
-	syntaxHighlighting.enable = true;
   };
 
   programs._1password.enable = true;

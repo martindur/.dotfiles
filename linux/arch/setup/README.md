@@ -50,13 +50,6 @@ linux/arch/setup/
 │   ├── touchpad.sh        # Optional: Touchpad
 │   ├── firewall.sh        # Optional: UFW firewall
 │   └── tailscale.sh       # Optional: Tailscale VPN
-├── bin/
-│   ├── webapp-install     # Install webapps interactively
-│   ├── webapp-launch      # Launch webapp in Chromium
-│   ├── webapp-remove      # Remove webapps
-│   ├── restart-bluetooth  # Restart bluetooth service
-│   ├── restart-audio      # Restart audio services
-│   └── restart-network    # Restart network service
 └── helpers/
     └── logging.sh         # Logging utilities
 ```
@@ -79,9 +72,9 @@ cd ~/.dotfiles/linux/arch/setup
 1. **Packages** - Installs all packages from `packages/base.packages`
 2. **AUR Helper** - Sets up yay for AUR packages
 3. **System Services** - Configures NetworkManager
-4. **Helper Scripts** - Installs utility scripts to `~/.local/bin`
+4. **Helper Scripts** - Stows utility scripts to `/usr/local/bin`
 5. **Webapps** - Installs ChatGPT and Discord as webapps
-6. **Dotfiles** - Stows your dotfiles (bash, vim, nvim, bin, i3, yazi)
+6. **Dotfiles** - Stows shared, Linux, and Arch-specific dotfiles
 
 ## After Installation
 
@@ -239,14 +232,11 @@ rofi -show drun -modi drun
 
 ### Helper scripts not in PATH
 
-Add to your `~/.bashrc` or `~/.zshrc`:
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
+Re-stow the Arch package:
 
-Then reload:
 ```bash
-source ~/.bashrc  # or ~/.zshrc
+cd ~/.dotfiles
+make linux-arch
 ```
 
 ### Chromium not launching webapps
