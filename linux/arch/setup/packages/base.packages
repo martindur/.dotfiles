@@ -3,6 +3,7 @@ git
 stow
 base-devel
 make
+mise
 
 # X11
 xorg-server

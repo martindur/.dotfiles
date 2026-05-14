@@ -99,12 +99,12 @@ in
     flyctl
     yarn
     bun
+    mise
     postgresql_16_jit
     love # 2d game engine
     vifm-full
 
     # LSPs
-    nodePackages.pyright
     nodePackages.svelte-language-server
     nodePackages.typescript-language-server
     lua-language-server
@@ -302,4 +302,3 @@ in
   system.stateVersion = "23.11"; # Did you read the comment?
 
 }
-

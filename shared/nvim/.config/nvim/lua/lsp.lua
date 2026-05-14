@@ -38,22 +38,12 @@ vim.lsp.config.ts_ls = {
 }
 
 -- PYTHON --
-vim.lsp.config.pyright = {
-	cmd = { "basedpyright-langserver", "--stdio" },
-	root_markers = { "pyproject.toml", "requirements.txt", ".git" },
+vim.lsp.config.ty = {
+	cmd = { "ty", "server" },
 	filetypes = { "python" },
+	root_markers = { "ty.toml", "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
 	settings = {
-		python = {
-			analysis = {
-				autoSearchPaths = true,
-				useLibraryCodeForTypes = true,
-				diagnosticMode = "workspace",
-			},
-		},
-	},
-	flags = {
-		debounce_text_changes = 150,
-		exit_timeout = 300,
+		ty = {},
 	},
 }
 
@@ -126,7 +116,7 @@ vim.lsp.config.sourcekit_ls = {
 function M.setup()
 	vim.lsp.enable("lua_ls")
 	vim.lsp.enable("ts_ls")
-	vim.lsp.enable("pyright")
+	vim.lsp.enable("ty")
 	vim.lsp.enable("astro_ls")
 	vim.lsp.enable("svelte_ls")
 	vim.lsp.enable("tailwindcss_ls")
