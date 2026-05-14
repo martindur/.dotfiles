@@ -1,0 +1,6 @@
+# AUR packages
+# Add your AUR packages here (one per line)
+# Comments are supported with #
+
+# AUR helper (installed separately via aur.sh)
+# yay

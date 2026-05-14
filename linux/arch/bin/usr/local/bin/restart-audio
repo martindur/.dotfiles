@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Restart audio services (PipeWire/PulseAudio)
+# Usage: restart-audio
+
+echo "Restarting audio services..."
+
+# Detect which audio system is running
+if systemctl --user is-active --quiet pipewire; then
+  echo "Detected PipeWire, restarting..."
+  systemctl --user restart pipewire pipewire-pulse wireplumber
+  echo "✓ PipeWire services restarted"
+elif systemctl --user is-active --quiet pulseaudio; then
+  echo "Detected PulseAudio, restarting..."
+  systemctl --user restart pulseaudio
+  echo "✓ PulseAudio service restarted"
+else
+  echo "⚠ No supported audio system detected (PipeWire or PulseAudio)"
+  echo "Attempting to restart PipeWire anyway..."
+  systemctl --user restart pipewire pipewire-pulse wireplumber 2>/dev/null || true
+fi
+
+# Check if audio is working
+if systemctl --user is-active --quiet pipewire || systemctl --user is-active --quiet pulseaudio; then
+  echo "✓ Audio services are running"
+else
+  echo "✗ Audio services may not be running properly"
+  exit 1
+fi

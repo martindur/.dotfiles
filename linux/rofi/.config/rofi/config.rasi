@@ -1,0 +1,169 @@
+configuration {
+  modi: "drun,run,window";
+  font: "CaskaydiaCove Nerd Font 14";
+  show-icons: true;
+  icon-theme: "Papirus-Dark";
+  display-drun: "";
+  display-run: "  Run";
+  display-window: " 﩯 Windows";
+  drun-display-format: "{name}";
+  disable-history: false;
+  hide-scrollbar: true;
+  sidebar-mode: false;
+}
+
+* {
+  /* Catppuccin Mocha colors to match i3 bar */
+  bg: #1e1e2e;
+  bg-alt: #313244;
+  fg: #cdd6f4;
+  fg-alt: #a6adc8;
+  border: #89b4fa;
+  selected: #89b4fa;
+  urgent: #f38ba8;
+
+  background-color: @bg;
+  text-color: @fg;
+  border-color: @border;
+}
+
+window {
+  width: 50%;
+  transparency: "real";
+  border: 2px;
+  border-color: @border;
+  border-radius: 8px;
+  padding: 0;
+}
+
+mainbox {
+  border: 0;
+  padding: 0;
+}
+
+message {
+  border: 0;
+  padding: 10px;
+  background-color: @bg-alt;
+}
+
+textbox {
+  text-color: @fg;
+}
+
+listview {
+  fixed-height: 0;
+  border: 0;
+  spacing: 4px;
+  scrollbar: false;
+  padding: 15px;
+  lines: 8;
+}
+
+element {
+  border: 0;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+element normal.normal {
+  background-color: @bg;
+  text-color: @fg;
+}
+
+element normal.urgent {
+  background-color: @urgent;
+  text-color: @bg;
+}
+
+element normal.active {
+  background-color: @bg-alt;
+  text-color: @selected;
+}
+
+element selected.normal {
+  background-color: @selected;
+  text-color: @bg;
+}
+
+element selected.urgent {
+  background-color: @urgent;
+  text-color: @bg;
+}
+
+element selected.active {
+  background-color: @selected;
+  text-color: @bg;
+}
+
+element alternate.normal {
+  background-color: @bg;
+  text-color: @fg;
+}
+
+element alternate.urgent {
+  background-color: @urgent;
+  text-color: @bg;
+}
+
+element alternate.active {
+  background-color: @bg-alt;
+  text-color: @selected;
+}
+
+element-icon {
+  size: 32px;
+  border: 0;
+  margin: 0 10px 0 0;
+}
+
+element-text {
+  expand: true;
+  horizontal-align: 0;
+  vertical-align: 0.5;
+  margin: 0;
+}
+
+scrollbar {
+  width: 4px;
+  border: 0;
+  handle-color: @border;
+  handle-width: 8px;
+  padding: 0;
+}
+
+inputbar {
+  spacing: 0;
+  text-color: @fg;
+  padding: 20px;
+  background-color: @bg;
+  border: 0 0 2px 0;
+  border-color: @border;
+  children: [ entry, case-indicator ];
+}
+
+case-indicator {
+  spacing: 0;
+  text-color: @fg-alt;
+}
+
+entry {
+  spacing: 0;
+  text-color: @fg;
+  placeholder-color: @fg-alt;
+  placeholder: "Type to search...";
+  padding: 0;
+}
+
+prompt {
+  spacing: 0;
+  text-color: @selected;
+  padding: 0 10px 0 0;
+}
+
+textbox-prompt-colon {
+  expand: false;
+  str: "";
+  text-color: @fg-alt;
+  padding: 0 5px 0 0;
+}

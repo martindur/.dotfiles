@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Launch system-menu in a floating terminal window
+# This script is designed to be called from i3 keybinding
+
+# Determine which terminal to use
+if command -v wezterm &> /dev/null; then
+  exec wezterm start --class floating-menu -- system-menu
+elif command -v alacritty &> /dev/null; then
+  exec alacritty --class floating-menu -e system-menu
+elif command -v kitty &> /dev/null; then
+  exec kitty --class floating-menu system-menu
+elif command -v gnome-terminal &> /dev/null; then
+  exec gnome-terminal --class=floating-menu -- system-menu
+else
+  # Fallback to xterm
+  exec xterm -class floating-menu -e system-menu
+fi

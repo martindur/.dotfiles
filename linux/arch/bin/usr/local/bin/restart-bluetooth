@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Restart bluetooth service
+# Usage: restart-bluetooth
+
+echo "Restarting bluetooth service..."
+
+# Stop bluetooth
+sudo systemctl stop bluetooth
+
+# Start bluetooth
+sudo systemctl start bluetooth
+
+# Check status
+if systemctl is-active --quiet bluetooth; then
+  echo "✓ Bluetooth service restarted successfully"
+else
+  echo "✗ Failed to restart bluetooth service"
+  exit 1
+fi
