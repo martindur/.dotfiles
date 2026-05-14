@@ -159,10 +159,22 @@ vim.diagnostic.config({
 require('zdiff').setup({
   diff = {
     show_line_numbers = "both",
-  }
+  },
+  -- engine = "diffbox",
+  -- diffbox_cmd = {
+  --   vim.fn.expand("~/projects/diffbox/target/debug/diffbox"),
+  -- }
 })
 vim.keymap.set('n', '<leader>dz', function() require('zdiff').open() end, { desc = "Open zdiff view" })
 vim.keymap.set('n', '<leader>dm', function() require('zdiff').open("main") end, { desc = "Open zdiff vs main" })
+
+
+-- Repo-local notes
+require('repo_notes').setup()
+vim.keymap.set('n', '<leader>na', '<cmd>NoteAdd<cr>', { desc = "add repo note" })
+vim.keymap.set('n', '<leader>nd', '<cmd>NoteDone<cr>', { desc = "remove repo note on current line" })
+vim.keymap.set('n', '<leader>nl', '<cmd>NoteList<cr>', { desc = "list repo notes" })
+vim.keymap.set('n', '<leader>nr', '<cmd>NoteReload<cr>', { desc = "reload repo notes" })
 
 
 -- CHECKS --
@@ -194,8 +206,21 @@ require("conform").setup({
 -- SNACKS --
 require('snacks').setup({
   lazygit = { enabled = true },
-  picker = { enabled = true },
-  gh = { enabled = true }
+  gh = { enabled = true },
+  picker = {
+    enabled = true,
+    layout = {
+      layout = {
+        width = 0.95,
+        height = 0.9,
+      },
+    },
+    sources = {
+      files = {
+        hidden = true,
+      },
+    },
+  },
 });
 
 vim.keymap.set('n', '<leader>pr', function()
