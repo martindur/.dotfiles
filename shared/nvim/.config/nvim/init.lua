@@ -60,7 +60,14 @@ vim.keymap.set({ "n" }, "<leader>e", "<cmd>Oil --float<cr>")
 vim.keymap.set({ "t" }, "<c-x>", "<c-\\><c-n>")
 
 -- PLUGINS
+vim.opt.runtimepath:prepend(vim.env.TREEBOX_OUT or vim.fn.expand("~/.local/share/treebox"))
 vim.cmd("source " .. vim.fn.stdpath("config") .. "/plugme.vim")
+
+vim.api.nvim_create_autocmd("FileType", {
+	callback = function(args)
+		pcall(vim.treesitter.start, args.buf)
+	end,
+})
 
 require("oil").setup({
 	keymaps = {

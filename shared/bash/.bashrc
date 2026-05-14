@@ -33,4 +33,12 @@ if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
 fi
 
-PS1='\w \$ '
+git_branch() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
+
+  local branch
+  branch=$(git branch --show-current 2>/dev/null)
+  [ -n "$branch" ] && printf " (%s)" "$branch"
+}
+
+PS1='\w$(git_branch) \$ '
