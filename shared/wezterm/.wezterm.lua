@@ -37,25 +37,6 @@ if not wezterm.target_triple:find("darwin") then
   super = "ALT"
 end
 
-local function detect_nu()
-  local success, stdout = wezterm.run_child_process({ "/bin/sh", "-lc", "command -v nu || true" })
-  if not success then
-    return nil
-  end
-
-  local nu_path = stdout:gsub("%s+$", "")
-  if nu_path == "" then
-    return nil
-  end
-
-  return nu_path
-end
-
-local nu = detect_nu()
-if nu then
-  config.default_prog = { nu, "-l" }
-end
-
 local function basename(path)
   return path:gsub("/$", ""):match("([^/]+)$")
 end
@@ -412,13 +393,6 @@ config.launch_menu = {
     args = { "top" },
   },
 }
-
-if nu then
-  table.insert(config.launch_menu, {
-    label = "Nushell",
-    args = { nu, "-l" },
-  })
-end
 
 table.insert(config.launch_menu, {
   label = "Bash",

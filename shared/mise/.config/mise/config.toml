@@ -7,9 +7,10 @@ rust = "stable"
 erlang = "27"
 elixir = "1.19.0-otp-27"
 lua = "5.4.6"
+postgres = "17.5"
 
 # --- Python: LSP & tools (isolated via pipx) ---
-ty = "latest"
+"aqua:astral-sh/ty" = "latest"
 "pipx:ruff" = "latest"
 
 # --- TS/JS: LSPs & tools ---
@@ -29,3 +30,6 @@ ty = "latest"
 "github:rust-lang/rust-analyzer" = "latest"
 "github:LuaLS/lua-language-server" = "latest"
 "github:elixir-lsp/elixir-ls" = "latest"
+
+# --- Zig LSP via aqua ---
+"aqua:zigtools/zls" = "latest"

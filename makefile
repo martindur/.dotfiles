@@ -23,10 +23,10 @@ nix-upgrade:
 
 osx:
 	$(STOW) --dir=shared --verbose --restow $(SHARED)
-	$(STOW) --dir=osx --verbose --restow aerospace sketchybar
+	$(STOW) --dir=osx --verbose --restow aerospace sketchybar bash
 
 delete:
-	$(STOW) --dir=osx --verbose --delete aerospace sketchybar || true
+	$(STOW) --dir=osx --verbose --delete aerospace sketchybar bash || true
 	$(ROOT_STOW) --dir=linux/arch --verbose --delete $(ARCH_ROOT) || true
 	$(STOW) --dir=linux/arch --verbose --delete $(ARCH_HOME) || true
 	$(STOW) --dir=linux --verbose --delete $(LINUX) || true
