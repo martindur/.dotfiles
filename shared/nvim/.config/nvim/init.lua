@@ -59,8 +59,9 @@ vim.keymap.set({ "n" }, "<leader>e", "<cmd>Oil --float<cr>")
 -- Exit terminal mode
 vim.keymap.set({ "t" }, "<c-x>", "<c-\\><c-n>")
 
--- PLUGINS
 vim.opt.runtimepath:prepend(vim.env.TREEBOX_OUT or vim.fn.expand("~/.local/share/treebox"))
+
+-- PLUGINS
 vim.cmd("source " .. vim.fn.stdpath("config") .. "/plugme.vim")
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -96,15 +97,6 @@ end, { desc = "grep word under cursor" })
 vim.keymap.set({ "n" }, ",", function()
 	snacks.picker.resume()
 end, { desc = "re-run last query" })
-
--- Agents picker: find files in .agents/ subdirectory, ignoring gitignore
-vim.keymap.set({ "n" }, "<leader>a", function()
-	snacks.picker.files({
-		cwd = vim.fn.getcwd() .. "/.agents",
-		hidden = true,
-		ignored = true, -- include gitignored files
-	})
-end, { desc = "find files in .agents/" })
 
 vim.diagnostic.config({
 	virtual_text = false,
