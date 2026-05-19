@@ -41,4 +41,4 @@ git_branch() {
   [ -n "$branch" ] && printf " (%s)" "$branch"
 }
 
-PS1='\w$(git_branch) \$ '
+PS1='\[\e[34m\]\w\[\e[36m\]$(git_branch)\[\e[0m\] \$ '
