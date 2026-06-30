@@ -106,11 +106,31 @@ vim.lsp.config.zig_ls = {
 	root_markers = { ".git" },
 }
 
+-- V --
+vim.lsp.config.v_analyzer = {
+	cmd = { vim.fn.expand("~/.config/v-analyzer/bin/v-analyzer") },
+	filetypes = { "v", "vsh" },
+	root_markers = { "v.mod", ".git" },
+}
+
 -- SWIFT --
 vim.lsp.config.sourcekit_ls = {
 	cmd = { "sourcekit-lsp" },
 	filetypes = { "swift", "objc", "objcpp", "c", "cpp" },
 	root_markers = { "Package.swift", ".git", "compile_commands.json" },
+}
+
+-- RUST --
+vim.lsp.config.rust_analyzer = {
+	cmd = { "rust-analyzer" },
+	filetypes = { "rust" },
+	root_markers = { "Cargo.toml", "rust-project.json", ".git" },
+	settings = {
+		["rust-analyzier"] = {
+			cargo = { allFeatures = true },
+			check = { command = "clippy" },
+		},
+	},
 }
 
 function M.setup()
@@ -123,7 +143,9 @@ function M.setup()
 	vim.lsp.enable("sql_ls")
 	vim.lsp.enable("json_ls")
 	vim.lsp.enable("zig_ls")
+	vim.lsp.enable("v_analyzer")
 	vim.lsp.enable("sourcekit_ls")
+	vim.lsp.enable("rust_analyzer")
 end
 
 return M

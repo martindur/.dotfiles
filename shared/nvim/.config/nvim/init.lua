@@ -27,6 +27,23 @@ vim.opt.cursorline = true
 vim.opt.wildignore = { "__pycache__", "node_modules" }
 vim.opt.listchars = { space = "_", tab = ">~" }
 
+--------
+-- FT --
+--------
+
+vim.filetype.add({
+	extension = {
+		v = function(path, _)
+			local dir = vim.fs.dirname(path)
+			if dir and vim.fs.find("v.mod", { path = dir, upward = true })[1] then
+				return "v"
+			end
+			return "verilog"
+		end,
+		vsh = "vsh",
+	},
+})
+
 ---------
 -- LSP --
 ---------
@@ -142,6 +159,7 @@ require("conform").setup({
 		lua = { "stylua" },
 		python = { "ruff", "black" },
 		rust = { "rustfmt", lsp_format = "fallback" },
+		ocaml = { "ocamlformat", lsp_format = "fallback" },
 		javascript = { "prettierd", "prettier", stop_after_first = true },
 		typescript = { "prettierd", "prettier", stop_after_first = true },
 		astro = { "prettierd", "prettier", stop_after_first = true },
