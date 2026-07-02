@@ -18,15 +18,27 @@ set splitbelow
 
 g:mapleader = " "
 
+set termguicolors
+set background=dark
+
 syntax enable
 filetype plugin indent on
 
+colorscheme habamax
+
 if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+  set grepformat=%f:%l:%c:%m
 endif
 
-nnoremap J 10j
-nnoremap K 10k
+# Find tag files upward toward the repo root
+set tags=./tags;,tags;
 
-vnoremap J 10j
-vnoremap K 10k
+# Allow :find to search recursively
+set path+=**
+set wildignore+=**/.git/**,**/node_modules/**,**/dist/**,**/target/**
+
+augroup terminal
+  autocmd!
+  autocmd TerminalWinOpen * setlocal nonumber norelativenumber signcolumn=no
+augroup END
