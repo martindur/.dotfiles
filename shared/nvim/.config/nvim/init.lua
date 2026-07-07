@@ -1,56 +1,71 @@
 vim.g.mapleader = " "
 
+vim.cmd('colorscheme habamax')
+
 vim.opt.relativenumber = true
 vim.opt.number = true
-vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
-vim.opt.smarttab = true
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = -1
 vim.opt.expandtab = true
-vim.opt.completeopt = { "menu", "popup", "noinsert", "fuzzy" }
+vim.opt.completeopt:append({ "fuzzy", "noinsert" })
+vim.opt.switchbuf:append("useopen")
 
 vim.opt.clipboard = "unnamedplus"
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.smartindent = true
 
 -- Use ripgrep for :grep command
-vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
-vim.opt.grepformat = "%f:%l:%c:%m"
-
--- Jump to quickfix results in another window automatically
-vim.opt.switchbuf = "useopen,uselast"
+vim.opt.grepprg = "rg --vimgrep --smart-case"
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.cursorline = true
 
-vim.opt.wildignore = { "__pycache__", "node_modules" }
-vim.opt.listchars = { space = "_", tab = ">~" }
-
 ---------
 -- LSP --
 ---------
+vim.pack.add({
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
+})
+vim.pack.add({
+  { src = "https://github.com/martindur/zdiff.nvim" }
+})
 
-require("lsp").setup()
+vim.keymap.set("n", "<leader>dz", function()
+	require("zdiff").open()
+end, { desc = "Open zdiff view" })
+vim.keymap.set("n", "<leader>dm", function()
+	require("zdiff").open("main")
+end, { desc = "Open zdiff vs main" })
 
--- LSP AUTO COMPLETE --
+vim.lsp.enable({
+        "clangd",
+	"lua_ls",
+	"ts_ls",
+	"ty",
+	"svelte",
+	"tailwindcss",
+	"sqlls",
+	"zls",
+	"rust_analyzer",
+})
+
 vim.api.nvim_create_autocmd("LspAttach", {
-	callback = function(args)
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = args.buf })
-		vim.keymap.set("n", "gh", vim.lsp.buf.hover, { buffer = args.buf })
-		-- vim.keymap.set("n", "gr", function()
-		-- 	require("snacks").picker.lsp_references()
-		-- end, { buffer = args.buf, desc = "LSP references" })
+	callback = function(event)
+		local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
+
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(true, client.id, event.buf, {
+				autotrigger = true,
+			})
+		end
 	end,
 })
 
--- KEY MAP --
 vim.keymap.set("i", "jk", "<esc>")
 
 vim.opt.runtimepath:prepend(vim.env.TREEBOX_OUT or vim.fn.expand("~/.local/share/treebox"))
-
--- PLUGINS
-vim.cmd("source " .. vim.fn.stdpath("config") .. "/plugme.vim")
 
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function(args)
@@ -58,22 +73,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- vim.diagnostic.config({
--- 	virtual_text = false,
--- 	virtual_lines = { severity = { min = vim.diagnostic.severity.ERROR } },
--- 	underline = { severity = { min = vim.diagnostic.severity.ERROR } },
--- 	signs = { severity = { min = vim.diagnostic.severity.WARN } },
--- })
-
--- Zdiff (multi-buffer diff view)
-require("zdiff").setup({
-	diff = {
-		show_line_numbers = "both",
-	},
-})
-vim.keymap.set("n", "<leader>dz", function()
-	require("zdiff").open()
-end, { desc = "Open zdiff view" })
-vim.keymap.set("n", "<leader>dm", function()
-	require("zdiff").open("main")
-end, { desc = "Open zdiff vs main" })
+vim.treesitter.language.register("bash", "sh")
+vim.treesitter.language.register("javascript", "javascriptreact")
+vim.treesitter.language.register("tsx", "typescriptreact")

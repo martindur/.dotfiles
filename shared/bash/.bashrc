@@ -3,7 +3,7 @@
 [[ $- != *i* ]] && return
 
 export EDITOR="nvim"
-export TERM="xterm-256color"
+export VISUAL="nvim"
 export BAT_THEME="kanagawa"
 
 path_prepend() {
@@ -27,7 +27,6 @@ shopt -s checkwinsize
 
 alias ll="ls -la"
 alias g="git"
-alias v="nvim"
 
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
