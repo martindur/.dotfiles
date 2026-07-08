@@ -22,6 +22,9 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.cursorline = true
 
+vim.opt.wildmenu = true
+vim.opt.wildmode = "longest:full,full"
+
 ---------
 -- LSP --
 ---------
@@ -40,7 +43,7 @@ vim.keymap.set("n", "<leader>dm", function()
 end, { desc = "Open zdiff vs main" })
 
 vim.lsp.enable({
-        "clangd",
+  "clangd",
 	"lua_ls",
 	"ts_ls",
 	"ty",
@@ -76,3 +79,10 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.treesitter.language.register("bash", "sh")
 vim.treesitter.language.register("javascript", "javascriptreact")
 vim.treesitter.language.register("tsx", "typescriptreact")
+
+vim.api.nvim_create_autocmd('QuickFixCmdPost', {
+  pattern = { "grep", "grepadd", "vimgrep", "vimgrepadd" },
+  callback = function ()
+    vim.cmd("cwindow")
+  end,
+})
