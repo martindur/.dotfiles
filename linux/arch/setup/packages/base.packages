@@ -15,7 +15,7 @@ i3status
 i3lock
 
 # Terminal & Editor
-wezterm
+alacritty
 vim
 neovim
 zed

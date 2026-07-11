@@ -61,8 +61,7 @@ default_border pixel 3
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec wezterm
-# bindsym $mod+t exec wezterm
+bindsym $mod+Return exec alacritty
 
 # start a browser
 bindsym $alt+b exec firefox

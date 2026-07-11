@@ -47,7 +47,7 @@ in
 	bat
 	xclip
   ffmpeg-full
-	wezterm
+	alacritty
   yazi
 	unstable.neovim
 	unstable.helix

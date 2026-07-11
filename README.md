@@ -28,6 +28,6 @@ Useful targets:
 
 Examples:
 
-- `stow --target="$HOME" --dir=shared bash nvim wezterm mise`
+- `stow --target="$HOME" --dir=shared alacritty bash nvim mise`
 - `stow --target="$HOME" --dir=osx aerospace sketchybar`
 - `stow --target="$HOME" --dir=linux i3 rofi`

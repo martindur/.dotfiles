@@ -1,6 +1,6 @@
 STOW = stow --target=$(HOME)
 ROOT_STOW = sudo stow --target=/
-SHARED = agents bash nvim wezterm mise
+SHARED = agents alacritty bash nvim mise
 LINUX = i3 rofi
 ARCH_HOME = bash
 ARCH_ROOT = bin xorg

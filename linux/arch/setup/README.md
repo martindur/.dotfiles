@@ -13,7 +13,7 @@ Quick setup scripts to get your system configured after installing Arch Linux wi
 ### Core System
 - **Display Manager:** lightdm with slick greeter
 - **Window Manager:** i3
-- **Terminal:** wezterm
+- **Terminal:** Alacritty
 - **Editor:** neovim
 - **Browsers:** Firefox (main), Chromium (for webapps)
 
