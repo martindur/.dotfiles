@@ -4,8 +4,6 @@ bun = "latest"
 node = "22"
 python = "3.12"
 rust = "stable"
-erlang = "27"
-elixir = "1.19.0-otp-27"
 lua = "5.4.6"
 postgres = "17.5"
 
@@ -18,7 +16,6 @@ postgres = "17.5"
 "npm:typescript" = "latest"
 "npm:@tailwindcss/language-server" = "latest"
 "npm:vscode-langservers-extracted" = "latest"      # html/json/css servers
-"npm:@astrojs/language-server" = "latest"
 "npm:svelte-language-server" = "latest"
 "npm:sql-language-server" = "latest"
 
@@ -26,10 +23,6 @@ postgres = "17.5"
 "npm:@fsouza/prettierd" = "latest"
 "npm:prettier" = "latest"
 
-# --- Rust / Lua / Elixir LSPs via GitHub releases ---
+# --- Rust / Lua LSPs via GitHub releases ---
 "github:rust-lang/rust-analyzer" = "latest"
 "github:LuaLS/lua-language-server" = "latest"
-"github:elixir-lsp/elixir-ls" = "latest"
-
-# --- Zig LSP via aqua ---
-"aqua:zigtools/zls" = "latest"

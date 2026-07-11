@@ -57,7 +57,6 @@ vim.lsp.enable({
 	"svelte",
 	"tailwindcss",
 	"sqlls",
-	"zls",
 	"rust_analyzer",
 })
 
