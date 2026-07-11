@@ -24,7 +24,7 @@ vim.opt.cursorline = true
 
 vim.opt.wildmenu = true
 vim.opt.wildmode = "longest:full,full"
-vim.opt.path:append({ "**", "**/.*/**" })
+vim.opt.path:append({ "**", "**/.[^.]*/**" })
 vim.opt.wildignore:append({
 	"**/.git/**",
 	"**/node_modules/**",
