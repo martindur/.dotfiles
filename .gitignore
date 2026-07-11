@@ -5,6 +5,4 @@ p.conf
 *.swp
 .netrwhist
 *.zwc
-shared/nushell/.config/nushell/*
-!shared/nushell/.config/nushell/config.nu
-!shared/nushell/.config/nushell/env.nu
+nvim.log

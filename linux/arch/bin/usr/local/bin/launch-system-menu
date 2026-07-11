@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# Launch system-menu in a floating terminal window
-# This script is designed to be called from i3 keybinding
-
-exec alacritty --class floating-menu -e system-menu

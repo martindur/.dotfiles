@@ -196,15 +196,6 @@ mode "resize" {
 
 # bindsym $mod+r mode "resize"
 
-# Float the system menu window
-for_window [class="floating-menu"] floating enable
-for_window [class="floating-menu"] resize set 800 600
-for_window [class="floating-menu"] move position center
-for_window [class="floating-menu"] border pixel 2
-
-# Launch system menu
-bindsym $alt+space exec launch-system-menu
-
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 

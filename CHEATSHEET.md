@@ -44,6 +44,24 @@ and external commands share a useful working directory.
 :tcd path           " change it for the current tab
 ```
 
+### Command-line completion
+
+```text
+Tab                 show or advance completion
+Ctrl-n / Ctrl-p     select the next / previous match
+Ctrl-e              cancel completion and restore the original input
+Ctrl-y              accept the selected match
+```
+
+`wildmode` controls what successive `Tab` presses do:
+
+| Value                | Behavior                                                 |
+| -------------------- | -------------------------------------------------------- |
+| `longest,full`       | Complete the common prefix, then cycle full matches      |
+| `longest:full,full`  | Complete the common prefix and show the menu, then cycle |
+| `noselect:full,full` | Show the menu without changing the input, then cycle     |
+| `full`               | Cycle full matches immediately                           |
+
 ## Locations
 
 ```vim

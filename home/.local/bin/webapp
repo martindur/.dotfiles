@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+desktop_dir=${XDG_DATA_HOME:-"$HOME/.local/share"}/applications
+
+usage() {
+  cat <<'EOF'
+Usage:
+  webapp add NAME URL [ICON]
+  webapp remove NAME
+  webapp launch URL
+  webapp list
+
+ICON may be an icon theme name or a local file path.
+EOF
+}
+
+app_id() {
+  local id
+  id=$(printf '%s' "$1" | tr '[:upper:] ' '[:lower:]-' | tr -cd '[:alnum:]_.-')
+  if [ -z "$id" ]; then
+    printf 'webapp: NAME must contain a letter or number\n' >&2
+    return 1
+  fi
+  printf '%s' "$id"
+}
+
+desktop_exec_escape() {
+  local value=$1
+  value=${value//\\/\\\\}
+  value=${value//\"/\\\"}
+  value=${value//\%/%%}
+  printf '%s' "$value"
+}
+
+refresh_desktop_database() {
+  if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database "$desktop_dir"
+  fi
+}
+
+add() {
+  if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+    usage >&2
+    return 2
+  fi
+
+  local name=$1
+  local url=$2
+  local icon=${3:-applications-internet}
+  local id
+  local launcher
+
+  case "$name$url$icon" in
+    *$'\n'*)
+      printf 'webapp: arguments must not contain newlines\n' >&2
+      return 2
+      ;;
+  esac
+
+  id=$(app_id "$name")
+  launcher=$(desktop_exec_escape "$HOME/.local/bin/webapp")
+  url=$(desktop_exec_escape "$url")
+  mkdir -p "$desktop_dir"
+
+  cat >"$desktop_dir/webapp-$id.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=$name
+Exec="$launcher" launch "$url"
+Icon=$icon
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true
+X-Webapp=true
+EOF
+
+  refresh_desktop_database
+  printf 'Added %s to the application menu.\n' "$name"
+}
+
+remove() {
+  if [ "$#" -ne 1 ]; then
+    usage >&2
+    return 2
+  fi
+
+  local desktop_file="$desktop_dir/webapp-$(app_id "$1").desktop"
+  if [ ! -f "$desktop_file" ]; then
+    printf 'webapp: no webapp named %s\n' "$1" >&2
+    return 1
+  fi
+
+  rm "$desktop_file"
+  refresh_desktop_database
+  printf 'Removed %s from the application menu.\n' "$1"
+}
+
+launch() {
+  if [ "$#" -ne 1 ]; then
+    usage >&2
+    return 2
+  fi
+
+  local browser
+  if [ -n "${WEBAPP_BROWSER:-}" ]; then
+    browser=$WEBAPP_BROWSER
+  elif command -v chromium >/dev/null 2>&1; then
+    browser=chromium
+  elif command -v google-chrome >/dev/null 2>&1; then
+    browser=google-chrome
+  else
+    printf 'webapp: set WEBAPP_BROWSER or install Chromium\n' >&2
+    return 1
+  fi
+
+  exec "$browser" --app="$1"
+}
+
+list() {
+  local file
+  shopt -s nullglob
+  for file in "$desktop_dir"/webapp-*.desktop; do
+    sed -n 's/^Name=//p' "$file"
+  done
+}
+
+case "${1:-}" in
+  add | remove | launch | list)
+    command=$1
+    shift
+    "$command" "$@"
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

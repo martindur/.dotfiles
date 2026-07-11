@@ -24,6 +24,13 @@ vim.opt.cursorline = true
 
 vim.opt.wildmenu = true
 vim.opt.wildmode = "longest:full,full"
+vim.opt.path:append({ "**", "**/.*/**" })
+vim.opt.wildignore:append({
+	"**/.git/**",
+	"**/node_modules/**",
+	"**/dist/**",
+	"**/target/**",
+})
 
 ---------
 -- LSP --
@@ -67,7 +74,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.keymap.set("i", "jk", "<esc>")
-vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n]], {
+vim.keymap.set("t", "<C-\\>", [[<C-\><C-n>]], {
   desc = "Exit terminal mode",
 })
 

@@ -1,33 +1,54 @@
-
 # Dotfiles
 
-Personal configuration, managed with GNU Stow.
+Personal home configuration managed as one GNU Stow package.
 
-The repo is split into three package roots:
+## Layout
 
-- `shared/` for tools used on both macOS and Linux
-- `osx/` for macOS-only config
-- `linux/` for Linux-only config and `configuration.nix`
-- `linux/arch/` for Arch-specific setup scripts and system-level helpers
+`home/` mirrors the home directory. Configuration for Linux and macOS lives
+together because tools ignore configuration for programs that are not
+installed.
 
-Shell:
+```text
+home/
+├── .bashrc
+├── .profile
+├── .config/
+├── .local/bin/
+└── AGENTS.md
+```
 
-- `shared/bash/` is the portable interactive shell config
-- `linux/arch/bash/` contains Arch-specific login startup
-- `shared/mise/` is the cross-system tool/runtime source of truth
+`configuration.nix` is system configuration rather than a home dotfile, so it
+stays outside the Stow package.
 
-Stow commands target `$HOME` explicitly so the setup stays portable across macOS and Linux.
+## Install
 
-Useful targets:
+```bash
+make install
+```
 
-- `make osx`
-- `make linux`
-- `make linux-arch`
-- `make nix`
-- `make nix-upgrade`
+Remove the managed links with:
 
-Examples:
+```bash
+make delete
+```
 
-- `stow --target="$HOME" --dir=shared alacritty bash nvim mise`
-- `stow --target="$HOME" --dir=osx aerospace sketchybar`
-- `stow --target="$HOME" --dir=linux i3 rofi`
+## Webapps
+
+`webapp` creates desktop entries that Rofi discovers and launches in a
+dedicated Chromium window.
+
+```bash
+webapp add NAME URL [ICON]
+webapp remove NAME
+webapp list
+```
+
+`ICON` may be an icon theme name or a local file path. Set `WEBAPP_BROWSER` to
+override the default Chromium executable.
+
+## NixOS
+
+```bash
+make nix
+make nix-upgrade
+```
