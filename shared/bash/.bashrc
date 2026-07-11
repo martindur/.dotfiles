@@ -4,7 +4,9 @@
 
 export EDITOR="nvim"
 export VISUAL="nvim"
-export BAT_THEME="kanagawa"
+export BAT_THEME="ansi"
+
+CDPATH=.:$HOME/projects:$HOME
 
 path_prepend() {
   case ":$PATH:" in
