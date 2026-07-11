@@ -2,9 +2,23 @@
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-if [ -f "$HOME/.cargo/env" ]; then
-  . "$HOME/.cargo/env"
-fi
+path_prepend() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+  esac
+}
+
+for directory in \
+  "/opt/homebrew/sbin" \
+  "/opt/homebrew/bin" \
+  "$HOME/.cargo/bin" \
+  "$HOME/.config/bin" \
+  "$HOME/.local/bin" \
+  "$HOME/.local/share/mise/shims"; do
+  [ -d "$directory" ] && path_prepend "$directory"
+done
+unset directory
 
 if [ -f "$HOME/.bashrc" ]; then
   . "$HOME/.bashrc"

@@ -1,41 +1,16 @@
-# Reference: https://github.com/i3/i3/blob/next/etc/config
+start-at-login = true
 
-# i3 doesn't have "normalizations" feature that why we disable them here.
-# But the feature is very helpful.
-# Normalizations eliminate all sorts of weird tree configurations that don't make sense.
-# Give normalizations a chance and enable them back.
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 
-# Automatically hide macOS menu bar
 automatically-unhide-macos-hidden-apps = true
-
 accordion-padding = 0
 
-# Mouse follows focus when focused monitor changes
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# Run Sketchybar together with AeroSpace
-# sketchbar has a built-in detection of already running process,
-# so it won't be run twice on AeroSpace restart
-after-startup-command = ['exec-and-forget sketchybar']
-
-# Notify Sketchybar about workspace change
-exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
-]
-
-# Add gaps for SketchyBar at the top
-# Adjust the value based on your SketchyBar height (default is usually 32-40px)
-[gaps]
-outer.top = [
-  { monitor."built-in" = 0 },
-  { monitor."main" = 30 },
-  30
-]
-
-
 [mode.main.binding]
+cmd-enter = 'exec-and-forget open -n /Applications/Alacritty.app'
+
 cmd-1 = 'workspace 1'
 cmd-2 = 'workspace 2'
 cmd-3 = 'workspace 3'

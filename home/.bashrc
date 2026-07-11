@@ -8,19 +8,6 @@ export BAT_THEME="ansi"
 
 CDPATH=.:$HOME/projects:$HOME
 
-path_prepend() {
-  case ":$PATH:" in
-    *":$1:"*) ;;
-    *) PATH="$1:$PATH" ;;
-  esac
-}
-
-path_prepend "$HOME/.local/bin"
-path_prepend "$HOME/.config/bin"
-path_prepend "$HOME/.cargo/bin"
-path_prepend "$HOME/.bun/bin"
-path_prepend "$HOME/.local/share/mise/shims"
-
 HISTSIZE=10000
 HISTFILESIZE=20000
 HISTCONTROL=ignoredups:erasedups
