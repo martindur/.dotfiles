@@ -32,7 +32,7 @@ Remove the managed links with:
 make delete
 ```
 
-On an Arch laptop, enable the touchpad configuration with:
+On an Arch laptop, enable the touchpad and memory-pressure protection with:
 
 ```bash
 make laptop
