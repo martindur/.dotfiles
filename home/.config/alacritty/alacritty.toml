@@ -1,2 +1,5 @@
+[window]
+decorations = "None"
+
 [font]
-size = 16
+size = 10

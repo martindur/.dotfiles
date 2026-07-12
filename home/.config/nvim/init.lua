@@ -38,9 +38,11 @@ vim.opt.wildignore:append({
 vim.pack.add({
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 })
-vim.pack.add({
-  { src = "https://github.com/martindur/zdiff.nvim" }
-})
+-- vim.pack.add({
+--   { src = "https://github.com/martindur/zdiff.nvim" }
+-- })
+-- DEVELOPMENT:
+vim.opt.runtimepath:prepend(vim.fn.expand("~/projects/zdiff.nvim"))
 
 vim.keymap.set("n", "<leader>dz", function()
 	require("zdiff").open()
@@ -77,6 +79,8 @@ vim.keymap.set("t", "<C-\\>", [[<C-\><C-n>]], {
   desc = "Exit terminal mode",
 })
 
+vim.keymap.set("n", "<leader>g", "<cmd>term lazygit<cr>", { desc = "launch lazygit in a terminal" })
+
 vim.opt.runtimepath:prepend(vim.env.TREEBOX_OUT or vim.fn.expand("~/.local/share/treebox"))
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -93,5 +97,26 @@ vim.api.nvim_create_autocmd('QuickFixCmdPost', {
   pattern = { "grep", "grepadd", "vimgrep", "vimgrepadd" },
   callback = function ()
     vim.cmd("cwindow")
+  end,
+})
+
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "zdiff",
+  callback = function(event)
+    local opts = { buffer = event.buf, silent = true }
+
+    vim.keymap.set("n", "<CR>", "<cmd>ZdiffOpen<cr>", opts)
+    vim.keymap.set("n", "<Tab>", "<cmd>ZdiffToggle<cr>", opts)
+    vim.keymap.set("n", "R", "<cmd>ZdiffRefresh<cr>", opts)
+    vim.keymap.set("n", "q", "<cmd>bdelete<cr>", opts)
+
+    vim.keymap.set("n", "m", function()
+      if vim.b.zdiff.base == "" then
+        vim.cmd("Zdiff main")
+      else
+        vim.cmd("Zdiff")
+      end
+    end, opts)
   end,
 })

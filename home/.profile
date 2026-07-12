@@ -13,6 +13,7 @@ for directory in \
   "/opt/homebrew/sbin" \
   "/opt/homebrew/bin" \
   "$HOME/.cargo/bin" \
+  "$HOME/.bun/bin" \
   "$HOME/.config/bin" \
   "$HOME/.local/bin" \
   "$HOME/.local/share/mise/shims"; do

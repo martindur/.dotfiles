@@ -32,6 +32,12 @@ Remove the managed links with:
 make delete
 ```
 
+On an Arch laptop, enable the touchpad configuration with:
+
+```bash
+make laptop
+```
+
 ## Webapps
 
 `webapp` creates desktop entries that Rofi discovers and launches in a
