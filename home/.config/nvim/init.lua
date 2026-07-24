@@ -79,7 +79,8 @@ vim.keymap.set("t", "<C-\\>", [[<C-\><C-n>]], {
   desc = "Exit terminal mode",
 })
 
-vim.keymap.set("n", "<leader>g", "<cmd>term lazygit<cr>", { desc = "launch lazygit in a terminal" })
+vim.keymap.set("n", "<leader>g", "<cmd>tabnew | term lazygit<cr>", { desc = "launch lazygit in a new tab" })
+vim.keymap.set("n", "<leader>t", ":tabnew | term ", { desc = "launch any process in a new tab" })
 
 vim.opt.runtimepath:prepend(vim.env.TREEBOX_OUT or vim.fn.expand("~/.local/share/treebox"))
 
@@ -109,7 +110,7 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<CR>", "<cmd>ZdiffOpen<cr>", opts)
     vim.keymap.set("n", "<Tab>", "<cmd>ZdiffToggle<cr>", opts)
     vim.keymap.set("n", "R", "<cmd>ZdiffRefresh<cr>", opts)
-    vim.keymap.set("n", "q", "<cmd>bdelete<cr>", opts)
+    vim.keymap.set("n", "q", "<cmd>b# | bd#<cr>", opts)
 
     vim.keymap.set("n", "m", function()
       if vim.b.zdiff.base == "" then
@@ -119,4 +120,65 @@ vim.api.nvim_create_autocmd("FileType", {
       end
     end, opts)
   end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.cmd('startinsert')
+  end
+})
+
+local function pick_file(command)
+  local source_window = vim.api.nvim_get_current_win()
+  local cwd = vim.fn.getcwd()
+  local output = vim.fn.tempname()
+
+  vim.cmd.tabnew()
+
+  local picker_tab = vim.api.nvim_get_current_tabpage()
+  local picker_buffer = vim.api.nvim_get_current_buf()
+  local shell_command = command .. " | fzf > " .. vim.fn.shellescape(output)
+
+  vim.fn.jobstart({ "sh", "-c", shell_command }, {
+    term = true,
+    cwd = cwd,
+
+    on_exit = function()
+      vim.schedule(function()
+        local selection = vim.fn.readfile(output)[1]
+        vim.fn.delete(output)
+
+        if vim.api.nvim_tabpage_is_valid(picker_tab) then
+          vim.api.nvim_set_current_tabpage(picker_tab)
+          vim.cmd.tabclose()
+        end
+
+        if vim.api.nvim_buf_is_valid(picker_buffer) then
+          vim.api.nvim_buf_delete(picker_buffer, { force = true })
+        end
+
+        if vim.api.nvim_win_is_valid(source_window) then
+          vim.api.nvim_set_current_win(source_window)
+          if selection then
+            vim.cmd.edit(vim.fn.fnameescape(vim.fs.joinpath(cwd, selection)))
+          end
+        end
+      end)
+    end
+  })
+end
+
+vim.keymap.set("n", "<leader>f", function()
+  pick_file("rg --files")
+end, { desc = "find files" })
+
+vim.api.nvim_create_user_command("CodexReview", function(options)
+  require("codex_review").review(options.args)
+end, {
+  nargs = 1,
+  complete = function(argument)
+    return require("codex_review").complete(argument)
+  end,
+  desc = "Review the current implementation with a Codex review lens",
 })
