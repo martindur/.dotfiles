@@ -187,3 +187,10 @@ end, {
   end,
   desc = "Review with a Codex lens or review a GitHub pull request",
 })
+
+vim.api.nvim_create_user_command("CodexWork", function(options)
+  require("codex_work").start(options.args)
+end, {
+  nargs = 1,
+  desc = "Plan work for a Linear issue in a new Git worktree",
+})
