@@ -54,6 +54,30 @@ relevant tradeoff. Do not flag superficial similarity or recommend adding a
 dependency without a clear net benefit.
 ]],
   },
+  tests = {
+    description = "Assess critical-path test coverage",
+    prompt = [[
+Review the current change and its tests for business-critical path coverage.
+Judge criticality by failure impact, not code coverage or test count.
+Do not run tests.
+
+Output only:
+
+coverage: complete | partial | insufficient
+
+gaps:
+- `<critical-path>` — missing: `<scenario>`
+
+tests:
+- `<critical-path>`
+  - setup: `<state>`, `<inputs>`
+  - assert: `<outputs>`, `<state changes>`, `<invariants>`
+
+Include only existing tests that cover critical paths. Consolidate equivalent
+cases. Prefer identifiers, values, and state transitions over explanatory
+prose. Use `gaps: none` when appropriate.
+]],
+  },
 }
 
 local function set_buffer_content(buffer, lines)
@@ -66,9 +90,9 @@ local function set_buffer_content(buffer, lines)
   vim.bo[buffer].modifiable = false
 end
 
-local function set_status(buffer, lens_name, message)
+local function set_status(buffer, review_name, message)
   set_buffer_content(buffer, {
-    ("# Codex Review: %s"):format(lens_name),
+    ("# Codex Review: %s"):format(review_name),
     "",
     message,
   })
@@ -108,13 +132,14 @@ local function run(command, options, callback)
   end)
 end
 
-local function create_review_buffer(lens_name)
+local function create_review_buffer(review_name)
   vim.cmd.tabnew()
 
   local buffer = vim.api.nvim_get_current_buf()
+  local buffer_name = review_name:gsub("[^%w_-]", "-")
   vim.api.nvim_buf_set_name(
     buffer,
-    ("codex-review://%s/%d"):format(lens_name, buffer)
+    ("codex-review://%s/%d"):format(buffer_name, buffer)
   )
 
   vim.bo[buffer].buftype = "nofile"
@@ -131,16 +156,43 @@ local function create_review_buffer(lens_name)
   return buffer
 end
 
-local function check_dependencies()
+local function check_dependencies(commands)
   local missing = {}
 
-  for _, command in ipairs({ "codex", "git" }) do
+  for _, command in ipairs(commands) do
     if vim.fn.executable(command) == 0 then
       table.insert(missing, command)
     end
   end
 
   return missing
+end
+
+local function notify_missing_dependencies(commands)
+  local missing = check_dependencies(commands)
+  if #missing == 0 then
+    return false
+  end
+
+  vim.notify(
+    "CodexReview requires these commands: " .. table.concat(missing, ", "),
+    vim.log.levels.ERROR
+  )
+  return true
+end
+
+local function set_review_result(buffer, result)
+  if result.code ~= 0 then
+    set_buffer_content(buffer, command_error("running Codex", result))
+    return
+  end
+
+  local review = vim.trim(result.stdout or "")
+  if review == "" then
+    review = "Codex completed without returning a review."
+  end
+
+  set_buffer_content(buffer, vim.split(review, "\n", { plain = true }))
 end
 
 function M.complete(argument)
@@ -156,26 +208,8 @@ function M.complete(argument)
   return matches
 end
 
-function M.review(lens_name)
-  local lens = review_lenses[lens_name]
-  if not lens then
-    local available = M.complete("")
-    vim.notify(
-      ("Unknown review lens %q. Available lenses: %s"):format(
-        lens_name,
-        table.concat(available, ", ")
-      ),
-      vim.log.levels.ERROR
-    )
-    return
-  end
-
-  local missing = check_dependencies()
-  if #missing > 0 then
-    vim.notify(
-      "CodexReview requires these commands: " .. table.concat(missing, ", "),
-      vim.log.levels.ERROR
-    )
+local function review_lens(lens_name, lens)
+  if notify_missing_dependencies({ "codex", "git" }) then
     return
   end
 
@@ -216,19 +250,145 @@ function M.review(lens_name)
       "--ephemeral",
       vim.trim(lens.prompt),
     }, { cwd = repository }, function(review_result)
-      if review_result.code ~= 0 then
-        set_buffer_content(buffer, command_error("running Codex", review_result))
+      set_review_result(buffer, review_result)
+    end)
+  end)
+end
+
+local function parse_pull_request_url(url)
+  local owner, repository, number =
+    url:match("^https://github%.com/([^/]+)/([^/]+)/pull/(%d+)/?.*$")
+
+  if not owner then
+    return nil
+  end
+
+  return {
+    owner = owner,
+    repository = repository,
+    number = number,
+  }
+end
+
+local function review_pull_request(url, pull_request)
+  if notify_missing_dependencies({ "codex", "gh", "git" }) then
+    return
+  end
+
+  local review_name = ("PR %s/%s#%s"):format(
+    pull_request.owner,
+    pull_request.repository,
+    pull_request.number
+  )
+  local buffer = create_review_buffer(review_name)
+  local temp_root = vim.fn.tempname()
+  local repository_dir = vim.fs.joinpath(temp_root, "repository")
+
+  vim.fn.mkdir(temp_root, "p")
+  set_status(buffer, review_name, "Loading pull request…")
+
+  local function cleanup()
+    vim.fn.delete(temp_root, "rf")
+  end
+
+  local function fail(stage, result)
+    cleanup()
+    set_buffer_content(buffer, command_error(stage, result))
+  end
+
+  run({
+    "gh",
+    "pr",
+    "view",
+    url,
+    "--json",
+    "baseRefName",
+  }, {}, function(view_result)
+    if view_result.code ~= 0 then
+      fail("loading the pull request", view_result)
+      return
+    end
+
+    local decoded, metadata = pcall(vim.json.decode, view_result.stdout)
+    if not decoded or type(metadata.baseRefName) ~= "string" then
+      fail("reading pull request metadata", {
+        code = 1,
+        stderr = "GitHub returned invalid pull request metadata.",
+      })
+      return
+    end
+
+    set_status(buffer, review_name, "Cloning repository…")
+
+    run({
+      "gh",
+      "repo",
+      "clone",
+      pull_request.owner .. "/" .. pull_request.repository,
+      repository_dir,
+      "--",
+      "--filter=blob:none",
+    }, {}, function(clone_result)
+      if clone_result.code ~= 0 then
+        fail("cloning the repository", clone_result)
         return
       end
 
-      local review = vim.trim(review_result.stdout or "")
-      if review == "" then
-        review = "Codex completed without returning a review."
-      end
+      set_status(buffer, review_name, "Checking out pull request…")
 
-      set_buffer_content(buffer, vim.split(review, "\n", { plain = true }))
+      run({
+        "gh",
+        "pr",
+        "checkout",
+        pull_request.number,
+        "--detach",
+      }, { cwd = repository_dir }, function(checkout_result)
+        if checkout_result.code ~= 0 then
+          fail("checking out the pull request", checkout_result)
+          return
+        end
+
+        set_status(
+          buffer,
+          review_name,
+          ("Reviewing against %s…"):format(metadata.baseRefName)
+        )
+
+        run({
+          "codex",
+          "exec",
+          "review",
+          "--base",
+          "origin/" .. metadata.baseRefName,
+          "--ephemeral",
+        }, { cwd = repository_dir }, function(review_result)
+          cleanup()
+          set_review_result(buffer, review_result)
+        end)
+      end)
     end)
   end)
+end
+
+function M.review(target)
+  local lens = review_lenses[target]
+  if lens then
+    review_lens(target, lens)
+    return
+  end
+
+  local pull_request = parse_pull_request_url(target)
+  if pull_request then
+    review_pull_request(target, pull_request)
+    return
+  end
+
+  vim.notify(
+    ("Expected a review lens (%s) or a GitHub pull request URL."):format(
+      table.concat(M.complete(""), ", ")
+    ),
+    vim.log.levels.ERROR
+  )
 end
 
 return M

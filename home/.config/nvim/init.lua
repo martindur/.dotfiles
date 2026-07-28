@@ -81,6 +81,7 @@ vim.keymap.set("t", "<C-\\>", [[<C-\><C-n>]], {
 
 vim.keymap.set("n", "<leader>g", "<cmd>tabnew | term lazygit<cr>", { desc = "launch lazygit in a new tab" })
 vim.keymap.set("n", "<leader>t", ":tabnew | term ", { desc = "launch any process in a new tab" })
+vim.keymap.set("n", "<leader>v", ":vert term ", { desc = "launch any process in vertical split" })
 
 vim.opt.runtimepath:prepend(vim.env.TREEBOX_OUT or vim.fn.expand("~/.local/share/treebox"))
 
@@ -173,6 +174,10 @@ vim.keymap.set("n", "<leader>f", function()
   pick_file("rg --files")
 end, { desc = "find files" })
 
+vim.keymap.set("n", "<leader>F", function()
+  pick_file("rg --files --hidden")
+end, { desc = "find files" })
+
 vim.api.nvim_create_user_command("CodexReview", function(options)
   require("codex_review").review(options.args)
 end, {
@@ -180,5 +185,5 @@ end, {
   complete = function(argument)
     return require("codex_review").complete(argument)
   end,
-  desc = "Review the current implementation with a Codex review lens",
+  desc = "Review with a Codex lens or review a GitHub pull request",
 })
