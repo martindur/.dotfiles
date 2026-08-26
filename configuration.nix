@@ -4,7 +4,10 @@
 
 { config, lib, pkgs, ... }:
 let
-  unstable = import <nixos-unstable> {};
+  blexMonoFont =
+    if builtins.hasAttr "nerd-fonts" pkgs
+    then pkgs.nerd-fonts.blex-mono
+    else pkgs.nerdfonts;
 in
 {
   imports =
@@ -22,7 +25,7 @@ in
     "electron-25.9.0"
   ];
 
-  nixpkgs.overlays = [ (import /home/dur/extras/nixpkgs-mozilla/firefox-overlay.nix) ];
+  # nixpkgs.overlays = [ (import /home/dur/extras/nixpkgs-mozilla/firefox-overlay.nix) ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.dur = {
@@ -30,91 +33,79 @@ in
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
     shell = pkgs.bashInteractive;
     packages = with pkgs; [
-	# essentials
-	gnumake
-	cmake
-	libtool
-	shellcheck
-	binutils
-	glibc
-	gcc
-	stow
-	universal-ctags
-	git
-	ripgrep
-	fzf
-	fd
-	bat
-	xclip
-  ffmpeg-full
-	alacritty
-  yazi
-	unstable.neovim
-	unstable.helix
-	tree-sitter
-	nodejs
-	pandoc # document transpiler (e.g. markdown compiling)
+      # essentials
+      gnumake
+      cmake
+      libtool
+      shellcheck
+      binutils
+      glibc
+      gcc
+      stow
+      git
+      ripgrep
+      fzf
+      fd
+      bat
+      xclip
+      ffmpeg-full
+      alacritty
+      yazi
+      tree-sitter
+      starship
+      neovim
 
-	# apps
-    firefox
-    thunderbird
-    lazygit
-    google-chrome
-    tree
-    rofi
-    discord
-    slack
-    youtube-music
-    flameshot
-    vlc
-    imagemagick
-    unzip
-    ngrok
-    reaper # audio DAW
-    insomnia
+      # apps
+      firefox
+      thunderbird
+      lazygit
+      tree
+      rofi
+      discord
+      slack
+      flameshot
+      vlc
+      imagemagick
+      unzip
+      reaper # audio DAW
+      chromium
 
-    # programming
-    erlang
-    elixir
-    unstable.gleam
-    python3
-    typescript
-    rustup # Rust toolchain (cargo etc.)
-    python311Packages.nose3
-    python311Packages.pytest
-    python311Packages.setuptools
-    python311Packages.pyflakes
-    python311Packages.debugpy
-    python311Packages.python-lsp-server
-    isort
-    pipenv
-    black
-    nixfmt # nix formatter
-    html-tidy # validator and 'tidier' for html
-    stylelint # linting for css
-    jsbeautifier # code formatting for JS/CSS/HTML
-    rebar3 # erlang build tool
-    shfmt
-    inotify-tools
-    flyctl
-    yarn
-    bun
-    mise
-    postgresql_16_jit
-    love # 2d game engine
-    vifm-full
+      # programming
+      erlang
+      elixir
+      python3
+      typescript
+      rustup # Rust toolchain (cargo etc.)
+      isort
+      pipenv
+      black
+      nixfmt # nix formatter
+      html-tidy # validator and 'tidier' for html
+      stylelint # linting for css
+      jsbeautifier # code formatting for JS/CSS/HTML
+      shfmt
+      inotify-tools
+      flyctl
+      bun
+      mise
+      postgresql_16_jit
+      love # 2d game engine
+      vifm-full
 
-    # LSPs
-    nodePackages.svelte-language-server
-    nodePackages.typescript-language-server
-    lua-language-server
-    elixir-ls
-    vscode-langservers-extracted
-    ruff-lsp
+      # LSPs
+      nodePackages.svelte-language-server
+      nodePackages.typescript-language-server
+      uv
+      basedpyright
+      (pkgs.nodejs_24 or pkgs.nodejs_22 or pkgs.nodejs)
+      lua-language-server
+      elixir-ls
+      vscode-langservers-extracted
+      ruff
 
-	# extras
-	bluez
-	fira-code-symbols
+      # extras
+      bluez
+      fira-code-symbols
     ];
   };
 
@@ -154,39 +145,48 @@ in
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
 
   # Enable the X11 windowing system.
   services.xserver = {
+    enable = true;
+    xkb.layout = "us";
+    videoDrivers = [ "nvidia" ];
+    deviceSection = ''
+      Option "TripleBuffer" "true"
+    '';
+    screenSection = ''
+      Option "AllowIndirectGLXProtocol" "off"
+    '';
+
+    desktopManager = {
+      xterm.enable = false;
+      wallpaper.mode = "fill"; # wallpaper default path looks in ~/.background-image
+    };
+
+    displayManager = {
+      lightdm.greeters.slick.enable = true;
+      lightdm.greeters.slick.draw-user-backgrounds = true;
+      setupCommands = ''
+        ${pkgs.xrandr or pkgs.xorg.xrandr}/bin/xrandr --output DP-2 --mode 3440x1440 --rate 144
+      '';
+    };
+
+    windowManager.i3 = {
       enable = true;
-      xkb.layout = "us";
-      videoDrivers = ["nvidia"];
-      
-      desktopManager = {
-	xterm.enable = false;
-	wallpaper.mode = "fill"; # wallpaper default path looks in ~/.background-image
-      };
-
-      displayManager = {
-	defaultSession = "none+i3";
-	lightdm.greeters.slick.enable = true;
-	lightdm.greeters.slick.draw-user-backgrounds = true;
-      };
-
-      windowManager.i3 = {
-	enable = true;
-	extraPackages = with pkgs; [
-	  dmenu
-	  i3status
-	  i3lock
-	  i3-auto-layout
-	];
-      };
+      extraPackages = with pkgs; [
+        dmenu
+        i3status
+        i3lock
+        i3-auto-layout
+      ];
+    };
   };
+
+  services.displayManager.defaultSession = "none+i3";
 
   hardware.nvidia = {
     modesetting.enable = true;
@@ -200,20 +200,8 @@ in
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # docker
-  virtualisation.docker = {
-    enable = true;
-    enableOnBoot = true;
-    enableNvidia = true;
-  };
-
-  # libnvidia-container does not support cgroups v2 (prior to 1.8.0)
-  # https://github.com/NVIDIA/nvidia-docker/issues/1447
-  systemd.enableUnifiedCgroupHierarchy = false;
-
-  virtualisation.oci-containers.backend = "docker";
-
-  
+  # Docker is currently disabled; the old enableNvidia and cgroups-v1 options
+  # are obsolete on current NixOS.
 
   # Configure keymap in X11
   # services.xserver.xkb.options = "eurosign:e,caps:escape";
@@ -221,15 +209,26 @@ in
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  # Enable sound through PipeWire.
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
 
   services.tailscale.enable = true;
+
+  fonts.packages = with pkgs; [
+    blexMonoFont
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -258,7 +257,12 @@ in
   programs._1password.enable = true;
   programs._1password-gui.enable = true;
 
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
+  programs.gamemode.enable = true;
 
   # List services that you want to enable:
 
