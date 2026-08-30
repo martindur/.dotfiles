@@ -11,7 +11,7 @@ A concise reminder of the fundamental tools that replace configured conveniences
 | Search-results picker   | `:grep` and quickfix                  |
 | Location/history picker | Marks, jump list, change list         |
 | Terminal panes          | Neovim splits and terminal buffers    |
-| Terminal workspaces     | i3 workspaces                         |
+| Terminal workspaces     | Sway workspaces                       |
 | Project selector        | Shell navigation or Rofi, then `nvim` |
 | Background terminal tab | Shell job control                     |
 | Persistent process      | A user service                        |

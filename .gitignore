@@ -6,3 +6,8 @@ p.conf
 .netrwhist
 *.zwc
 nvim.log
+
+# Codex runtime state; keep only the tracked instructions file.
+home/.codex/**
+!home/.codex/AGENTS.md
+home/.local/bin/codex
